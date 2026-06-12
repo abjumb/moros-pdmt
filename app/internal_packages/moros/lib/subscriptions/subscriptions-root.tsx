@@ -156,7 +156,7 @@ export default class SubscriptionsRoot extends React.Component<
 
   _renderSuggestions() {
     const { suggestions, scanning, scanRan, scanError } = this.state;
-    if (!scanRan && suggestions.length === 0) return null;
+    if (!scanRan && !scanning && suggestions.length === 0) return null;
     if (scanError) {
       return (
         <div className="moros-suggestions">

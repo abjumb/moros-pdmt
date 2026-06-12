@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import MailspringStore from 'mailspring-store';
-import { DatabaseStore, Message } from 'mailspring-exports';
+import { DatabaseStore, Message, localized } from 'mailspring-exports';
 import MorosDataStore, { MorosRecord } from '../moros-data-store';
 import { BriefingProviderId, DEFAULT_MODEL, providerById } from './briefing-providers';
 
@@ -159,7 +159,10 @@ class BriefingStore extends MailspringStore {
       const mail = await this._collectRecentMail();
       if (mail.length === 0) {
         throw new Error(
-          `No mail received in the last ${BRIEF_WINDOW_HOURS} hours — nothing to brief.`
+          localized(
+            'No mail received in the last %@ hours — nothing to brief.',
+            `${BRIEF_WINDOW_HOURS}`
+          )
         );
       }
       const provider = providerById(this._settings.provider);
