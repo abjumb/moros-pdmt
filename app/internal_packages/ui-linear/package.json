@@ -1,0 +1,12 @@
+{
+  "name": "ui-linear",
+  "displayName": "Linear",
+  "theme": "ui",
+  "version": "0.1.0",
+  "description": "A dark theme modeled on Linear's visual language — the default Moros look",
+  "license": "GPL-3.0",
+  "engines": {
+    "mailspring": "*"
+  },
+  "private": true
+}

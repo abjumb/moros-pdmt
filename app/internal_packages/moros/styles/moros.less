@@ -1,0 +1,254 @@
+@import 'ui-variables';
+
+// Linear-style module chrome: dense rows, hairline dividers, quiet chrome
+// that picks all of its color from the active theme's variables.
+
+.moros-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background: @background-primary;
+  color: @text-color;
+
+  .moros-header {
+    padding: @spacing-standard @spacing-double @spacing-half;
+    border-bottom: 1px solid @border-color-divider;
+
+    h2 {
+      margin: 0;
+      font-size: @font-size-large;
+      font-weight: @font-weight-semi-bold;
+      color: @text-color-heading;
+    }
+
+    .moros-header-note {
+      margin-top: @spacing-quarter;
+      font-size: @font-size-smaller;
+      color: @text-color-very-subtle;
+    }
+  }
+
+  .moros-toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: @spacing-half;
+    padding: @spacing-half @spacing-double;
+    border-bottom: 1px solid @border-color-divider;
+
+    .moros-input {
+      flex: 1;
+      min-width: 60px;
+      padding: 5px 9px;
+      font-size: @font-size-small;
+      color: @text-color;
+      background: @input-bg;
+      border: 1px solid @input-border-color;
+      border-radius: @border-radius-base;
+      outline: none;
+
+      &:focus {
+        border-color: @accent-primary;
+      }
+    }
+
+    .moros-input-amount,
+    .moros-input-date {
+      flex: 0 0 110px;
+    }
+  }
+
+  .moros-select {
+    padding: 4px 6px;
+    font-size: @font-size-small;
+    color: @text-color;
+    background: @input-bg;
+    border: 1px solid @input-border-color;
+    border-radius: @border-radius-base;
+    outline: none;
+  }
+
+  .moros-cards {
+    display: flex;
+    gap: @spacing-standard;
+    padding: @spacing-standard @spacing-double 0;
+
+    .moros-card {
+      flex: 1;
+      padding: @spacing-three-quarters @spacing-standard;
+      background: @background-secondary;
+      border: 1px solid @border-color-divider;
+      border-radius: @border-radius-large;
+
+      .moros-card-label {
+        font-size: @font-size-smaller;
+        color: @text-color-subtle;
+      }
+
+      .moros-card-value {
+        margin-top: 2px;
+        font-size: @font-size-larger;
+        font-weight: @font-weight-semi-bold;
+        font-variant-numeric: tabular-nums;
+
+        &.is-income {
+          color: @color-success;
+        }
+        &.is-expense {
+          color: @color-error;
+        }
+      }
+    }
+  }
+
+  .moros-scroll-region {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: @spacing-double;
+  }
+
+  .moros-group-header {
+    display: flex;
+    align-items: center;
+    gap: @spacing-half;
+    padding: @spacing-three-quarters @spacing-double @spacing-quarter;
+    background: @background-secondary;
+    border-bottom: 1px solid @border-color-divider;
+
+    .moros-group-title {
+      font-size: @font-size-small;
+      font-weight: @font-weight-semi-bold;
+      color: @text-color;
+    }
+
+    .moros-group-count {
+      font-size: @font-size-smaller;
+      color: @text-color-very-subtle;
+    }
+  }
+
+  .moros-row {
+    display: flex;
+    align-items: center;
+    gap: @spacing-half;
+    padding: 6px @spacing-double;
+    border-bottom: 1px solid @border-color-divider;
+    font-size: @font-size-small;
+
+    &:hover {
+      background: @list-hover-bg;
+
+      .moros-row-delete {
+        opacity: 1;
+      }
+    }
+
+    .moros-row-title {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &.is-done {
+        color: @text-color-very-subtle;
+        text-decoration: line-through;
+      }
+    }
+
+    .moros-row-detail {
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: @text-color-subtle;
+    }
+
+    .moros-row-date {
+      color: @text-color-very-subtle;
+      font-size: @font-size-smaller;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .moros-row-delete {
+      opacity: 0;
+      border: none;
+      background: none;
+      color: @text-color-very-subtle;
+      font-size: @font-size-large;
+      line-height: 1;
+      padding: 0 4px;
+      cursor: pointer;
+
+      &:hover {
+        color: @color-error;
+      }
+    }
+  }
+
+  .moros-amount {
+    font-variant-numeric: tabular-nums;
+    font-weight: @font-weight-medium;
+
+    &.is-income {
+      color: @color-success;
+    }
+    &.is-expense {
+      color: @color-error;
+    }
+  }
+
+  .moros-chip {
+    padding: 1px 8px;
+    font-size: @font-size-smaller;
+    color: @text-color-subtle;
+    background: @background-secondary;
+    border: 1px solid @border-color-divider;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+
+  .moros-secret {
+    font-family: @font-family-monospace;
+    font-size: @font-size-smaller;
+    color: @text-color-subtle;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .moros-status-ring {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid @text-color-very-subtle;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+
+    &.status-todo {
+      border-color: @text-color-subtle;
+    }
+    &.status-in-progress {
+      border-color: @color-warning;
+      background: color-mix(in srgb, @color-warning 35%, transparent);
+    }
+    &.status-done {
+      border-color: @color-success;
+      background: @color-success;
+    }
+  }
+
+  span.moros-status-ring {
+    cursor: default;
+  }
+
+  .moros-empty {
+    padding: @spacing-double;
+    text-align: center;
+    color: @text-color-very-subtle;
+  }
+}

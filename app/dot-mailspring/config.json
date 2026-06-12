@@ -2,6 +2,7 @@
   "*": {
     "env": "production",
     "core": {
+      "theme": "ui-linear",
       "themes": [
         "ui-light"
       ],

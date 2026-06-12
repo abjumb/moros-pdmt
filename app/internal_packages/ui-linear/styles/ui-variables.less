@@ -1,0 +1,101 @@
+// Linear-inspired dark palette. Color values mirror Linear's dark theme:
+// near-black chrome (#090A0B), slightly raised content surfaces, indigo
+// #5E6AD2 accent, high-contrast primary text with muted gray secondary text.
+@import 'base/ui-variables';
+
+@gray-base: #ffffff;
+@gray-darker: darken(@gray-base, 13.5%);
+@gray-dark: darken(@gray-base, 20%);
+@gray: darken(@gray-base, 40%);
+@gray-light: darken(@gray-base, 55%);
+@gray-lighter: darken(@gray-base, 90%);
+@white: #08090a;
+
+@accent-primary: var(--system-accent, #5e6ad2);
+
+@background-primary: #101113;
+@background-off-primary: #0e0f11;
+@background-secondary: #16171b;
+@background-tertiary: #23252a;
+
+@background-gradient: none;
+
+@border-color-primary: #23252a;
+@border-color-secondary: #1f2126;
+@border-color-tertiary: #2c2e36;
+@border-color-divider: #1f2126;
+
+@text-color: #f7f8f8;
+@text-color-subtle: #8a8f98;
+@text-color-very-subtle: #62666d;
+@text-color-inverse: #08090a;
+@text-color-inverse-subtle: fadeout(@text-color-inverse, 20%);
+@text-color-inverse-very-subtle: fadeout(@text-color-inverse, 50%);
+@text-color-heading: #f7f8f8;
+
+@text-color-link: #828fff;
+@text-color-link-hover: #a5aeff;
+@text-color-link-active: #a5aeff;
+
+@component-active-color: @accent-primary;
+@component-active-bg: @background-primary;
+
+// Linear's type stack: Inter when available, otherwise the platform UI font.
+@font-family-sans-serif: 'Inter', 'Inter Variable', -apple-system, BlinkMacSystemFont,
+  'Segoe UI', 'Helvetica Neue', sans-serif;
+@font-family: @font-family-sans-serif;
+@font-family-heading: @font-family-sans-serif;
+
+// Linear runs a denser 13px base size.
+@font-size-base: 13px;
+
+@border-radius-base: 4px;
+@border-radius-large: 6px;
+@border-radius-small: 4px;
+
+@standard-shadow-color: rgba(0, 0, 0, 0.45);
+
+@btn-default-bg-color: #191b20;
+@btn-border-color: rgba(255, 255, 255, 0.08);
+@btn-icon-color: #8a8f98;
+@btn-emphasis-bg-color: @accent-primary;
+
+@dropdown-default-bg-color: #1c1e24;
+@dropdown-default-border-color: #2c2e36;
+
+@input-bg: #16171b;
+@input-bg-disabled: #101113;
+@input-border-color: #2c2e36;
+@input-border: #2c2e36;
+
+@list-bg: #101113;
+@list-border: #1f2126;
+@list-hover-bg: #16171a;
+@list-focused-color: @text-color;
+@list-focused-bg: color-mix(in srgb, #5e6ad2 16%, #101113);
+@list-focused-border: color-mix(in srgb, #5e6ad2 45%, #101113);
+@list-selected-color: @text-color;
+@list-selected-bg: color-mix(in srgb, #5e6ad2 10%, #101113);
+@list-selected-border: color-mix(in srgb, #5e6ad2 30%, #101113);
+
+@toolbar-background-color: #090a0b;
+@panel-background-color: #090a0b;
+@source-list-bg: @panel-background-color;
+@source-list-active-bg: rgba(255, 255, 255, 0.06);
+@source-list-active-color: #f7f8f8;
+
+@menu-item-color-hover: rgba(255, 255, 255, 0.06);
+@menu-item-color-selected: #5e6ad2;
+@menu-text-color-selected: #ffffff;
+
+@background-color-info: #4ea7fc;
+@background-color-success: #4cb782;
+@background-color-warning: #fc7840;
+@background-color-error: #eb5757;
+@background-color-pending: #62666d;
+
+@color-info: #4ea7fc;
+@color-success: #4cb782;
+@color-warning: #f2c94c;
+@color-error: #eb5757;
+@color-danger: #eb5757;

@@ -1,0 +1,16 @@
+{
+  "name": "moros",
+  "main": "./lib/main",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "mailspring": "*"
+  },
+
+  "title": "Moros Productivity",
+  "description": "Tasks, personal finance, and an encrypted API key & password vault alongside your mail.",
+  "license": "GPL-3.0"
+}

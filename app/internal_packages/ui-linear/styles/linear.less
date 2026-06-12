@@ -1,0 +1,57 @@
+// Chrome-level adjustments that variables alone can't express: hairline
+// toolbar borders, dark-theme icon/image inversion, and Linear's quiet
+// unread/read contrast in the thread list.
+@import 'ui-variables';
+
+.sheet-toolbar {
+  box-shadow: none;
+  border-bottom: 1px solid @border-color-divider;
+}
+.sheet-toolbar-container {
+  background: @toolbar-background-color;
+}
+body.is-blurred .sheet-toolbar-container {
+  background: @toolbar-background-color;
+}
+
+// Re-tint mail iconography for the near-black surfaces.
+.thread-icon:not(.thread-icon-unread):not(.thread-icon-star) {
+  filter: invert(84%);
+}
+img.content-dark {
+  filter: invert(88%);
+}
+img.content-light {
+  filter: invert(88%);
+}
+
+.mail-label {
+  filter: contrast(110%) brightness(85%);
+}
+
+#message-list .message-item-wrap .message-item-white-wrap {
+  background-color: @background-secondary;
+  box-shadow: 0 0 0 1px @border-color-divider;
+}
+
+// Linear keeps read rows muted and unread rows bright — no bold blue dots.
+.thread-list .list-item:not(.unread):not(.selected):not(.focused) {
+  color: @text-color-subtle;
+}
+
+.thread-list .list-item.thread-list-reminder-item {
+  background-color: #1d1e2b;
+
+  &.unread {
+    background-color: #1d1e2b;
+    &:not(.focused):not(.selected) {
+      background-color: #1d1e2b;
+    }
+  }
+}
+
+.send-reminders-header {
+  color: #828fff;
+  background: #1d1e2b;
+  border-bottom: 1px solid #2c2e44;
+}
