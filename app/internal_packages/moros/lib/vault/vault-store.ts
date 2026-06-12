@@ -1,5 +1,5 @@
 import { KeyManager } from 'mailspring-exports';
-import MorosDataStore, { MorosRecord } from '../moros-data-store';
+import MorosDataStore, { MorosRecord, morosId } from '../moros-data-store';
 
 export type VaultEntryKind = 'password' | 'api-key';
 
@@ -24,12 +24,19 @@ class VaultStore extends MorosDataStore<VaultEntry> {
     super('vault.json');
   }
 
+  // Write ordering matters in both directions: a crash between the two
+  // writes must never leave a *visible* entry whose secret is gone. The
+  // failure mode we accept instead is an orphaned keychain value, which is
+  // invisible, still encrypted, and overwritten if the id is ever reused.
+
   async createWithSecret(
     attrs: Omit<VaultEntry, 'id' | 'createdAt' | 'updatedAt'>,
     secret: string
   ) {
-    const entry = this.create(attrs);
-    await KeyManager.replacePassword(secretKeyName(entry.id), secret);
+    const id = morosId();
+    await KeyManager.replacePassword(secretKeyName(id), secret);
+    const entry = this.create(attrs, id);
+    this.flush();
     return entry;
   }
 
@@ -38,8 +45,11 @@ class VaultStore extends MorosDataStore<VaultEntry> {
   }
 
   async removeWithSecret(entryId: string) {
+    const removed = this.remove(entryId);
+    if (!removed) return undefined;
+    this.flush();
     await KeyManager.deletePassword(secretKeyName(entryId));
-    return this.remove(entryId);
+    return removed;
   }
 }
 

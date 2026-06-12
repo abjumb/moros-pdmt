@@ -4,6 +4,7 @@ import { localized } from 'mailspring-exports';
 import VaultStore, { VaultEntry } from './vault-store';
 
 const CLIPBOARD_CLEAR_MS = 30000;
+const REVEAL_HIDE_MS = 15000;
 
 interface VaultListPanelState {
   entries: ReadonlyArray<VaultEntry>;
@@ -22,6 +23,7 @@ export default class VaultListPanel extends React.Component<
   _unlisten?: () => void;
   _copiedTimer: ReturnType<typeof setTimeout> | null = null;
   _clipboardClearTimer: ReturnType<typeof setTimeout> | null = null;
+  _revealHideTimer: ReturnType<typeof setTimeout> | null = null;
   // Held (outside state) only to verify the clipboard still contains our
   // secret before auto-clearing — never rendered.
   _copiedSecret: string | null = null;
@@ -42,8 +44,15 @@ export default class VaultListPanel extends React.Component<
     if (this._unlisten) this._unlisten();
     if (this._copiedTimer) clearTimeout(this._copiedTimer);
     if (this._clipboardClearTimer) clearTimeout(this._clipboardClearTimer);
+    if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
     this._copiedSecret = null;
   }
+
+  _hideRevealed = () => {
+    if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
+    this._revealHideTimer = null;
+    this.setState({ revealedId: null, revealedSecret: null });
+  };
 
   _onCopy = async (entry: VaultEntry) => {
     const secret = await VaultStore.getSecret(entry.id);
@@ -67,16 +76,19 @@ export default class VaultListPanel extends React.Component<
 
   _onToggleReveal = async (entry: VaultEntry) => {
     if (this.state.revealedId === entry.id) {
-      this.setState({ revealedId: null, revealedSecret: null });
+      this._hideRevealed();
       return;
     }
     const secret = await VaultStore.getSecret(entry.id);
     this.setState({ revealedId: entry.id, revealedSecret: secret === undefined ? null : secret });
+    // Don't leave plaintext on screen if the user walks away.
+    if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
+    this._revealHideTimer = setTimeout(this._hideRevealed, REVEAL_HIDE_MS);
   };
 
   _onRemove = async (entry: VaultEntry) => {
     if (this.state.revealedId === entry.id) {
-      this.setState({ revealedId: null, revealedSecret: null });
+      this._hideRevealed();
     }
     await VaultStore.removeWithSecret(entry.id);
   };
