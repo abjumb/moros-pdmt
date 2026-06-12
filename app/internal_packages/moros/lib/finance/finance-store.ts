@@ -1,4 +1,5 @@
 import MorosDataStore, { MorosRecord, todayISO } from '../moros-data-store';
+import MorosSettingsStore from '../moros-settings-store';
 
 export { todayISO };
 
@@ -25,19 +26,51 @@ export interface MorosTransaction extends MorosRecord {
   date: string;
 }
 
-const formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
+// Formatters are cached per configured currency (see MorosSettingsStore —
+// the currency is user-selectable in the Finance header, defaulting to USD).
+const formatters = new Map<string, Intl.NumberFormat>();
 
 export function formatCents(cents: number) {
+  const currency = MorosSettingsStore.currency();
+  let formatter = formatters.get(currency);
+  if (!formatter) {
+    try {
+      formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency });
+    } catch (err) {
+      formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
+    }
+    formatters.set(currency, formatter);
+  }
   return formatter.format(cents / 100);
 }
 
-/** Parse user input like "12.50" or "$1,200" into integer cents. */
+/**
+ * Parse user input like "12.50", "$1,200" or "1.200,50" into integer cents.
+ * Both `.` and `,` are accepted as decimal or thousands separators: when both
+ * appear, the last one wins as the decimal point; a lone `,` or `.` is a
+ * decimal point only when followed by 1-2 trailing digits.
+ */
 export function parseAmountToCents(input: string): number | null {
-  const normalized = input.replace(/[^0-9.,-]/g, '').replace(/,/g, '');
+  let normalized = input.replace(/[^0-9.,]/g, '');
   if (!normalized) return null;
+
+  const lastDot = normalized.lastIndexOf('.');
+  const lastComma = normalized.lastIndexOf(',');
+  if (lastDot !== -1 && lastComma !== -1) {
+    const decimalSep = lastDot > lastComma ? '.' : ',';
+    const thousandsSep = decimalSep === '.' ? ',' : '.';
+    normalized = normalized.split(thousandsSep).join('');
+    normalized = normalized.replace(decimalSep, '.');
+  } else if (lastDot !== -1 || lastComma !== -1) {
+    const sep = lastDot !== -1 ? '.' : ',';
+    const isDecimal = new RegExp(`\\${sep}\\d{1,2}$`).test(normalized);
+    normalized = normalized.split(sep).join(isDecimal ? '#' : '');
+    normalized = normalized.replace('#', '.');
+  }
+
   const value = Number(normalized);
   if (!Number.isFinite(value)) return null;
-  return Math.round(Math.abs(value) * 100);
+  return Math.round(value * 100);
 }
 
 /** Current month as a 'yyyy-mm' prefix. */

@@ -47,8 +47,10 @@ The guiding constraints:
       design reference — the app dashboard itself is behind a login/bot wall, so the
       layout follows Origin's published overview structure): net worth headline with
       delta badge, 1W/1M/3M/1Y/All range pills, and a daily running-balance area chart.
-- [ ] Finance: budgets per category, CSV import, chart hover scrubber, configurable
-      currency.
+- [x] Finance: configurable currency (header picker, persisted in
+      `<config>/moros/settings.json`) with locale-tolerant amount parsing
+      (`1,200.50` and `1.200,50` both work).
+- [ ] Finance: budgets per category, CSV import, chart hover scrubber.
 - [x] Vault: search, auto-clearing clipboard (30 s — only when the clipboard still
       holds the copied secret).
 - [ ] Vault: TOTP support, secret strength meter, import from CSV/1Password/Bitwarden

@@ -6,6 +6,7 @@ import FinanceStore, {
   formatCents,
   monthPrefixLabel,
 } from './finance-store';
+import MorosSettingsStore from '../moros-settings-store';
 
 export default class FinanceSummaryPanel extends React.Component<
   Record<string, unknown>,
@@ -14,6 +15,7 @@ export default class FinanceSummaryPanel extends React.Component<
   static displayName = 'FinanceSummaryPanel';
 
   _unlisten?: () => void;
+  _unlistenSettings?: () => void;
 
   state = { transactions: FinanceStore.items() };
 
@@ -21,10 +23,13 @@ export default class FinanceSummaryPanel extends React.Component<
     this._unlisten = FinanceStore.listen(() =>
       this.setState({ transactions: FinanceStore.items() })
     );
+    // Re-render amounts when the configured currency changes.
+    this._unlistenSettings = MorosSettingsStore.listen(() => this.forceUpdate());
   }
 
   componentWillUnmount() {
     if (this._unlisten) this._unlisten();
+    if (this._unlistenSettings) this._unlistenSettings();
   }
 
   render() {

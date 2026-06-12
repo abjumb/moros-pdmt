@@ -7,6 +7,7 @@ import FinanceStore, {
   monthPrefixLabel,
   shiftMonthPrefix,
 } from './finance-store';
+import MorosSettingsStore from '../moros-settings-store';
 
 interface TransactionsPanelState {
   transactions: ReadonlyArray<MorosTransaction>;
@@ -20,6 +21,7 @@ export default class TransactionsPanel extends React.Component<
   static displayName = 'TransactionsPanel';
 
   _unlisten?: () => void;
+  _unlistenSettings?: () => void;
 
   state: TransactionsPanelState = {
     transactions: FinanceStore.items(),
@@ -30,10 +32,13 @@ export default class TransactionsPanel extends React.Component<
     this._unlisten = FinanceStore.listen(() =>
       this.setState({ transactions: FinanceStore.items() })
     );
+    // Re-render amounts when the configured currency changes.
+    this._unlistenSettings = MorosSettingsStore.listen(() => this.forceUpdate());
   }
 
   componentWillUnmount() {
     if (this._unlisten) this._unlisten();
+    if (this._unlistenSettings) this._unlistenSettings();
   }
 
   _renderTransaction(t: MorosTransaction) {

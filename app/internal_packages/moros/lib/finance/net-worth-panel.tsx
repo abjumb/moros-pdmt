@@ -1,6 +1,7 @@
 import React from 'react';
 import { localized } from 'mailspring-exports';
 import FinanceStore, { MorosTransaction, formatCents } from './finance-store';
+import MorosSettingsStore from '../moros-settings-store';
 
 // Range pills modeled on Origin's net worth dashboard (1W/1M/3M/1Y/ALL).
 const RANGES: { key: string; label: string; days: number | null }[] = [
@@ -26,6 +27,7 @@ export default class NetWorthPanel extends React.Component<
   static displayName = 'NetWorthPanel';
 
   _unlisten?: () => void;
+  _unlistenSettings?: () => void;
 
   state: NetWorthPanelState = {
     transactions: FinanceStore.items(),
@@ -36,10 +38,13 @@ export default class NetWorthPanel extends React.Component<
     this._unlisten = FinanceStore.listen(() =>
       this.setState({ transactions: FinanceStore.items() })
     );
+    // Re-render amounts when the configured currency changes.
+    this._unlistenSettings = MorosSettingsStore.listen(() => this.forceUpdate());
   }
 
   componentWillUnmount() {
     if (this._unlisten) this._unlisten();
+    if (this._unlistenSettings) this._unlistenSettings();
   }
 
   _chartGeometry(series: { date: string; cents: number }[]) {
