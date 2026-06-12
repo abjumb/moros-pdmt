@@ -29,8 +29,20 @@ export class MorosFinancePerspective extends MorosPerspective {
   }
 }
 
-export class MorosVaultPerspective extends MorosPerspective {
+export class MorosKeyNestPerspective extends MorosPerspective {
   sheet() {
-    return WorkspaceStore.Sheet.MorosVault;
+    return WorkspaceStore.Sheet.MorosKeyNest;
+  }
+}
+
+export class MorosSubscriptionsPerspective extends MorosPerspective {
+  sheet() {
+    return WorkspaceStore.Sheet.MorosSubscriptions;
+  }
+}
+
+export class MorosBriefingPerspective extends MorosPerspective {
+  sheet() {
+    return WorkspaceStore.Sheet.MorosBriefing;
   }
 }

@@ -1,0 +1,198 @@
+import { localized, IdentityStore, MailspringAPIRequest } from 'mailspring-exports';
+import KeyNestStore, { ANTHROPIC_KEY_ENTRY_NAME } from '../keynest/keynest-store';
+
+export type BriefingProviderId = 'byok' | 'hosted';
+
+/**
+ * A completion backend for the Briefing module. Two implementations:
+ * bring-your-own-key (the user's Anthropic API key, stored in KeyNest) and
+ * the hosted Moros service (included with a paid Mailspring ID plan).
+ */
+export interface BriefingProvider {
+  id: BriefingProviderId;
+  /** True when the provider has everything it needs to run. */
+  isConfigured(): Promise<boolean>;
+  /** Resolves when usable; rejects with a user-facing message otherwise. */
+  validate(): Promise<void>;
+  complete(prompt: string, options: { model: string; maxTokens: number }): Promise<string>;
+}
+
+const ANTHROPIC_API_ROOT = 'https://api.anthropic.com';
+const ANTHROPIC_VERSION = '2023-06-01';
+
+export const DEFAULT_MODEL = 'claude-opus-4-8';
+
+export const MODEL_OPTIONS = [
+  { id: 'claude-opus-4-8', label: 'Claude Opus 4.8 — best quality' },
+  { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6 — balanced' },
+  { id: 'claude-haiku-4-5', label: 'Claude Haiku 4.5 — fastest' },
+];
+
+interface AnthropicErrorEnvelope {
+  error?: { type?: string; message?: string };
+}
+
+function anthropicErrorMessage(status: number, json: AnthropicErrorEnvelope | null): string {
+  if (status === 401) {
+    return localized('Your Anthropic API key was rejected — check the key stored in KeyNest.');
+  }
+  if (status === 429) {
+    return localized('The Anthropic API rate limit was hit — try again in a minute.');
+  }
+  if (json && json.error && json.error.message) {
+    return json.error.message;
+  }
+  return localized('The Anthropic API returned an unexpected error (%@).', `${status}`);
+}
+
+/**
+ * Bring-your-own-key provider, talking to the Anthropic Messages API.
+ *
+ * The requests are plain `fetch` calls rather than the official
+ * `@anthropic-ai/sdk` — the app intentionally doesn't grow a dependency for
+ * the two endpoints used here, and the renderer's fetch is sufficient.
+ * Note Opus 4.7+ models reject sampling parameters (`temperature` etc.),
+ * so none are sent.
+ */
+export class AnthropicByokProvider implements BriefingProvider {
+  id: BriefingProviderId = 'byok';
+
+  async _key(): Promise<string | undefined> {
+    return KeyNestStore.getSecretByName(ANTHROPIC_KEY_ENTRY_NAME);
+  }
+
+  async isConfigured() {
+    return (await this._key()) !== undefined;
+  }
+
+  _headers(key: string) {
+    return {
+      'x-api-key': key,
+      'anthropic-version': ANTHROPIC_VERSION,
+      'content-type': 'application/json',
+    };
+  }
+
+  async validate() {
+    const key = await this._key();
+    if (!key) {
+      throw new Error(
+        localized('No Anthropic API key found — save one below to use bring-your-own-key.')
+      );
+    }
+    // count_tokens validates the key and model without billing any tokens.
+    let resp: Response;
+    try {
+      resp = await fetch(`${ANTHROPIC_API_ROOT}/v1/messages/count_tokens`, {
+        method: 'POST',
+        headers: this._headers(key),
+        body: JSON.stringify({
+          model: DEFAULT_MODEL,
+          messages: [{ role: 'user', content: 'ping' }],
+        }),
+      });
+    } catch (err) {
+      throw new Error(localized('Could not reach the Anthropic API — are you online?'));
+    }
+    if (!resp.ok) {
+      const json = await resp.json().catch(() => null);
+      throw new Error(anthropicErrorMessage(resp.status, json));
+    }
+  }
+
+  async complete(prompt: string, { model, maxTokens }: { model: string; maxTokens: number }) {
+    const key = await this._key();
+    if (!key) {
+      throw new Error(
+        localized('No Anthropic API key found — save one in Briefing settings first.')
+      );
+    }
+    let resp: Response;
+    try {
+      resp = await fetch(`${ANTHROPIC_API_ROOT}/v1/messages`, {
+        method: 'POST',
+        headers: this._headers(key),
+        body: JSON.stringify({
+          model,
+          max_tokens: maxTokens,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+    } catch (err) {
+      throw new Error(localized('Could not reach the Anthropic API — are you online?'));
+    }
+    const json = await resp.json().catch(() => null);
+    if (!resp.ok) {
+      throw new Error(anthropicErrorMessage(resp.status, json));
+    }
+    if (!json) {
+      throw new Error(localized('The Anthropic API returned an unreadable response — try again.'));
+    }
+    if (json.stop_reason === 'refusal') {
+      throw new Error(localized('The model declined to summarize this content.'));
+    }
+    const text = (json.content || [])
+      .filter((block: { type: string }) => block.type === 'text')
+      .map((block: { text: string }) => block.text)
+      .join('\n')
+      .trim();
+    if (!text) {
+      throw new Error(localized('The model returned an empty brief — try again.'));
+    }
+    return text;
+  }
+}
+
+/**
+ * Hosted provider — briefs are generated by the Moros service using the
+ * user's Mailspring ID, included with any paid plan. The model choice is
+ * made server-side, so `options.model` is ignored.
+ */
+export class MorosHostedProvider implements BriefingProvider {
+  id: BriefingProviderId = 'hosted';
+
+  async isConfigured() {
+    return !!IdentityStore.identity() && IdentityStore.hasProFeatures();
+  }
+
+  async validate() {
+    if (!IdentityStore.identity()) {
+      throw new Error(
+        localized(
+          'Sign in to your Mailspring ID (Preferences → Subscription) to use the hosted plan.'
+        )
+      );
+    }
+    if (!IdentityStore.hasProFeatures()) {
+      throw new Error(
+        localized(
+          'The hosted briefing service is included with paid plans — upgrade, or switch to your own API key.'
+        )
+      );
+    }
+  }
+
+  async complete(prompt: string) {
+    await this.validate();
+    const json = await MailspringAPIRequest.makeRequest({
+      server: 'identity',
+      method: 'POST',
+      path: '/api/ai/brief',
+      json: true,
+      body: { prompt },
+    });
+    if (!json || typeof json.brief !== 'string' || !json.brief.trim()) {
+      throw new Error(localized('The briefing service returned an empty response — try again.'));
+    }
+    return json.brief;
+  }
+}
+
+const PROVIDERS: { [K in BriefingProviderId]: BriefingProvider } = {
+  byok: new AnthropicByokProvider(),
+  hosted: new MorosHostedProvider(),
+};
+
+export function providerById(id: BriefingProviderId): BriefingProvider {
+  return PROVIDERS[id];
+}
