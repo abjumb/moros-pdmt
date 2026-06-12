@@ -74,12 +74,14 @@ The guiding constraints:
 
 ### Phase 3 — Linear shell
 
+- [x] Moros modules appear exactly once in the sidebar regardless of account
+      count (sidebar extensions may now return `null` for sections they skip).
 - [ ] App-level navigation rail (Mail / Tasks / Finance / Vault) replacing the
-      per-account sidebar injection, so modules appear exactly once.
+      sidebar injection entirely.
 - [ ] Command palette (`Cmd/Ctrl+K`) covering navigation and module actions — Linear's
       primary interaction model. Mailspring's keymap + menu infrastructure already
       provides most of the plumbing.
-- [ ] Linear-style light theme variant (`ui-linear-light`).
+- [x] Linear-style light theme variant (`ui-linear-light`).
 
 ### Plugins & custom themes (already supported upstream)
 
