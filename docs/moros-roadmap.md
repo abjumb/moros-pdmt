@@ -43,21 +43,42 @@ The guiding constraints:
       (`c` to create, `1-4` to set priority — Linear bindings), task → thread link-back.
 - [x] Finance: month navigation (summary cards + transaction list scoped to the
       viewed month, with full-history toggle).
-- [ ] Finance: budgets per category, CSV import, simple charts (reuse the activity
-      dashboard's chart primitives), configurable currency.
-- [x] Vault: search, auto-clearing clipboard (30 s — only when the clipboard still
-      holds the copied secret).
-- [ ] Vault: TOTP support, secret strength meter, import from CSV/1Password/Bitwarden
-      formats.
+- [x] Finance: configurable currency (header picker, persisted in
+      `<config>/moros/settings.json`) with locale-tolerant amount parsing
+      (`1,200.50` and `1.200,50` both work).
+- [x] Finance: Origin-style net worth overview ([useorigin.com](https://useorigin.com)
+      as the design reference; its app dashboard is behind a login/bot wall, so the
+      layout follows Origin's published overview) — running-balance headline with a
+      period delta badge, 1W/1M/3M/1Y/All range pills, and a daily area chart.
+- [ ] Finance: budgets per category, CSV import, chart hover scrubber.
+- [x] KeyNest (secrets): crash-safe write ordering — secret stored before a visible
+      entry exists, metadata flushed before keychain deletion; revealed secrets
+      auto-hide after 15 s; search, kind filter, expiry chips, 30 s clipboard clear.
+- [ ] KeyNest: TOTP support, secret strength meter, import from CSV/1Password/Bitwarden.
+
+> Module set note: the secrets manager shipped as **KeyNest** (an evolution of the
+> original Vault — same `vault.json` / keychain prefix), and the app now also includes
+> **Subscriptions**, **Briefing**, and a shared **AI** layer. This roadmap predates
+> those; they are tracked in their own PRs.
 
 ### Phase 3 — Linear shell
 
-- [ ] App-level navigation rail (Mail / Tasks / Finance / Vault) replacing the
-      per-account sidebar injection, so modules appear exactly once.
+- [x] Moros modules appear exactly once in the sidebar regardless of account count
+      (sidebar extensions may now return `null` for sections they skip).
+- [ ] App-level navigation rail (Mail / Tasks / Finance / …) replacing the sidebar
+      injection entirely.
 - [ ] Command palette (`Cmd/Ctrl+K`) covering navigation and module actions — Linear's
       primary interaction model. Mailspring's keymap + menu infrastructure already
       provides most of the plumbing.
-- [ ] Linear-style light theme variant (`ui-linear-light`).
+- [x] Linear-style light theme variant (`ui-linear-light`).
+
+### Phase 2.5 — Tiling panels & desktop widgets (next PR)
+
+- [ ] Compose every module view from tileable panels (drag to rearrange, resize,
+      hide/restore), persisted per module.
+- [ ] Pop any panel out into its own always-on-top desktop widget window, with data
+      live-syncing across windows. (Built once on this branch; being re-landed on top
+      of the current 5-module app in a dedicated PR.)
 
 ### Phase 4 — Rebrand
 
@@ -83,5 +104,6 @@ until that bar is met.
 | ------- | ----------------------------- | ------------------------------------------ |
 | Tasks   | tasks.json                    | `<config>/moros/tasks.json`                |
 | Finance | transactions.json             | `<config>/moros/transactions.json`         |
-| Vault   | entry metadata (no secrets)   | `<config>/moros/vault.json`                |
-| Vault   | secret values                 | OS keychain via `KeyManager`/`safeStorage` |
+| Finance | display currency              | `<config>/moros/settings.json`             |
+| KeyNest | entry metadata (no secrets)   | `<config>/moros/vault.json`                |
+| KeyNest | secret values                 | OS keychain via `KeyManager`/`safeStorage` |
