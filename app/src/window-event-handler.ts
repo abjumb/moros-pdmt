@@ -373,7 +373,7 @@ export default class WindowEventHandler {
           AppEnv.showErrorDialog({
             title: localized('Failed to Open Link'),
             message: localized(
-              'Mailspring was unable to open the link in your browser.\n\n%@',
+              'Moros was unable to open the link in your browser.\n\n%@',
               err.message
             ),
           });
@@ -392,11 +392,11 @@ export default class WindowEventHandler {
 
     if (!AppEnv.inDevMode()) {
       console.log(
-        "%c Welcome to Mailspring! If you're exploring the source or building a " +
+        "%c Welcome to Moros! If you're exploring the source or building a " +
           "plugin, you should enable debug flags. It's slower, but " +
           'gives you better exceptions, the debug version of React, ' +
           'and more. Choose %c Developer > Run with Debug Flags %c ' +
-          'from the menu. Also, check out http://Foundry376.github.io/Mailspring/ ' +
+          'from the menu. Also, check out http://Foundry376.github.io/Moros/ ' +
           'for documentation and sample code!',
         'background-color: antiquewhite;',
         'background-color: antiquewhite; font-weight:bold;',

@@ -147,7 +147,7 @@ export async function expandAccountWithCommonSettings(account: Account) {
     if (mstemplate.alias) {
       mstemplate = MorosProviderSettings[mstemplate.alias];
     }
-    console.log(`Using Mailspring Template: ${JSON.stringify(mstemplate, null, 2)}`);
+    console.log(`Using Moros Template: ${JSON.stringify(mstemplate, null, 2)}`);
   } else {
     console.log(`Using Fallback Template`);
     mstemplate = {
@@ -203,7 +203,7 @@ export async function expandAccountWithCommonSettings(account: Account) {
   // on protonmail by default Folders set as container folder
   const containerFolderDefault = AccountStore.containerFolderDefaultGetter();
   if (
-    containerFolderDefault !== 'Mailspring' &&
+    containerFolderDefault !== 'Moros' &&
     (populated.settings.container_folder === '' ||
       populated.settings.container_folder === undefined)
   ) {

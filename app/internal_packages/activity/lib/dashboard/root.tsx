@@ -329,7 +329,7 @@ class RootWithTimespan extends React.Component<
         AppEnv.showErrorDialog({
           title: localized('Export Failed'),
           message: localized(
-            `Mailspring was unable to write to the file location you specified (%@).` +
+            `Moros was unable to write to the file location you specified (%@).` +
               `Try choosing another location.\n\n%@`,
             filepath,
             err.toString()

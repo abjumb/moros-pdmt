@@ -125,7 +125,7 @@ class _AccountStore extends MorosStore {
 
     if (message && AppEnv.isMainWindow()) {
       AppEnv.showErrorDialog(
-        `Mailspring was unable to load your account preferences.\n\n${message}`
+        `Moros was unable to load your account preferences.\n\n${message}`
       );
     }
   };
@@ -174,7 +174,7 @@ class _AccountStore extends MorosStore {
   };
 
   /**
-   * When an account is removed from Mailspring, the AccountStore
+   * When an account is removed from Moros, the AccountStore
    * triggers. The local-sync/src/local-sync-worker/index.js listens to
    * the AccountStore and runs `ensureK2Consistency`. This will actually
    * delete the Account on the local sync side.

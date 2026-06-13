@@ -172,7 +172,7 @@ export default class AiSettingsPanel extends React.Component<
           <span className="moros-settings-label">{localized('Plan')}</span>
           {!hasIdentity ? (
             <span className="moros-settings-note">
-              {localized('Sign in to your Mailspring ID (Preferences → Subscription) first.')}
+              {localized('Sign in to your Moros ID (Preferences → Subscription) first.')}
             </span>
           ) : hasPro ? (
             <span className="moros-settings-note">

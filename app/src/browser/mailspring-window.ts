@@ -98,7 +98,7 @@ export default class MorosWindow extends EventEmitter {
     type GetConstructorArgs<T> = T extends new (options: infer U) => any ? U : never;
     const browserWindowOptions: GetConstructorArgs<typeof BrowserWindow> = {
       show: false,
-      title: title || 'Mailspring',
+      title: title || 'Moros',
       frame,
       width,
       height,
@@ -199,7 +199,7 @@ export default class MorosWindow extends EventEmitter {
     // When --background is requested on Wayland we must still show briefly to commit the
     // Wayland surface (otherwise show() silently fails). Once the window finishes
     // initializing (window:loaded) we hide it again so the net effect matches what the
-    // user asked for: Mailspring running silently in the background.
+    // user asked for: Moros running silently in the background.
     if (isWaylandSession()) {
       this.browserWindow.webContents.once('did-finish-load', () => {
         if (!this.browserWindow.isDestroyed() && !this.browserWindow.isVisible()) {
@@ -269,7 +269,7 @@ export default class MorosWindow extends EventEmitter {
 
       const isLastWindow = global.application.windowManager.getVisibleWindowCount() === 1;
       // The configuration value may be `undefined` when it has not been manually set to true in the preferences
-      // This check against false prevents that Mailspring is closed when configuring the first mail account
+      // This check against false prevents that Moros is closed when configuring the first mail account
       const isTrayEnabled = global.application.config.get('core.workspace.systemTray') !== false;
       const runWithoutWindowsOpen = isTrayEnabled || process.platform === 'darwin';
 
@@ -338,7 +338,7 @@ export default class MorosWindow extends EventEmitter {
       const chosen = dialog.showMessageBoxSync(this.browserWindow, {
         type: 'warning',
         buttons: ['Close', 'Keep Waiting'],
-        message: 'Mailspring is not responding',
+        message: 'Moros is not responding',
         detail: 'Would you like to force close it or keep waiting?',
       });
       if (chosen === 0) {
@@ -366,7 +366,7 @@ export default class MorosWindow extends EventEmitter {
         const chosen = dialog.showMessageBoxSync({
           type: 'warning',
           buttons: ['Close Window', 'Reload', 'Keep It Open'],
-          message: 'Mailspring has crashed',
+          message: 'Moros has crashed',
           detail: 'Please report this issue to us at support@getmailspring.com.',
         });
         if (chosen === 0) {

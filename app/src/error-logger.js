@@ -137,8 +137,8 @@ module.exports = ErrorLogger = (function () {
       return;
     }
     require('electron').crashReporter.start({
-      productName: 'Mailspring',
-      companyName: 'Mailspring',
+      productName: 'Moros',
+      companyName: 'Moros',
       submitURL: `https://id.getmailspring.com/report-crash?ver=${appVersion}&platform=${process.platform}`,
       uploadToServer: true,
       autoSubmit: true,

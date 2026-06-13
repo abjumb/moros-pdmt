@@ -227,7 +227,7 @@ export default class WindowManager {
   }
 
   quitWinLinuxIfNoWindows() {
-    // Typically, Mailspring stays running in the background on all platforms,
+    // Typically, Moros stays running in the background on all platforms,
     // since it has a status icon you can use to quit it.
 
     // However, on Windows and Linux we /do/ want to quit if the app is somehow

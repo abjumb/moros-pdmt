@@ -116,7 +116,7 @@ export default class AppEnvConstructor {
     // require of moros-observables
     require('moros-observables');
 
-    // Mailspring exports is designed to provide a lazy-loaded set of globally
+    // Moros exports is designed to provide a lazy-loaded set of globally
     // accessible objects to all packages. Upon require, moros-exports will
     // fill the StoreRegistry, and DatabaseObjectRegistries
     // with various constructors.
@@ -131,9 +131,9 @@ export default class AppEnvConstructor {
     const MailsyncBridge = require('./flux/mailsync-bridge').default;
     this.mailsyncBridge = new MailsyncBridge();
 
-    process.title = `Mailspring ${this.getWindowType()}`;
+    process.title = `Moros ${this.getWindowType()}`;
     this.onWindowPropsReceived(() => {
-      process.title = `Mailspring ${this.getWindowType()}`;
+      process.title = `Moros ${this.getWindowType()}`;
     });
 
     // Shortcut phased out in April 2026, remove in June/July 2026
@@ -161,7 +161,7 @@ export default class AppEnvConstructor {
       'Start Menu',
       'Programs',
       'Startup',
-      'Mailspring.lnk'
+      'Moros.lnk'
     );
     const fs = require('fs');
     const exists = fs.existsSync(shortcutPath);
@@ -355,7 +355,7 @@ export default class AppEnvConstructor {
     return this.getLoadSettings().isSpec;
   }
 
-  // Public: Get the version of Mailspring.
+  // Public: Get the version of Moros.
   //
   // Returns the version text {String}.
   private appVersion;
@@ -372,7 +372,7 @@ export default class AppEnvConstructor {
     return !/\w{7}/.test(this.getVersion());
   }
 
-  // Public: Get the directory path to Mailspring's configuration area.
+  // Public: Get the directory path to Moros's configuration area.
   getConfigDirPath() {
     return this.getLoadSettings().configDirPath;
   }
@@ -396,7 +396,7 @@ export default class AppEnvConstructor {
   }
 
   /*
-  Section: Managing The Mailspring Window
+  Section: Managing The Moros Window
   */
 
   // Essential: Close the current window.

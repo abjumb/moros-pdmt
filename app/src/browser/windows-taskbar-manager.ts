@@ -56,7 +56,7 @@ class WindowsTaskbarManager {
             {
               type: 'task',
               title: localized('Preferences'),
-              description: localized('Open Mailspring preferences'),
+              description: localized('Open Moros preferences'),
               program: process.execPath,
               args: 'mailspring://open-preferences',
               iconPath: process.execPath,

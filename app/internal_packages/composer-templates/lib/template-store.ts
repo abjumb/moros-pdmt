@@ -88,7 +88,7 @@ class TemplateStore extends MorosStore {
         AppEnv.showErrorDialog({
           title: localized('Cannot scan templates directory'),
           message: localized(
-            'Mailspring was unable to read the contents of your templates directory (%@). You may want to delete this folder or ensure filesystem permissions are set correctly.',
+            'Moros was unable to read the contents of your templates directory (%@). You may want to delete this folder or ensure filesystem permissions are set correctly.',
             this._templatesDir
           ),
         });

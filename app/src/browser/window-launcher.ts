@@ -6,7 +6,7 @@ const DEBUG_SHOW_HOT_WINDOW = process.env.SHOW_HOT_WINDOW === 'true';
 let winNum = 0;
 
 /**
- * It takes a full second or more to bootup a Mailspring window. Most of this
+ * It takes a full second or more to bootup a Moros window. Most of this
  * is due to sheer amount of time it takes to parse all of the javascript
  * and follow the require tree.
  *

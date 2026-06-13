@@ -7,7 +7,7 @@ const TEST_NYLAS_ID = 'icihsnqh4pwujyqihlrj70vh';
 describe('IdentityStore', function identityStoreSpec() {
   beforeEach(() => {
     this.identityJSON = {
-      firstName: 'Mailspring 050',
+      firstName: 'Moros 050',
       lastName: 'Test',
       email: 'mailspring050test@evanmorikawa.com',
       id: TEST_NYLAS_ID,

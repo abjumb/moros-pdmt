@@ -39,15 +39,12 @@ class _SignatureStore extends MorosStore {
     // If the user has no signatures (after a clean install or upgrade from 1.0.9),
     // create a default one for them and apply it to all their accounts.
     if (!this.signatures) {
-      const sentFrom = localized('Sent from Mailspring, the best free email app for work');
+      const sentFrom = localized('Sent from Moros, the best free email app for work');
       this.signatures = {
         initial: {
           id: 'initial',
           title: localized('Default'),
-          body: `<div><div>${sentFrom.replace(
-            'Mailspring',
-            '<a href="https://getmailspring.com/">Mailspring</a>'
-          )}</div></div>`,
+          body: `<div><div>${sentFrom}</div></div>`,
           data: {
             title: sentFrom,
             templateName: 'SignatureB',

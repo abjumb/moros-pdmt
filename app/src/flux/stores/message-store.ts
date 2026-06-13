@@ -200,7 +200,7 @@ class _MessageStore extends MorosStore {
   }
 
   _setWindowTitle() {
-    const title = 'Mailspring' + (this._thread ? ' · ' + this._thread.subject : '');
+    const title = 'Moros' + (this._thread ? ' · ' + this._thread.subject : '');
     require('@electron/remote').getCurrentWindow().setTitle(title);
   }
 

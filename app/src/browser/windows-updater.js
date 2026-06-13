@@ -5,21 +5,21 @@
  * Read: https://github.com/electron-archive/grunt-electron-installer#handling-squirrel-events
  * Read: https://github.com/electron/electron/blob/master/docs/api/auto-updater.md#windows
  *
- * When Mailspring gets installed on a Windows machine it gets put in:
- * C:\Users\<USERNAME>\AppData\Local\Mailspring\app-x.x.x
+ * When Moros gets installed on a Windows machine it gets put in:
+ * C:\Users\<USERNAME>\AppData\Local\Moros\app-x.x.x
  *
  * The `process.execPath` is:
- * C:\Users\<USERNAME>\AppData\Local\Mailspring\app-x.x.x\nylas.exe
+ * C:\Users\<USERNAME>\AppData\Local\Moros\app-x.x.x\nylas.exe
  *
  * We manually copy everything in build/resources/win into a 'resources' folder
  * located inside the main app directory. See runCopyPlatformSpecificResources
  * in package-task.js
  *
  * This means `__dirname` should be:
- * C:\Users\<USERNAME>\AppData\Local\Mailspring\app-x.x.x\resources
+ * C:\Users\<USERNAME>\AppData\Local\Moros\app-x.x.x\resources
  *
  * We also expect Squirrel Windows to have a file called `nylas.exe` at:
- * C:\Users\<USERNAME>\AppData\Local\Mailspring\nylas.exe
+ * C:\Users\<USERNAME>\AppData\Local\Moros\nylas.exe
  */
 const ChildProcess = require('child_process');
 const fs = require('fs');
@@ -27,13 +27,13 @@ const path = require('path');
 const os = require('os');
 const { shell } = require('electron');
 
-// C:\Users\<USERNAME>\AppData\Local\Mailspring\app-x.x.x
+// C:\Users\<USERNAME>\AppData\Local\Moros\app-x.x.x
 const appFolder = path.resolve(process.execPath, '..');
 
-// C:\Users\<USERNAME>\AppData\Local\Mailspring\
+// C:\Users\<USERNAME>\AppData\Local\Moros\
 const rootAppDataFolder = path.resolve(appFolder, '..');
 
-// C:\Users\<USERNAME>\AppData\Local\Mailspring\Update.exe
+// C:\Users\<USERNAME>\AppData\Local\Moros\Update.exe
 const updateDotExe = path.join(rootAppDataFolder, 'Update.exe');
 
 // "mailspring.exe"
@@ -105,7 +105,7 @@ function createRegistryEntries({ allowEscalation, registerDefaultIfPossible }, c
   const requiresLocalMachine = isWindows7;
 
   // On Windows 7, we must write to LOCAL_MACHINE and need escalated privileges.
-  // Don't do it at install time - wait for the user to ask Mailspring to be the default.
+  // Don't do it at install time - wait for the user to ask Moros to be the default.
   if (requiresLocalMachine && !allowEscalation) {
     callback();
     return;
@@ -179,15 +179,15 @@ function createRegistryEntries({ allowEscalation, registerDefaultIfPossible }, c
 exports.spawn = spawnUpdate;
 exports.createRegistryEntries = createRegistryEntries;
 
-// Is the Update.exe installed with Mailspring?
+// Is the Update.exe installed with Moros?
 exports.existsSync = () => fs.existsSync(updateDotExe);
 
 // Register the AppUserModelId with a display name so Windows notifications
-// show "Mailspring" instead of "com.squirrel.mailspring.mailspring"
+// show "Moros" instead of "com.squirrel.mailspring.mailspring"
 // Registry path: HKEY_CURRENT_USER\SOFTWARE\Classes\AppUserModelId\{AUMID}
 function registerAppUserModelId(callback) {
   const aumid = 'com.squirrel.mailspring.mailspring';
-  const displayName = 'Mailspring';
+  const displayName = 'Moros';
   const iconPath = path.join(appFolder, 'resources', 'mailspring-square.ico');
 
   let regPath = 'reg.exe';
@@ -244,7 +244,7 @@ function copyVisualElements() {
   }
 }
 
-// Restart Mailspring using the version pointed to by the Mailspring.cmd shim.
+// Restart Moros using the version pointed to by the Moros.cmd shim.
 // Uses spawnDetached to ensure the child process survives the parent's exit —
 // the piped-stdio `spawn` function can fail when called during `will-quit`
 // because the Node.js event loop tears down the pipe before Update.exe launches
@@ -285,12 +285,12 @@ exports.handleSquirrelInstall = app => {
     'Windows',
     'Start Menu',
     'Programs',
-    'Mailspring.lnk'
+    'Moros.lnk'
   );
   const desktopPath = path.join(
     process.env.USERPROFILE || process.env.HOME,
     'Desktop',
-    'Mailspring.lnk'
+    'Moros.lnk'
   );
   const iconPath = path.join(appFolder, 'resources', 'mailspring-square.ico');
 
@@ -335,7 +335,7 @@ exports.handleSquirrelInstall = app => {
     '/t',
     'REG_SZ',
     '/d',
-    'Mailspring',
+    'Moros',
     '/f',
   ]);
   if (fs.existsSync(iconPath)) {
@@ -381,12 +381,12 @@ exports.handleSquirrelUninstall = app => {
     'Windows',
     'Start Menu',
     'Programs',
-    'Mailspring.lnk'
+    'Moros.lnk'
   );
   const desktopPath = path.join(
     process.env.USERPROFILE || process.env.HOME,
     'Desktop',
-    'Mailspring.lnk'
+    'Moros.lnk'
   );
 
   try {

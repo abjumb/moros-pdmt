@@ -26,7 +26,7 @@ export default class MorosProtocolHandler {
     this.registerProtocol();
   }
 
-  // Creates the 'Mailspring' custom protocol handler.
+  // Creates the 'Moros' custom protocol handler.
   registerProtocol() {
     const scheme = 'mailspring';
 

@@ -163,15 +163,15 @@ xdescribe('ParticipantsTextField', function ParticipantsTextFieldSpecs() {
           email: 'imposter@mailspring.com',
         });
         const newContact2 = new Contact({
-          name: 'Mailspring Team',
+          name: 'Moros Team',
           email: 'feedback@mailspring.com',
         });
 
         const inputs = [
-          'Ben Imposter <imposter@mailspring.com>, Mailspring Team <feedback@mailspring.com>',
-          '\n\nbla\nBen Imposter (imposter@mailspring.com), Mailspring Team (feedback@mailspring.com)',
+          'Ben Imposter <imposter@mailspring.com>, Moros Team <feedback@mailspring.com>',
+          '\n\nbla\nBen Imposter (imposter@mailspring.com), Moros Team (feedback@mailspring.com)',
           'Hello world! I like cheese. \rBen Imposter (imposter@mailspring.com)\nMailspring Team (feedback@mailspring.com)',
-          'Ben Imposter<imposter@mailspring.com>Mailspring Team (feedback@mailspring.com)',
+          'Ben Imposter<imposter@mailspring.com>Moros Team (feedback@mailspring.com)',
         ];
 
         for (const input of inputs) {

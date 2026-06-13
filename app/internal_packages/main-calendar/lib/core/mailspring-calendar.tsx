@@ -98,7 +98,7 @@ export interface MorosCalendarViewProps extends EventRendererProps {
 }
 
 /*
- * Mailspring Calendar
+ * Moros Calendar
  */
 interface MorosCalendarProps {}
 

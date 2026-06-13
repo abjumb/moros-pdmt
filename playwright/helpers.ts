@@ -11,7 +11,7 @@ export const APP_ROOT = path.join(REPO_ROOT, 'app');
 /**
  * Source config directory with the golden database and encrypted credentials.
  */
-const FIXTURE_DIR = '/Users/bengotow/Library/Application Support/Mailspring-dev-building-for-playwright';
+const FIXTURE_DIR = '/Users/bengotow/Library/Application Support/Moros-dev-building-for-playwright';
 const FIXTURE_DB = path.join(FIXTURE_DIR, 'edgehill.db');
 
 // ─── Config & Launch ───────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ export async function clickSidebarFolder(page: Page, name: string) {
 
 /**
  * Execute JavaScript in the renderer via the main process's
- * webContents.executeJavaScript(), bypassing Mailspring's
+ * webContents.executeJavaScript(), bypassing Moros's
  * window.eval() security restriction.
  */
 export async function executeInRenderer(electronApp: ElectronApplication, code: string): Promise<any> {
@@ -259,7 +259,7 @@ export async function executeInRenderer(electronApp: ElectronApplication, code: 
 /**
  * Install a listener on Actions.queueTask in the renderer to capture
  * tasks as they are created. Uses webContents.executeJavaScript() from
- * the main process to bypass Mailspring's window.eval() restriction.
+ * the main process to bypass Moros's window.eval() restriction.
  * Task data is stored in a hidden DOM element readable via locators.
  */
 export async function installTaskCapture(electronApp: ElectronApplication) {

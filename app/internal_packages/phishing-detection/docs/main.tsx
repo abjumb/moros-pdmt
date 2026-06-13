@@ -3,7 +3,7 @@
 // This is a simple package to notify N1 users if an email is a potential
 // phishing scam.
 
-// You can access Mailspring dependencies by requiring 'moros-exports'
+// You can access Moros dependencies by requiring 'moros-exports'
 import React from 'react';
 import {
   // The ComponentRegistry manages all React components in N1.
