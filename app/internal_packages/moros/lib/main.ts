@@ -1,6 +1,5 @@
 import {
   localized,
-  AccountStore,
   Actions,
   ComponentRegistry,
   ExtensionRegistry,
@@ -10,12 +9,16 @@ import {
 import {
   MorosTasksPerspective,
   MorosFinancePerspective,
-  MorosVaultPerspective,
+  MorosKeyNestPerspective,
+  MorosSubscriptionsPerspective,
+  MorosBriefingPerspective,
 } from './moros-perspectives';
 import TasksRoot from './tasks/tasks-root';
 import CreateTaskButton from './tasks/create-task-button';
 import FinanceRoot from './finance/finance-root';
-import VaultRoot from './vault/vault-root';
+import KeyNestRoot from './keynest/keynest-root';
+import SubscriptionsRoot from './subscriptions/subscriptions-root';
+import BriefingRoot from './briefing/briefing-root';
 
 const MODULES = [
   {
@@ -37,12 +40,30 @@ const MODULES = [
     iconName: 'tag.png',
   },
   {
-    sheetName: 'MorosVault',
-    locationName: 'MorosVaultContent',
-    component: VaultRoot,
-    perspectiveClass: MorosVaultPerspective,
-    sidebarId: 'MorosVault',
-    sidebarName: () => localized('Vault'),
+    sheetName: 'MorosSubscriptions',
+    locationName: 'MorosSubscriptionsContent',
+    component: SubscriptionsRoot,
+    perspectiveClass: MorosSubscriptionsPerspective,
+    sidebarId: 'MorosSubscriptions',
+    sidebarName: () => localized('Subscriptions'),
+    iconName: 'reminders.png',
+  },
+  {
+    sheetName: 'MorosBriefing',
+    locationName: 'MorosBriefingContent',
+    component: BriefingRoot,
+    perspectiveClass: MorosBriefingPerspective,
+    sidebarId: 'MorosBriefing',
+    sidebarName: () => localized('Briefing'),
+    iconName: 'activity.png',
+  },
+  {
+    sheetName: 'MorosKeyNest',
+    locationName: 'MorosKeyNestContent',
+    component: KeyNestRoot,
+    perspectiveClass: MorosKeyNestPerspective,
+    sidebarId: 'MorosKeyNest',
+    sidebarName: () => localized('KeyNest'),
     iconName: 'archive.png',
   },
 ];
@@ -50,13 +71,6 @@ const MODULES = [
 const sidebarExtensions = MODULES.map((module) => ({
   name: module.sidebarId,
   sidebarItem(accountIds: string[]) {
-    // Moros modules are account-agnostic — contribute exactly one sidebar
-    // item: with multiple accounts that's the unified section only, so
-    // skip the per-account sections (and the unified item's per-account
-    // children, which arrive as single-id calls too).
-    if (accountIds.length === 1 && AccountStore.accounts().length > 1) {
-      return null;
-    }
     return {
       id: module.sidebarId,
       name: module.sidebarName(),
@@ -67,15 +81,6 @@ const sidebarExtensions = MODULES.map((module) => ({
 }));
 
 export function activate() {
-  if (AppEnv.getWindowType() === 'moros-widget') {
-    // Widget windows render a single panel, onboarding-style: one root
-    // sheet with a Center column.
-    const WidgetRoot = require('./widget-root').default;
-    WorkspaceStore.defineSheet('Main', { root: true }, { list: ['Center'] });
-    ComponentRegistry.register(WidgetRoot, { location: WorkspaceStore.Location.Center });
-    return;
-  }
-
   for (const module of MODULES) {
     WorkspaceStore.defineSheet(
       module.sheetName,
@@ -104,10 +109,6 @@ export function activate() {
 }
 
 export function deactivate() {
-  if (AppEnv.getWindowType() === 'moros-widget') {
-    ComponentRegistry.unregister(require('./widget-root').default);
-    return;
-  }
   ComponentRegistry.unregister(CreateTaskButton);
   for (const module of MODULES) {
     ComponentRegistry.unregister(module.component);

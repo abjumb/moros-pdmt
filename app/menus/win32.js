@@ -226,7 +226,7 @@ module.exports = {
       args: { source: 'Menu' },
     },
     { label: localized('Change Theme') + '...', command: 'window:launch-theme-picker' },
-    { label: localized('Install Theme or Plugin') + '...', command: 'window:install-package' },
+    { label: localized('Install Theme') + '...', command: 'window:install-package' },
     { type: 'separator' },
     { label: 'VERSION', enabled: false },
     {

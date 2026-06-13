@@ -1,5 +1,4 @@
 import MorosDataStore, { MorosRecord, todayISO } from '../moros-data-store';
-import MorosSettingsStore from '../moros-settings-store';
 
 export { todayISO };
 
@@ -26,51 +25,19 @@ export interface MorosTransaction extends MorosRecord {
   date: string;
 }
 
-// Formatters are cached per configured currency (see MorosSettingsStore —
-// the currency is user-selectable in the Finance header, defaulting to USD).
-const formatters = new Map<string, Intl.NumberFormat>();
+const formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
 
 export function formatCents(cents: number) {
-  const currency = MorosSettingsStore.currency();
-  let formatter = formatters.get(currency);
-  if (!formatter) {
-    try {
-      formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency });
-    } catch (err) {
-      formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
-    }
-    formatters.set(currency, formatter);
-  }
   return formatter.format(cents / 100);
 }
 
-/**
- * Parse user input like "12.50", "$1,200" or "1.200,50" into integer cents.
- * Both `.` and `,` are accepted as decimal or thousands separators: when both
- * appear, the last one wins as the decimal point; a lone `,` or `.` is a
- * decimal point only when followed by 1-2 trailing digits.
- */
+/** Parse user input like "12.50" or "$1,200" into integer cents. */
 export function parseAmountToCents(input: string): number | null {
-  let normalized = input.replace(/[^0-9.,]/g, '');
+  const normalized = input.replace(/[^0-9.,-]/g, '').replace(/,/g, '');
   if (!normalized) return null;
-
-  const lastDot = normalized.lastIndexOf('.');
-  const lastComma = normalized.lastIndexOf(',');
-  if (lastDot !== -1 && lastComma !== -1) {
-    const decimalSep = lastDot > lastComma ? '.' : ',';
-    const thousandsSep = decimalSep === '.' ? ',' : '.';
-    normalized = normalized.split(thousandsSep).join('');
-    normalized = normalized.replace(decimalSep, '.');
-  } else if (lastDot !== -1 || lastComma !== -1) {
-    const sep = lastDot !== -1 ? '.' : ',';
-    const isDecimal = new RegExp(`\\${sep}\\d{1,2}$`).test(normalized);
-    normalized = normalized.split(sep).join(isDecimal ? '#' : '');
-    normalized = normalized.replace('#', '.');
-  }
-
   const value = Number(normalized);
   if (!Number.isFinite(value)) return null;
-  return Math.round(value * 100);
+  return Math.round(Math.abs(value) * 100);
 }
 
 /** Current month as a 'yyyy-mm' prefix. */
@@ -124,45 +91,6 @@ class FinanceStore extends MorosDataStore<MorosTransaction> {
       ? this.items().filter((t) => t.date.startsWith(monthPrefix))
       : [...this.items()];
     return filtered.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt);
-  }
-
-  /**
-   * Daily running-balance series ending today, for the net worth chart.
-   * `daysBack = null` spans from the earliest transaction. Days without
-   * transactions carry the previous balance forward, Origin-style.
-   */
-  balanceSeries(daysBack: number | null): { date: string; cents: number }[] {
-    const byDate = new Map<string, number>();
-    for (const t of this.items()) {
-      byDate.set(t.date, (byDate.get(t.date) || 0) + this.signedCents(t));
-    }
-    const allDates = [...byDate.keys()].sort();
-    const today = todayISO();
-    let startDate: string;
-    if (daysBack !== null) {
-      const start = new Date();
-      start.setDate(start.getDate() - (daysBack - 1));
-      startDate = `${start.getFullYear()}-${`${start.getMonth() + 1}`.padStart(2, '0')}-${`${start.getDate()}`.padStart(2, '0')}`;
-    } else {
-      startDate = allDates[0] || today;
-    }
-
-    // Balance accumulated before the window opens.
-    let runningCents = 0;
-    for (const date of allDates) {
-      if (date < startDate) runningCents += byDate.get(date);
-    }
-
-    const series: { date: string; cents: number }[] = [];
-    const cursor = new Date(`${startDate}T00:00:00`);
-    let iso = startDate;
-    while (iso <= today) {
-      runningCents += byDate.get(iso) || 0;
-      series.push({ date: iso, cents: runningCents });
-      cursor.setDate(cursor.getDate() + 1);
-      iso = `${cursor.getFullYear()}-${`${cursor.getMonth() + 1}`.padStart(2, '0')}-${`${cursor.getDate()}`.padStart(2, '0')}`;
-    }
-    return series;
   }
 }
 

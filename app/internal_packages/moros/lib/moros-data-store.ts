@@ -20,53 +20,6 @@ export function todayISO() {
   return `${d.getFullYear()}-${month}-${day}`;
 }
 
-export function morosDataDirPath() {
-  return path.join(AppEnv.getConfigDirPath(), 'moros');
-}
-
-export function readJsonFile<T>(filePath: string): T | null {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T;
-  } catch (err) {
-    // Missing on first run; if unreadable / corrupt, callers start fresh.
-    return null;
-  }
-}
-
-/** Write JSON via temp file + rename so a crash mid-save can't truncate data. */
-export function writeJsonFileAtomic(filePath: string, data: unknown) {
-  const tempPath = `${filePath}.tmp`;
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf8');
-  fs.renameSync(tempPath, filePath);
-}
-
-/**
- * Watch a file in the moros data directory and invoke `callback` (debounced)
- * when it changes. Used to keep stores in popped-out widget windows in sync
- * with the main window — each Electron window has its own store instances,
- * and the JSON files are the shared source of truth.
- */
-export function watchMorosFile(filename: string, callback: () => void): () => void {
-  let debounce: ReturnType<typeof setTimeout> | null = null;
-  try {
-    fs.mkdirSync(morosDataDirPath(), { recursive: true });
-    const watcher = fs.watch(morosDataDirPath(), (_eventType, changedFile) => {
-      if (changedFile && changedFile !== filename) return;
-      if (debounce) clearTimeout(debounce);
-      debounce = setTimeout(callback, 150);
-    });
-    return () => {
-      if (debounce) clearTimeout(debounce);
-      watcher.close();
-    };
-  } catch (err) {
-    // File watching is best-effort (it can fail on some network filesystems);
-    // without it, widget windows simply won't live-update.
-    return () => {};
-  }
-}
-
 /**
  * Base class for the Moros module stores. Records live in memory and are
  * persisted as JSON beneath `<config>/moros/`, outside the mail database —
@@ -80,18 +33,11 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
   _filename: string;
   _items: T[];
   _saveTimer: ReturnType<typeof setTimeout> | null = null;
-  _selfWriteAtMs = 0;
 
   constructor(filename: string) {
     super();
     this._filename = filename;
     this._items = this._load();
-    watchMorosFile(this._filename, () => {
-      // Ignore the watcher echo of our own debounced save.
-      if (Date.now() - this._selfWriteAtMs < 1000) return;
-      this._items = this._load();
-      this.trigger();
-    });
   }
 
   items(): ReadonlyArray<T> {
@@ -102,9 +48,9 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
     return this._items.find((item) => item.id === id);
   }
 
-  create(attrs: Omit<T, 'id' | 'createdAt' | 'updatedAt'>, presetId?: string): T {
+  create(attrs: Omit<T, 'id' | 'createdAt' | 'updatedAt'>): T {
     const now = Date.now();
-    const item = { ...attrs, id: presetId || morosId(), createdAt: now, updatedAt: now } as T;
+    const item = { ...attrs, id: morosId(), createdAt: now, updatedAt: now } as T;
     this._items = [item, ...this._items];
     this._queueSave();
     this.trigger();
@@ -131,18 +77,17 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
   }
 
   _filePath() {
-    return path.join(morosDataDirPath(), this._filename);
+    return path.join(AppEnv.getConfigDirPath(), 'moros', this._filename);
   }
 
   _load(): T[] {
-    const parsed = readJsonFile<T[]>(this._filePath());
-    return Array.isArray(parsed) ? parsed : [];
-  }
-
-  /** Persist immediately, bypassing the debounce — for ordering-sensitive writes. */
-  flush() {
-    if (this._saveTimer) clearTimeout(this._saveTimer);
-    this._save();
+    try {
+      const parsed = JSON.parse(fs.readFileSync(this._filePath(), 'utf8'));
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+      // Missing on first run; if unreadable / corrupt, start empty rather than crash.
+      return [];
+    }
   }
 
   _queueSave() {
@@ -152,9 +97,12 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
 
   _save() {
     this._saveTimer = null;
-    this._selfWriteAtMs = Date.now();
+    const filePath = this._filePath();
+    const tempPath = `${filePath}.tmp`;
     try {
-      writeJsonFileAtomic(this._filePath(), this._items);
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      fs.writeFileSync(tempPath, JSON.stringify(this._items, null, 2), 'utf8');
+      fs.renameSync(tempPath, filePath);
     } catch (err) {
       AppEnv.reportError(err);
     }
