@@ -2,6 +2,17 @@ import React from 'react';
 import { clipboard } from 'electron';
 import { localized } from 'mailspring-exports';
 import KeyNestStore, { KeyNestEntry, KeyNestEntryKind, expiryState } from './keynest-store';
+import {
+  GeneratorOptions,
+  DEFAULT_GENERATOR_OPTIONS,
+  MIN_LENGTH,
+  MAX_LENGTH,
+  generatePassword,
+} from './password-generator';
+import { estimateStrength, StrengthScore } from './password-strength';
+import { HealthSummary } from './password-health';
+
+type BooleanGeneratorOption = 'lowercase' | 'uppercase' | 'digits' | 'symbols';
 
 const CLIPBOARD_CLEAR_MS = 30000;
 
@@ -20,6 +31,11 @@ interface KeyNestRootState {
   revealedId: string | null;
   revealedSecret: string | null;
   copiedId: string | null;
+  genOptions: GeneratorOptions;
+  genError: string | null;
+  health: HealthSummary | null;
+  auditing: boolean;
+  auditError: string | null;
 }
 
 export default class KeyNestRoot extends React.Component<
@@ -29,6 +45,7 @@ export default class KeyNestRoot extends React.Component<
   static displayName = 'KeyNestRoot';
 
   _unlisten?: () => void;
+  _mounted = false;
   _copiedTimer: ReturnType<typeof setTimeout> | null = null;
   _clipboardClearTimer: ReturnType<typeof setTimeout> | null = null;
   // Held (outside state) only to verify the clipboard still contains our
@@ -48,13 +65,24 @@ export default class KeyNestRoot extends React.Component<
     revealedId: null,
     revealedSecret: null,
     copiedId: null,
+    genOptions: { ...DEFAULT_GENERATOR_OPTIONS },
+    genError: null,
+    health: null,
+    auditing: false,
+    auditError: null,
   };
 
   componentDidMount() {
-    this._unlisten = KeyNestStore.listen(() => this.setState({ entries: KeyNestStore.items() }));
+    this._mounted = true;
+    // Adding or removing an entry invalidates a previous health audit, so
+    // clear it whenever the entry set changes.
+    this._unlisten = KeyNestStore.listen(() =>
+      this.setState({ entries: KeyNestStore.items(), health: null })
+    );
   }
 
   componentWillUnmount() {
+    this._mounted = false;
     if (this._unlisten) this._unlisten();
     if (this._copiedTimer) clearTimeout(this._copiedTimer);
     if (this._clipboardClearTimer) clearTimeout(this._clipboardClearTimer);
@@ -120,6 +148,140 @@ export default class KeyNestRoot extends React.Component<
     await KeyNestStore.removeWithSecret(entry.id);
   };
 
+  _setGenOption = (patch: Partial<GeneratorOptions>) => {
+    this.setState({ genOptions: { ...this.state.genOptions, ...patch }, genError: null });
+  };
+
+  _onGenerate = () => {
+    try {
+      const secret = generatePassword(this.state.genOptions);
+      this.setState({ draftSecret: secret, draftKind: 'password', genError: null });
+    } catch (err) {
+      this.setState({ genError: err instanceof Error ? err.message : String(err) });
+    }
+  };
+
+  _onAudit = async () => {
+    this.setState({ auditing: true, auditError: null });
+    try {
+      const health = await KeyNestStore.auditPasswords();
+      if (!this._mounted) return;
+      this.setState({ health, auditing: false });
+    } catch (err) {
+      AppEnv.reportError(err);
+      if (!this._mounted) return;
+      this.setState({
+        auditing: false,
+        auditError: err instanceof Error ? err.message : String(err),
+      });
+    }
+  };
+
+  _strengthLabel(score: StrengthScore): string {
+    return [
+      localized('Very weak'),
+      localized('Weak'),
+      localized('Fair'),
+      localized('Strong'),
+      localized('Very strong'),
+    ][score];
+  }
+
+  _healthFor(id: string): { weak: boolean; reused: boolean } | null {
+    if (!this.state.health) return null;
+    const match = this.state.health.entries.find((e) => e.entry.id === id);
+    return match ? { weak: match.weak, reused: match.reused } : null;
+  }
+
+  _renderHealthChips(id: string) {
+    const health = this._healthFor(id);
+    if (!health) return null;
+    return (
+      <>
+        {health.weak && <span className="moros-chip health-weak">{localized('Weak')}</span>}
+        {health.reused && <span className="moros-chip health-reused">{localized('Reused')}</span>}
+      </>
+    );
+  }
+
+  _renderStrengthMeter() {
+    const secret = this.state.draftSecret;
+    if (this.state.draftKind !== 'password' || !secret) return null;
+    const { score } = estimateStrength(secret);
+    return (
+      <div className={`moros-strength strength-${score}`}>
+        <div className="moros-strength-bar">
+          {[0, 1, 2, 3].map((i) => (
+            <span key={i} className={`moros-strength-seg ${i < score ? 'filled' : ''}`} />
+          ))}
+        </div>
+        <span className="moros-strength-label">{this._strengthLabel(score)}</span>
+      </div>
+    );
+  }
+
+  _renderGenerator() {
+    const { genOptions } = this.state;
+    const toggle = (key: BooleanGeneratorOption, label: string) => (
+      <label className="moros-gen-toggle">
+        <input
+          type="checkbox"
+          checked={genOptions[key]}
+          onChange={(e) =>
+            this._setGenOption({ [key]: e.target.checked } as Partial<GeneratorOptions>)
+          }
+        />
+        {label}
+      </label>
+    );
+    return (
+      <div className="moros-toolbar-row moros-generator">
+        <span className="moros-gen-label">{localized('Generate')}</span>
+        <input
+          type="number"
+          className="moros-input moros-gen-length"
+          min={MIN_LENGTH}
+          max={MAX_LENGTH}
+          title={localized('Length')}
+          value={genOptions.length}
+          onChange={(e) => this._setGenOption({ length: Number(e.target.value) })}
+        />
+        {toggle('lowercase', localized('a–z'))}
+        {toggle('uppercase', localized('A–Z'))}
+        {toggle('digits', localized('0–9'))}
+        {toggle('symbols', localized('!@#'))}
+        <button className="btn" onClick={this._onGenerate}>
+          {localized('Generate password')}
+        </button>
+        {this.state.genError && <span className="moros-gen-error">{this.state.genError}</span>}
+      </div>
+    );
+  }
+
+  _renderHealth() {
+    const { health, auditing, auditError } = this.state;
+    return (
+      <div className="moros-toolbar-row moros-health-row">
+        <button className="btn" disabled={auditing} onClick={this._onAudit}>
+          {auditing ? localized('Checking…') : localized('Check password health')}
+        </button>
+        {auditError && <span className="moros-gen-error">{auditError}</span>}
+        {health && !auditError && (
+          <span className="moros-health-summary">
+            {health.checked === 0
+              ? localized('No stored passwords to check.')
+              : localized(
+                  'Checked %@ · %@ weak · %@ reused',
+                  `${health.checked}`,
+                  `${health.weakCount}`,
+                  `${health.reusedCount}`
+                )}
+          </span>
+        )}
+      </div>
+    );
+  }
+
   _renderExpiryChip(entry: KeyNestEntry) {
     const state = expiryState(entry);
     if (state === 'ok') return null;
@@ -139,6 +301,7 @@ export default class KeyNestRoot extends React.Component<
         </span>
         <span className="moros-row-title">{entry.name}</span>
         {this._renderExpiryChip(entry)}
+        {this._renderHealthChips(entry.id)}
         <span className="moros-row-detail">{entry.username}</span>
         <span className="moros-row-detail">{entry.url}</span>
         <span className="moros-secret">
@@ -218,6 +381,7 @@ export default class KeyNestRoot extends React.Component<
           />
           {this._renderKindFilter()}
         </div>
+        {this._renderHealth()}
         <div className="moros-toolbar-row">
           <select
             className="moros-select"
@@ -248,6 +412,7 @@ export default class KeyNestRoot extends React.Component<
             value={this.state.draftSecret}
             onChange={(e) => this.setState({ draftSecret: e.target.value })}
           />
+          {this._renderStrengthMeter()}
           <input
             type="text"
             className="moros-input"
@@ -266,6 +431,7 @@ export default class KeyNestRoot extends React.Component<
             {localized('Add')}
           </button>
         </div>
+        {this.state.draftKind === 'password' && this._renderGenerator()}
         <div className="moros-scroll-region">
           {visible.length > 0 ? (
             visible.map((entry) => this._renderEntry(entry))

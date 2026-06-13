@@ -1,5 +1,6 @@
 import { KeyManager } from 'mailspring-exports';
 import MorosDataStore, { MorosRecord } from '../moros-data-store';
+import { analyzeHealth, HealthSummary } from './password-health';
 
 export type KeyNestEntryKind = 'password' | 'api-key';
 
@@ -99,6 +100,23 @@ class KeyNestStore extends MorosDataStore<KeyNestEntry> {
   async getSecretByName(name: string): Promise<string | undefined> {
     const entry = this.findByName(name);
     return entry ? this.getSecret(entry.id) : undefined;
+  }
+
+  /**
+   * Read every password entry's secret (transiently, from the keychain) and
+   * audit it for weak and reused passwords. Secrets are not retained — only
+   * the metadata summary is returned. API-key entries are excluded, since the
+   * weak/reused heuristics don't apply to them.
+   */
+  async auditPasswords(): Promise<HealthSummary> {
+    const passwordEntries = this.items().filter((entry) => entry.kind === 'password');
+    const withSecrets = await Promise.all(
+      passwordEntries.map(async (entry) => ({
+        entry,
+        secret: (await this.getSecret(entry.id)) || '',
+      }))
+    );
+    return analyzeHealth(withSecrets);
   }
 }
 
