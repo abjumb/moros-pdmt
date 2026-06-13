@@ -66,7 +66,7 @@ const declareOptions = argv => {
   const optimist = require('optimist');
   const options = optimist(argv);
   options.usage(
-    `Moros\n\nUsage: mailspring [options] [recipient] [attachment]\n\nRun Moros: The open source extensible email client\n\n\`mailspring mailto:johndoe@example.com\` to compose an e-mail to johndoe@example.com.\n\`mailspring ./attachment.txt\` to compose an e-mail with a text file attached.\n\`mailspring --dev\` to start the client in dev mode.\n\`mailspring --test\` to run unit tests.`
+    `Moros\n\nUsage: moros [options] [recipient] [attachment]\n\nRun Moros: The open source extensible email client\n\n\`moros mailto:johndoe@example.com\` to compose an e-mail to johndoe@example.com.\n\`moros ./attachment.txt\` to compose an e-mail with a text file attached.\n\`moros --dev\` to start the client in dev mode.\n\`moros --test\` to run unit tests.`
   );
   options
     .alias('d', 'dev')
@@ -84,7 +84,7 @@ const declareOptions = argv => {
     );
   // The options --enable-crashpad and --allow-file-access-from-files are added to the command line options by electron when opening a second instance of Moros.
   // If they are not defined as boolean options here, they will "swallow" every argument that is passed after them. This leads to the "Send To" functionality not working
-  // if mailspring is already running.
+  // if moros is already running.
   options.boolean('enable-crashpad');
   options.boolean('allow-file-access-from-files');
   options.boolean('source-app-id');
@@ -152,7 +152,7 @@ const parseCommandLine = argv => {
   let pathsToOpen = [];
 
   // On Windows and Linux, mailto and file opens are passed in argv. Go through
-  // the items and pluck out things that look like mailto:, mailspring:, file paths
+  // the items and pluck out things that look like mailto:, moros:, file paths
   let ignoreNext = false;
   // args._ is all of the non-hyphenated options.
   for (const arg of args._) {
@@ -168,7 +168,7 @@ const parseCommandLine = argv => {
     if (path.resolve(arg) === resourcePath) {
       continue;
     }
-    if (arg.startsWith('mailto:') || arg.startsWith('mailspring:')) {
+    if (arg.startsWith('mailto:') || arg.startsWith('moros:')) {
       urlsToOpen.push(arg);
     } else if (arg[0] !== '-' && arg[0] !== '?' && /[/|\\]/.test(arg)) {
       pathsToOpen.push(arg);
@@ -229,8 +229,8 @@ const handleStartupEventWithSquirrel = () => {
       // Squirrel runs the NEW version with this flag after applying an update.
       // Per Squirrel.Windows conventions, we should update shortcuts and exit
       // quickly — NOT restart the app. The restart happens later when the user
-      // triggers "Install Update" via the UI, which calls restartMailspring().
-      // Previously this called restartMailspring() which spawned a new instance
+      // triggers "Install Update" via the UI, which calls restartMoros().
+      // Previously this called restartMoros() which spawned a new instance
       // that would be killed by requestSingleInstanceLock() (the original app
       // is still running), wasting time and risking Squirrel's 15s timeout.
       WindowsUpdater.handleSquirrelUpdated(app);
@@ -386,7 +386,7 @@ const start = () => {
         responseHeaders: {
           ...details.responseHeaders,
           'Content-Security-Policy': [
-            "default-src * mailspring:; script-src 'self' 'unsafe-inline' chrome-extension://react-developer-tools; style-src * 'unsafe-inline' mailspring:; img-src * data: mailspring: file:; object-src none; media-src mailspring:; manifest-src none;",
+            "default-src * moros:; script-src 'self' 'unsafe-inline' chrome-extension://react-developer-tools; style-src * 'unsafe-inline' moros:; img-src * data: moros: file:; object-src none; media-src moros:; manifest-src none;",
           ],
         },
       });

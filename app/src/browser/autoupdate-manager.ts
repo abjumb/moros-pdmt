@@ -180,7 +180,7 @@ export default class AutoUpdateManager extends EventEmitter {
       global.application.resourcePath,
       'static',
       'images',
-      'mailspring.png'
+      'moros.png'
     );
     if (!fs.existsSync(iconPath)) return undefined;
     return nativeImage.createFromPath(iconPath);

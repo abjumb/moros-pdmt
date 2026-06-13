@@ -93,8 +93,8 @@ class ContactListWithData extends React.Component<ContactListProps, ContactListS
 
     const canvas = CanvasUtils.canvasForDragging('contacts', data.ids.length);
     event.dataTransfer.setDragImage(canvas, 10, 10);
-    event.dataTransfer.setData('mailspring-contacts-data', JSON.stringify(data));
-    event.dataTransfer.setData(`mailspring-accounts=${data.accountIds.join(',')}`, '1');
+    event.dataTransfer.setData('moros-contacts-data', JSON.stringify(data));
+    event.dataTransfer.setData(`moros-accounts=${data.accountIds.join(',')}`, '1');
 
     // Allow the contacts to be dragged to the desktop as a .vcf file.
     try {

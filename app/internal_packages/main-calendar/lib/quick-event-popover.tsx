@@ -51,7 +51,7 @@ export class QuickEventPopover extends React.Component<
     end: Moment;
   }) => {
     const allCalendars = await DatabaseStore.findAll<Calendar>(Calendar);
-    const disabledCalendars: string[] = AppEnv.config.get('mailspring.disabledCalendars') || [];
+    const disabledCalendars: string[] = AppEnv.config.get('moros.disabledCalendars') || [];
     const editableCals = getEditableCalendars(allCalendars, disabledCalendars);
     if (editableCals.length === 0) {
       showNoEditableCalendarsError();

@@ -53,9 +53,9 @@ import {
 import { showRecurringEventDialog } from './recurring-event-dialog';
 import { modifyEventWithRecurringSupport, EventTimeChangeOptions } from './recurring-event-actions';
 
-const DISABLED_CALENDARS = 'mailspring.disabledCalendars';
-const CALENDAR_VIEW = 'mailspring.calendarView';
-const CALENDAR_LIST_VISIBLE = 'mailspring.calendarListVisible';
+const DISABLED_CALENDARS = 'moros.disabledCalendars';
+const CALENDAR_VIEW = 'moros.calendarView';
+const CALENDAR_LIST_VISIBLE = 'moros.calendarListVisible';
 
 const VIEWS = {
   [CalendarView.DAY]: DayView,

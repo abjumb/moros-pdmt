@@ -36,7 +36,7 @@ const rootAppDataFolder = path.resolve(appFolder, '..');
 // C:\Users\<USERNAME>\AppData\Local\Moros\Update.exe
 const updateDotExe = path.join(rootAppDataFolder, 'Update.exe');
 
-// "mailspring.exe"
+// "moros.exe"
 const exeName = path.basename(process.execPath);
 
 // Spawn a command and invoke the callback when it completes with an error
@@ -124,7 +124,7 @@ function createRegistryEntries({ allowEscalation, registerDefaultIfPossible }, c
   }
 
   fs.readFile(
-    path.join(appFolder, 'resources', 'mailspring-mailto-registration.reg'),
+    path.join(appFolder, 'resources', 'moros-mailto-registration.reg'),
     (err, data) => {
       if (err || !data) {
         callback(err);
@@ -145,7 +145,7 @@ function createRegistryEntries({ allowEscalation, registerDefaultIfPossible }, c
         importContents = importContents.replace(/{{HKEY_ROOT}}/g, 'HKEY_CURRENT_USER');
       }
 
-      const importTempPath = path.join(os.tmpdir(), `mailspring-reg-${Date.now()}.reg`);
+      const importTempPath = path.join(os.tmpdir(), `moros-reg-${Date.now()}.reg`);
 
       fs.writeFile(importTempPath, importContents, writeErr => {
         if (writeErr) {
@@ -158,7 +158,7 @@ function createRegistryEntries({ allowEscalation, registerDefaultIfPossible }, c
           spawnArgs.concat(['import', escapeBackticks(importTempPath)]),
           spawnErr => {
             if (isWindows7 && registerDefaultIfPossible) {
-              const defaultReg = path.join(appFolder, 'resources', 'mailspring-mailto-default.reg');
+              const defaultReg = path.join(appFolder, 'resources', 'moros-mailto-default.reg');
               spawn(
                 spawnPath,
                 spawnArgs.concat(['import', escapeBackticks(defaultReg)]),
@@ -188,7 +188,7 @@ exports.existsSync = () => fs.existsSync(updateDotExe);
 function registerAppUserModelId(callback) {
   const aumid = 'com.squirrel.moros.moros';
   const displayName = 'Moros';
-  const iconPath = path.join(appFolder, 'resources', 'mailspring-square.ico');
+  const iconPath = path.join(appFolder, 'resources', 'moros-square.ico');
 
   let regPath = 'reg.exe';
   if (process.env.SystemRoot) {
@@ -232,9 +232,9 @@ exports.registerAppUserModelId = registerAppUserModelId;
 function copyVisualElements() {
   try {
     const files = [
-      'mailspring-75px.png',
-      'mailspring-150px.png',
-      'mailspring.VisualElementsManifest.xml',
+      'moros-75px.png',
+      'moros-150px.png',
+      'moros.VisualElementsManifest.xml',
     ];
     for (const file of files) {
       fs.copyFileSync(path.join(appFolder, 'resources', file), path.join(rootAppDataFolder, file));
@@ -255,7 +255,7 @@ function copyVisualElements() {
 // launching the new one. Without the Wait variant, the new instance can start
 // before the old one exits, hit the single-instance lock, and immediately quit
 // — leaving no running instance. See: https://github.com/electron/electron/pull/6037
-exports.restartMailspring = app => {
+exports.restartMoros = app => {
   app.once('will-quit', () => {
     spawnDetached(updateDotExe, ['--processStartAndWait', exeName]);
   });
@@ -292,11 +292,11 @@ exports.handleSquirrelInstall = app => {
     'Desktop',
     'Moros.lnk'
   );
-  const iconPath = path.join(appFolder, 'resources', 'mailspring-square.ico');
+  const iconPath = path.join(appFolder, 'resources', 'moros-square.ico');
 
   const shortcutOptions = {
     target: updateDotExe,
-    args: '--processStart mailspring.exe',
+    args: '--processStart moros.exe',
     icon: fs.existsSync(iconPath) ? iconPath : undefined,
     iconIndex: 0,
     description: 'The best email app for people and teams at work',

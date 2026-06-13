@@ -5,7 +5,7 @@ import MorosStore from 'moros-store';
 
 import * as Actions from '../actions';
 
-const CONTAINER_ID = 'mailspring-modal-container';
+const CONTAINER_ID = 'moros-modal-container';
 
 function createContainer(id) {
   const element = document.createElement(id);

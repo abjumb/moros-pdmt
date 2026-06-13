@@ -973,7 +973,7 @@ export default class Application extends EventEmitter {
 
     if (parts.protocol === 'mailto:') {
       main.sendMessage('mailto', urlToOpen);
-    } else if (parts.protocol === 'mailspring:') {
+    } else if (parts.protocol === 'moros:') {
       // Handle notification action URLs from Windows toast notifications
       // These URLs are triggered when users click buttons on Windows toast notifications
       // since Windows toast XML with activationType="background" doesn't work reliably with Electron
@@ -1034,9 +1034,9 @@ export default class Application extends EventEmitter {
       );
     }
 
-    // Important: Use .mailspring-spec instead of .mailspring-mail to avoid overwriting the
+    // Important: Use .moros-spec instead of .moros-mail to avoid overwriting the
     // user's real email config!
-    const configDirPath = path.join(app.getPath('home'), '.mailspring-spec');
+    const configDirPath = path.join(app.getPath('home'), '.moros-spec');
 
     specWindowOptions.resourcePath = resourcePath;
     specWindowOptions.configDirPath = configDirPath;

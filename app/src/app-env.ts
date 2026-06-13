@@ -819,7 +819,7 @@ export default class AppEnvConstructor {
 
   initializeReactRoot() {
     // Put state back into sheet-container? Restore app state here
-    const item = document.createElement('mailspring-workspace');
+    const item = document.createElement('moros-workspace');
     item.setAttribute('id', 'sheet-container');
     item.setAttribute('class', 'sheet-container');
     item.setAttribute('tabIndex', '-1');

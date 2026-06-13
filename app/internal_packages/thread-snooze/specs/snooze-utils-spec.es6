@@ -7,7 +7,7 @@ import {
   Folder,
   Thread,
   FolderSyncProgressStore,
-} from 'mailspring-exports';
+} from 'moros-exports';
 import * as SnoozeUtils from '../lib/snooze-utils';
 
 xdescribe('Snooze Utils', function snoozeUtils() {

@@ -22,7 +22,7 @@ export function invalidateThemeTextColorCache() {
 
 function getThemeTextColor(): { r: number; g: number; b: number } | null {
   if (_themeTextColor === undefined) {
-    const container = document.querySelector('.mailspring-calendar');
+    const container = document.querySelector('.moros-calendar');
     const color = container ? getComputedStyle(container).color : '';
     _themeTextColor = (color ? parseColor(color) : null) ?? null;
   }

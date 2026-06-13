@@ -1,0 +1,60 @@
+Windows Registry Editor Version 5.00
+
+[{{HKEY_ROOT}}\SOFTWARE\Classes\Moros.Url.mailto]
+"FriendlyTypeName"="Moros Url"
+
+[{{HKEY_ROOT}}\SOFTWARE\Classes\Moros.Url.mailto\shell]
+
+[{{HKEY_ROOT}}\SOFTWARE\Classes\Moros.Url.mailto\shell\open]
+
+[{{HKEY_ROOT}}\SOFTWARE\Classes\Moros.Url.mailto\shell\open\command]
+@="\"{{PATH_TO_ROOT_FOLDER}}\\Update.exe\" --processStart moros.exe --process-start-args %1"
+
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros]
+@="Moros"
+"LocalizedString"="@{{PATH_TO_ROOT_FOLDER}}\\Update.exe,-123"
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\DefaultIcon]
+@="{{PATH_TO_APP_FOLDER}}\\moros.exe,1"
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Capabilities]
+"ApplicationName"="Moros"
+"ApplicationDescription"="A fast, modern mail client designed to help you boost your productivity."
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Capabilities\StartMenu]
+"Mail"="Moros"
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Capabilities\URLAssociations]
+"mailto"="Moros.Url.mailto"
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Protocols]
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Protocols\mailto]
+@="URL:MailTo Protocol"
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Protocols\mailto\DefaultIcon]
+@="{{PATH_TO_APP_FOLDER}}\\moros.exe,1"
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Protocols\mailto\shell]
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Protocols\mailto\shell\open]
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\Protocols\mailto\shell\open\command]
+@="\"{{PATH_TO_ROOT_FOLDER}}\\Update.exe\" --processStart moros.exe --process-start-args %1"
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\shell]
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\shell\open]
+
+[{{HKEY_ROOT}}\SOFTWARE\Clients\Mail\Moros\shell\open\command]
+@="\"{{PATH_TO_ROOT_FOLDER}}\\Update.exe\" --processStart moros.exe"
+
+[{{HKEY_ROOT}}\SOFTWARE\RegisteredApplications]
+"Moros"="Software\\Clients\\Mail\\Moros\\Capabilities"
+
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache]
+"{{PATH_TO_ROOT_FOLDER}}\\Update.exe"="Moros"
+"{{PATH_TO_ROOT_FOLDER}}\\Update.exe.FriendlyAppName"="Moros"
+"{{PATH_TO_ROOT_FOLDER}}\\Update.exe.ApplicationCompany"="Moros"

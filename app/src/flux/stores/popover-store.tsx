@@ -4,7 +4,7 @@ import MorosStore from 'moros-store';
 import * as Actions from '../actions';
 import FixedPopover from '../../components/fixed-popover';
 
-const CONTAINER_ID = 'mailspring-popover-container';
+const CONTAINER_ID = 'moros-popover-container';
 
 function createContainer(id) {
   const element = document.createElement(id);

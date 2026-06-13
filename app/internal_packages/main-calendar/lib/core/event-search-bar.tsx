@@ -5,7 +5,7 @@ import { RetinaImg, KeyCommandsRegion, BindGlobalCommands } from 'moros-componen
 import { EventOccurrence, occurrencesForEvents } from './calendar-data-source';
 import { Disposable } from 'rx-core';
 
-const DISABLED_CALENDARS = 'mailspring.disabledCalendars';
+const DISABLED_CALENDARS = 'moros.disabledCalendars';
 
 interface EventSearchBarState {
   query: string;

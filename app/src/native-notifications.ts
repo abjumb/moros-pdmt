@@ -13,7 +13,7 @@ const DEFAULT_ICON = path.resolve(
   AppEnv.getLoadSettings().resourcePath,
   'static',
   'images',
-  'mailspring.png'
+  'moros.png'
 );
 
 type INotificationCallback = (args: {
@@ -146,7 +146,7 @@ class NativeNotifications {
       os.homedir() + '/.local/share/applications/',
       '/usr/share/applications/',
     ];
-    const desktopFileNames = ['mailspring.desktop', 'Moros.desktop'];
+    const desktopFileNames = ['moros.desktop', 'Moros.desktop'];
     // check the applications directories, the user directory has a higher priority
     for (const baseDir of desktopBaseDirs) {
       // check multiple spellings

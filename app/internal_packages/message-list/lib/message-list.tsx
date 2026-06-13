@@ -158,7 +158,7 @@ class MessageList extends React.Component<Record<string, unknown>, MessageListSt
     // the attachment has a clean display name.
     const tempDir = pathModule.join(
       require('@electron/remote').app.getPath('temp'),
-      `mailspring-fwd-${message.id}`
+      `moros-fwd-${message.id}`
     );
     fs.mkdirSync(tempDir, { recursive: true });
     const tempPath = pathModule.join(tempDir, 'Forwarded Message.eml');
