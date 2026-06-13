@@ -7,12 +7,12 @@ import {
   DraftFactory,
   DatabaseChangeRecord,
 } from 'moros-exports';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 
 import { PLUGIN_ID } from './send-reminders-constants';
 import { updateReminderMetadata } from './send-reminders-utils';
 
-class SendRemindersStore extends MailspringStore {
+class SendRemindersStore extends MorosStore {
   _lastFocusedThread = null;
   _unsubscribers: (() => void)[] = [];
 

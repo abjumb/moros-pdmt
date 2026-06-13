@@ -80,7 +80,7 @@ export default class ViewOnGithubButton extends React.Component<
    */
   componentDidMount() {
     /*
-     * The `listen` method of {MailspringStore}s (which {GithubStore}
+     * The `listen` method of {MorosStore}s (which {GithubStore}
      * subclasses) returns an "unlistener" function. When the unlistener is
      * invoked (as it is in `componentWillUnmount`) the listener references
      * are cleaned up. Every time the `GithubStore` calls its `trigger`

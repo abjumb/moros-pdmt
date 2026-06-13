@@ -2,7 +2,7 @@ import os from 'os';
 import _fs from 'fs';
 import path from 'path';
 import { shell } from 'electron';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import DraftStore from './draft-store';
 import * as Actions from '../actions';
 import { File } from '../models/file';
@@ -28,7 +28,7 @@ const fileAccessibleAtPath = async (filePath) => {
 
 export type AttachmentDownloadData = null;
 
-class AttachmentStore extends MailspringStore {
+class AttachmentStore extends MorosStore {
   _filePreviewPaths = {};
   _filesDirectory: string = path.join(AppEnv.getConfigDirPath(), 'files');
   _lastDownloadDirectory: string;

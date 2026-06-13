@@ -3,7 +3,7 @@ import {
   QuotedHTMLTransformer,
   localized,
   Actions,
-  MailspringAPIRequest,
+  MorosAPIRequest,
   RegExpUtils,
   FeatureLexicon,
 } from 'moros-exports';
@@ -236,7 +236,7 @@ export async function translateMessageBody(
 
     let response = null;
     try {
-      response = await MailspringAPIRequest.makeRequest({
+      response = await MorosAPIRequest.makeRequest({
         server: 'identity',
         method: 'POST',
         path: `/api/translate`,

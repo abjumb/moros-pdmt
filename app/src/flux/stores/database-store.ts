@@ -7,7 +7,7 @@ import Sqlite3 from 'better-sqlite3';
 
 import { ExponentialBackoffScheduler } from '../../backoff-schedulers';
 import { Model } from '../models/model';
-import MailspringStore from '../../global/moros-store';
+import MorosStore from '../../global/moros-store';
 import * as Utils from '../models/utils';
 import Query from '../models/query';
 
@@ -128,7 +128,7 @@ are in your displayed set before refreshing.
 
 Section: Database
 */
-class DatabaseStore extends MailspringStore {
+class DatabaseStore extends MorosStore {
   _open = false;
   _waiting = [];
   _preparedStatementCache = new LRUCache<string, Sqlite3.Statement<any[]>>({ max: 500 });

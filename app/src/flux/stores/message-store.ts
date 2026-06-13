@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import * as Actions from '../actions';
 import { Message } from '../models/message';
 import { Thread } from '../models/thread';
@@ -13,7 +13,7 @@ import { DatabaseChangeRecord } from './database-change-record';
 
 const FolderNamesHiddenByDefault = ['spam', 'trash'];
 
-class _MessageStore extends MailspringStore {
+class _MessageStore extends MorosStore {
   FolderNamesHiddenByDefault = FolderNamesHiddenByDefault;
 
   _showingHiddenItems = false;

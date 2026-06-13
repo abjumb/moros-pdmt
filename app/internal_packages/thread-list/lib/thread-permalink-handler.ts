@@ -5,7 +5,7 @@ import { localized, DatabaseStore, Thread, Matcher, Actions } from 'moros-export
 
 const DATE_EPSILON = 60; // Seconds
 
-interface MailspringLinkParams {
+interface MorosLinkParams {
   subject: string;
   lastDate?: number;
   date?: number;
@@ -18,11 +18,11 @@ const _parseOpenThreadUrl = (mailspringUrlString: string) => {
     subject: params.subject,
     date: params.date ? parseInt(params.date, 10) : undefined,
     lastDate: params.lastDate ? parseInt(params.lastDate, 10) : undefined,
-  } as MailspringLinkParams;
+  } as MorosLinkParams;
 };
 
 const _findCorrespondingThread = (
-  { subject, lastDate, date }: MailspringLinkParams,
+  { subject, lastDate, date }: MorosLinkParams,
   dateEpsilon = DATE_EPSILON
 ) => {
   const dateClause = date

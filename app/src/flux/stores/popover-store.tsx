@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import * as Actions from '../actions';
 import FixedPopover from '../../components/fixed-popover';
 
@@ -12,7 +12,7 @@ function createContainer(id) {
   return element;
 }
 
-class PopoverStore extends MailspringStore {
+class PopoverStore extends MorosStore {
   isOpen = false;
   container: HTMLElement;
 

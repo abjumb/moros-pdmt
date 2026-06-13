@@ -2,7 +2,7 @@ import React from 'react';
 import moment, { Moment } from 'moment-timezone';
 import { ScrollRegion, InjectedComponentSet } from 'moros-component-kit';
 import { localized, Actions } from 'moros-exports';
-import { MailspringCalendarViewProps } from './mailspring-calendar';
+import { MorosCalendarViewProps } from './mailspring-calendar';
 import { CalendarView } from './calendar-constants';
 import { HeaderControls } from './header-controls';
 import { CalendarEventPopover } from './calendar-event-popover';
@@ -21,13 +21,13 @@ interface AgendaViewState {
   events: EventOccurrence[];
 }
 
-export class AgendaView extends React.Component<MailspringCalendarViewProps, AgendaViewState> {
+export class AgendaView extends React.Component<MorosCalendarViewProps, AgendaViewState> {
   static displayName = 'AgendaView';
 
   _mounted = false;
   _sub?: Disposable;
 
-  constructor(props: MailspringCalendarViewProps) {
+  constructor(props: MorosCalendarViewProps) {
     super(props);
     this.state = {
       events: [],
@@ -39,7 +39,7 @@ export class AgendaView extends React.Component<MailspringCalendarViewProps, Age
     this.updateSubscription();
   }
 
-  componentDidUpdate(prevProps: MailspringCalendarViewProps) {
+  componentDidUpdate(prevProps: MorosCalendarViewProps) {
     if (
       prevProps.focusedMoment !== this.props.focusedMoment ||
       prevProps.disabledCalendars !== this.props.disabledCalendars

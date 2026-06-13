@@ -8,7 +8,7 @@ import {
   RegExpUtils,
 } from 'moros-exports';
 
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import path from 'path';
 import fs from 'fs';
 
@@ -22,7 +22,7 @@ interface TemplateItem {
   path: string;
 }
 
-class TemplateStore extends MailspringStore {
+class TemplateStore extends MorosStore {
   private _items = [];
   private _templatesDir = path.join(AppEnv.getConfigDirPath(), 'templates');
   private _watcher = null;

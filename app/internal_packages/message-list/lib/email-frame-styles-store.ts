@@ -1,6 +1,6 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 
-class EmailFrameStylesStore extends MailspringStore {
+class EmailFrameStylesStore extends MorosStore {
   _styles?: string;
   _mutationObserver: MutationObserver;
 

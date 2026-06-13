@@ -13,7 +13,7 @@ import path from 'path';
 //   * <config-dir>/packages
 //   * RESOURCE_PATH/node_modules
 //
-export default class MailspringProtocolHandler {
+export default class MorosProtocolHandler {
   loadPaths: string[] = [];
 
   constructor({ configDirPath, resourcePath, safeMode }) {

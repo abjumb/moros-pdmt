@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Modal } from 'moros-component-kit';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 
 import * as Actions from '../actions';
 
@@ -13,7 +13,7 @@ function createContainer(id) {
   return element;
 }
 
-class ModalStore extends MailspringStore {
+class ModalStore extends MorosStore {
   isOpen = false;
   container: HTMLElement;
 

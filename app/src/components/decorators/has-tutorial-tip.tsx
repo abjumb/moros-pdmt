@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { localized, Actions, WorkspaceStore, DOMUtils } from 'moros-exports';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { Disposable } from 'event-kit';
 
 const TipsBackgroundEl = document.createElement('tutorial-tip-background');
@@ -13,7 +13,7 @@ const TipsContainerEl = document.createElement('div');
 TipsContainerEl.classList.add('tooltips-container');
 document.body.insertBefore(TipsContainerEl, document.body.children[0]);
 
-class TipsStoreCls extends MailspringStore {
+class TipsStoreCls extends MorosStore {
   _tipKeys = [];
 
   isTipVisible(key) {

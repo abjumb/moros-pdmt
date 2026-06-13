@@ -9,7 +9,7 @@ import {
   MailsyncProcess,
   localized,
 } from 'moros-exports';
-import MailspringProviderSettings from './mailspring-provider-settings.json';
+import MorosProviderSettings from './mailspring-provider-settings.json';
 import MailcoreProviderSettings from './mailcore-provider-settings.json';
 import dns from 'dns';
 import {
@@ -142,10 +142,10 @@ export async function expandAccountWithCommonSettings(account: Account) {
   // this matches the acccount type presets ("yahoo") and common domains against
   // data derived from Thunderbirds ISPDB.
   let mstemplate =
-    MailspringProviderSettings[domain] || MailspringProviderSettings[account.provider];
+    MorosProviderSettings[domain] || MorosProviderSettings[account.provider];
   if (mstemplate) {
     if (mstemplate.alias) {
-      mstemplate = MailspringProviderSettings[mstemplate.alias];
+      mstemplate = MorosProviderSettings[mstemplate.alias];
     }
     console.log(`Using Mailspring Template: ${JSON.stringify(mstemplate, null, 2)}`);
   } else {

@@ -6,11 +6,11 @@ import {
   IdentityAuthResponse,
 } from 'moros-exports';
 import { ipcRenderer } from 'electron';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 
 import * as OnboardingActions from './onboarding-actions';
 
-class OnboardingStore extends MailspringStore {
+class OnboardingStore extends MorosStore {
   _account: Account;
   _pageStack: string[];
 

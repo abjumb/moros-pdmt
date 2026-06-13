@@ -72,7 +72,7 @@ export interface EventRendererProps {
   onEventFocused: (event: EventOccurrence) => void;
 }
 
-export interface MailspringCalendarViewProps extends EventRendererProps {
+export interface MorosCalendarViewProps extends EventRendererProps {
   dataSource: CalendarDataSource;
   disabledCalendars: string[];
   focusedMoment: Moment;
@@ -100,9 +100,9 @@ export interface MailspringCalendarViewProps extends EventRendererProps {
 /*
  * Mailspring Calendar
  */
-interface MailspringCalendarProps {}
+interface MorosCalendarProps {}
 
-interface MailspringCalendarState {
+interface MorosCalendarState {
   view: CalendarView;
   selectedEvents: EventOccurrence[];
   focusedEvent: FocusedEventInfo | null;
@@ -117,11 +117,11 @@ interface MailspringCalendarState {
   themeVersion: number;
 }
 
-export class MailspringCalendar extends React.Component<
-  MailspringCalendarProps,
-  MailspringCalendarState
+export class MorosCalendar extends React.Component<
+  MorosCalendarProps,
+  MorosCalendarState
 > {
-  static displayName = 'MailspringCalendar';
+  static displayName = 'MorosCalendar';
 
   static DayView = DayView;
   static WeekView = WeekView;
@@ -135,7 +135,7 @@ export class MailspringCalendar extends React.Component<
   _unlisten?: () => void;
   _dataSource = new CalendarDataSource();
 
-  constructor(props: MailspringCalendarProps) {
+  constructor(props: MorosCalendarProps) {
     super(props);
     this.state = {
       calendars: [],

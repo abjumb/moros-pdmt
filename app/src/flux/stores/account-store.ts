@@ -2,7 +2,7 @@
 
 import _ from 'underscore';
 
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import KeyManager from '../../key-manager';
 import * as Actions from '../actions';
 import { Account } from '../models/account';
@@ -22,7 +22,7 @@ the database and exposes the currently active Account via {::current}
 
 Section: Stores
 */
-class _AccountStore extends MailspringStore {
+class _AccountStore extends MorosStore {
   private _version: number;
   private _accounts: Account[];
   private _containerFolderDefault: string;

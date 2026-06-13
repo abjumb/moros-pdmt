@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { AccountStore } from './account-store';
 import CategoryStore from './category-store';
 import { Folder } from '../models/folder';
@@ -31,7 +31,7 @@ interface FolderProgress {
   scanProgress: number;
   bodyProgress: number;
 }
-class FolderSyncProgressStore extends MailspringStore {
+class FolderSyncProgressStore extends MorosStore {
   _triggerDebounced: () => void;
   _statesByAccount: { [accountId: string]: { [folderPath: string]: FolderProgress } } = {};
   _stateSummary = {

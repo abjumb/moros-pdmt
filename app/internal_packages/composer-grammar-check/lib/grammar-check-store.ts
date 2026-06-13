@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { localized, FeatureUsageStore, IdentityStore } from 'moros-exports';
 import { GrammarError, LanguageToolBackend, UsageExceededError } from './grammar-check-service';
 
@@ -17,7 +17,7 @@ interface BlockCheckResult {
   errors: GrammarError[];
 }
 
-class _GrammarCheckStore extends MailspringStore {
+class _GrammarCheckStore extends MorosStore {
   private _enabled = false;
   private _checking: Map<string, boolean> = new Map();
   private _errorsByDraft: Map<string, Map<string, BlockCheckResult>> = new Map();

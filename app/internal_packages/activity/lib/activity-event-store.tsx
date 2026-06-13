@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import {
   localized,
   Actions,
@@ -32,7 +32,7 @@ export function pluckByEmail(recipients: Contact[], email: string) {
   return null;
 }
 
-class ActivityEventStore extends MailspringStore {
+class ActivityEventStore extends MorosStore {
   _throttlingTimestamps = {};
   _actions = [];
   _unreadCount = 0;

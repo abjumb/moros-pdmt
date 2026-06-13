@@ -8,7 +8,7 @@ import { isWaylandSession } from './is-wayland';
 let WindowIconPath = null;
 let idNum = 0;
 
-export interface MailspringWindowSettings {
+export interface MorosWindowSettings {
   frame?: boolean;
   title?: string;
   width?: number;
@@ -36,12 +36,12 @@ export interface MailspringWindowSettings {
   [key: string]: unknown;
 }
 
-export default class MailspringWindow extends EventEmitter {
+export default class MorosWindow extends EventEmitter {
   static includeShellLoadTime = true;
 
   public windowType: string;
   public browserWindow: BrowserWindow & {
-    loadSettings?: MailspringWindowSettings;
+    loadSettings?: MorosWindowSettings;
     loadSettingsChangedSinceGetURL?: boolean;
   } = null;
   public devMode: boolean;
@@ -58,7 +58,7 @@ export default class MailspringWindow extends EventEmitter {
 
   private isWindowClosing: boolean;
 
-  constructor(settings: MailspringWindowSettings = {}) {
+  constructor(settings: MorosWindowSettings = {}) {
     super();
 
     let frame, height, pathToOpen, resizable, title, width, autoHideMenuBar, titleBarStyle;
@@ -157,8 +157,8 @@ export default class MailspringWindow extends EventEmitter {
     }
 
     // Only send to the first non-spec window created
-    if (MailspringWindow.includeShellLoadTime && !this.isSpec) {
-      MailspringWindow.includeShellLoadTime = false;
+    if (MorosWindow.includeShellLoadTime && !this.isSpec) {
+      MorosWindow.includeShellLoadTime = false;
       if (loadSettings.shellLoadTime == null) {
         loadSettings.shellLoadTime = Date.now() - global.shellStartTime;
       }
@@ -229,7 +229,7 @@ export default class MailspringWindow extends EventEmitter {
     this.setLoadSettings({ ...this.browserWindow.loadSettings, ...newSettings });
   };
 
-  loadSettings(): MailspringWindowSettings {
+  loadSettings(): MorosWindowSettings {
     return this.browserWindow.loadSettings;
   }
 

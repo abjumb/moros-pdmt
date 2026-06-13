@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import {
   Actions,
   Account,
@@ -22,7 +22,7 @@ const Sections = {
   User: 'User',
 };
 
-class SidebarStore extends MailspringStore {
+class SidebarStore extends MorosStore {
   _sections: {
     Standard: ISidebarSection;
     User: ISidebarSection[];

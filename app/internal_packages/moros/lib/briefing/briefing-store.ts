@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { DatabaseStore, Message, localized } from 'moros-exports';
 import MorosDataStore, { MorosRecord } from '../moros-data-store';
 import AiSettingsStore from '../ai/ai-settings';
@@ -74,7 +74,7 @@ export function buildBriefPrompt(messages: BriefEmail[]): string {
   ].join('\n');
 }
 
-class BriefingStore extends MailspringStore {
+class BriefingStore extends MorosStore {
   _briefs = new MorosDataStore<MorosBrief>('briefs.json');
   _working = false;
   _lastError: string | null = null;

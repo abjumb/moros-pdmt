@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 
 import {
   localized,
@@ -13,7 +13,7 @@ import { markUnreadOrResurfaceThreads, moveThreads, snoozedUntilMessage } from '
 import { PLUGIN_ID } from './snooze-constants';
 import * as SnoozeActions from './snooze-actions';
 
-class _SnoozeStore extends MailspringStore {
+class _SnoozeStore extends MorosStore {
   unsubscribers: Array<() => void>;
 
   activate() {

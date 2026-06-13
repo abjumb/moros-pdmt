@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { DraftEditingSession } from './draft-editing-session';
 import DraftFactory, { ReplyType, ReplyBehavior } from './draft-factory';
 import DatabaseStore from './database-store';
@@ -39,7 +39,7 @@ Remember that a "Draft" is actually just a "Message" with `draft: true`.
 
 Section: Drafts
 */
-class DraftStore extends MailspringStore {
+class DraftStore extends MorosStore {
   _draftSessions: { [headerMessageId: string]: DraftEditingSession } = {};
   _draftsSending: { [headerMessageId: string]: boolean } = {};
 

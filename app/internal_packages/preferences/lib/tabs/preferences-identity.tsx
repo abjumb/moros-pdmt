@@ -182,7 +182,7 @@ class PreferencesIdentity extends React.Component<
           </div>
         </div>
         <div className="row padded" style={{ paddingTop: 0 }}>
-          <ExploreMailspringPro />
+          <ExploreMorosPro />
         </div>
       </>
     );
@@ -212,7 +212,7 @@ class PreferencesIdentity extends React.Component<
               `Upgrade to %@ to use all these great features permanently:`,
               <a onClick={onLearnMore}>{localized('Mailspring Pro')}</a>
             )}
-            <ExploreMailspringSmall />
+            <ExploreMorosSmall />
           </div>
           <div className="subscription-actions">
             <div className="pro-feature-ring">
@@ -230,7 +230,7 @@ class PreferencesIdentity extends React.Component<
             />
           </div>
         </div>
-        <ExploreMailspringPro />
+        <ExploreMorosPro />
       </div>
     );
   }
@@ -260,7 +260,7 @@ class PreferencesIdentity extends React.Component<
           )}
           {unpaidNote}
         </div>
-        <ExploreMailspringPro />
+        <ExploreMorosPro />
         <div style={{ paddingTop: 15 }}>
           <OpenIdentityPageButton
             label={localized('Manage Billing')}
@@ -293,7 +293,7 @@ class PreferencesIdentity extends React.Component<
   }
 }
 
-const ExploreMailspringSmall: React.FunctionComponent = () => (
+const ExploreMorosSmall: React.FunctionComponent = () => (
   <div className="features">
     <ul>
       <li>
@@ -382,7 +382,7 @@ const ExploreMailspringSmall: React.FunctionComponent = () => (
   </div>
 );
 
-const ExploreMailspringPro: React.FunctionComponent = () => (
+const ExploreMorosPro: React.FunctionComponent = () => (
   <>
     <div className="feature-explore-title">{localized('Explore Mailspring Pro')}</div>
     <div className="feature-explore-grid">
@@ -408,7 +408,7 @@ const ExploreMailspringPro: React.FunctionComponent = () => (
 
 const IdentitySummary: React.FunctionComponent<{ identity: IIdentity }> = (props) => {
   const { firstName, lastName, emailAddress } = props.identity;
-  const logout = () => Actions.logoutMailspringIdentity();
+  const logout = () => Actions.logoutMorosIdentity();
   return (
     <div className="row padded">
       <div className="identity-info">

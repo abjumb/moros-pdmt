@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 
 import {
   Rx,
@@ -12,7 +12,7 @@ import {
 import { ListTabular, ListDataSource } from 'moros-component-kit';
 import ThreadListDataSource from './thread-list-data-source';
 
-class ThreadListStore extends MailspringStore {
+class ThreadListStore extends MorosStore {
   _dataSource?: ListDataSource;
   _dataSourceUnlisten: () => void;
 

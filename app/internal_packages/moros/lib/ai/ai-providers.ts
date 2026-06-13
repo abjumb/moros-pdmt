@@ -1,4 +1,4 @@
-import { localized, IdentityStore, MailspringAPIRequest } from 'moros-exports';
+import { localized, IdentityStore, MorosAPIRequest } from 'moros-exports';
 import KeyNestStore, { ANTHROPIC_KEY_ENTRY_NAME } from '../keynest/keynest-store';
 
 export type AiProviderId = 'byok' | 'hosted';
@@ -204,7 +204,7 @@ export class MorosHostedProvider implements AiProvider {
 
   async complete(prompt: string, { task, maxTokens }: AiCompletionOptions) {
     await this.validate();
-    const json = await MailspringAPIRequest.makeRequest({
+    const json = await MorosAPIRequest.makeRequest({
       server: 'identity',
       method: 'POST',
       path: '/api/ai/complete',

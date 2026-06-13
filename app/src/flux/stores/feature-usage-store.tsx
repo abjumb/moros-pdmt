@@ -1,6 +1,6 @@
 import Rx from 'rx-lite';
 import React from 'react';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { FeatureUsedUpModal } from 'moros-component-kit';
 import * as Actions from '../actions';
 import { IdentityStore, EMPTY_FEATURE_USAGE, IIdentity } from './identity-store';
@@ -26,7 +26,7 @@ export interface FeatureLexicon {
  *
  * The final schema looks like (Feb 7, 2017):
  *
- * MailspringID = {
+ * MorosID = {
  *   ...
  *   "featureUsage": {
  *     "snooze": {
@@ -54,7 +54,7 @@ export interface FeatureLexicon {
  * Valid periods are:
  * 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'unlimited'
  */
-class _FeatureUsageStore extends MailspringStore {
+class _FeatureUsageStore extends MorosStore {
   _waitForModalClose = [];
   NoProAccessError = NoProAccessError;
   _disp: Rx.Disposable;

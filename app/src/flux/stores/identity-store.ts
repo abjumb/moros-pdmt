@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 
 import url from 'url';
 import querystring from 'querystring';
@@ -40,7 +40,7 @@ export const EMPTY_FEATURE_USAGE = {
   quota: 0,
 };
 
-class _IdentityStore extends MailspringStore {
+class _IdentityStore extends MorosStore {
   _identity: IIdentity = null;
   _displayedPasswordError = false;
   _disp: Disposable;
@@ -62,7 +62,7 @@ class _IdentityStore extends MailspringStore {
     AppEnv.config.onDidChange('identity', this._onIdentityChanged);
     this._onIdentityChanged();
 
-    this.listenTo(Actions.logoutMailspringIdentity, this._onLogoutMailspringIdentity);
+    this.listenTo(Actions.logoutMorosIdentity, this._onLogoutMorosIdentity);
     this._fetchAndPollRemoteIdentity();
   }
 
@@ -154,12 +154,12 @@ class _IdentityStore extends MailspringStore {
     this.trigger();
   };
 
-  _onLogoutMailspringIdentity = async () => {
+  _onLogoutMorosIdentity = async () => {
     // Do not touch the keychain or restart the app during specs.
     if (AppEnv.inSpecMode()) return;
     await this.saveIdentity(null);
     // We need to relaunch the app to clear the webview session
-    // and prevent the webview from re signing in with the same MailspringID
+    // and prevent the webview from re signing in with the same MorosID
     require('@electron/remote').app.relaunch();
     require('@electron/remote').app.quit();
   };

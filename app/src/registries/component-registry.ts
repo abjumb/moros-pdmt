@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { SheetToolbarDeclaration } from '../flux/stores/workspace-store';
 
 type LocationDescriptor = { id: string } | SheetToolbarDeclaration;
@@ -20,7 +20,7 @@ to dynamically render components registered with the ComponentRegistry.
 
 Section: Stores
 */
-class ComponentRegistry extends MailspringStore {
+class ComponentRegistry extends MorosStore {
   _registry: {
     [displayName: string]: {
       modes?: string[];

@@ -1,5 +1,5 @@
 import { Actions, ICSEventHelpers, CalendarUtils, SyncbackEventTask } from 'moros-exports';
-import { Event as MailspringEvent } from '../src/flux/models/event';
+import { Event as MorosEvent } from '../src/flux/models/event';
 
 // Import the functions under test directly from the source file.
 // We use a relative path because the plugin is not registered in moros-exports.
@@ -85,8 +85,8 @@ END:VCALENDAR`;
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeEvent(ics: string, overrides: Partial<MailspringEvent> = {}): MailspringEvent {
-  return new MailspringEvent({
+function makeEvent(ics: string, overrides: Partial<MorosEvent> = {}): MorosEvent {
+  return new MorosEvent({
     id: 'event-id-1',
     accountId: 'account-id-1',
     calendarId: 'calendar-id-1',

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   localized,
   APIError,
-  MailspringAPIRequest,
+  MorosAPIRequest,
   Message,
   DraftEditingSession,
 } from 'moros-exports';
@@ -14,7 +14,7 @@ type Props = { draft: Message; session: DraftEditingSession };
 function errorMessage(error: Error) {
   if (
     error instanceof APIError &&
-    MailspringAPIRequest.TimeoutErrorCodes.includes(error.statusCode)
+    MorosAPIRequest.TimeoutErrorCodes.includes(error.statusCode)
   ) {
     return localized(
       `Link tracking does not work offline. Please re-enable when you come back online.`

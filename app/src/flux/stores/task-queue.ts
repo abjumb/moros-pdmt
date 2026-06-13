@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { Rx } from 'moros-exports';
 import { Task } from '../tasks/task';
 import DatabaseStore from './database-store';
@@ -41,7 +41,7 @@ Actions.dequeueMatchingTask({
 })
 */
 
-class TaskQueue extends MailspringStore {
+class TaskQueue extends MorosStore {
   _queue: Task[] = [];
   _completed: Task[] = [];
   _currentSequentialId = Date.now();

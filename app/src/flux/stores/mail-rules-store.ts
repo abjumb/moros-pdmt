@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import _ from 'underscore';
 import * as Utils from '../models/utils';
 import * as Actions from '../actions';
@@ -38,7 +38,7 @@ export interface MailRule extends Template {
   ];
 }
 
-class MailRulesStore extends MailspringStore {
+class MailRulesStore extends MorosStore {
   _autoSince = Number(window.localStorage.getItem(AutoSinceJSONKey) || 0);
   _reprocessing: {
     [accountId: string]: {

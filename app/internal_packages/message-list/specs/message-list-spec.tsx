@@ -8,7 +8,7 @@ import {
   Folder,
   Message,
   MessageStore,
-  MailspringTestUtils,
+  MorosTestUtils,
 } from 'moros-exports';
 
 import MessageParticipants from '../lib/message-participants';
@@ -185,7 +185,7 @@ describe('MessageList', function () {
       MessageStore._expandItemsToDefault();
       MessageStore.trigger(MessageStore);
       this.messageList.setState({ currentThread: testThread });
-      MailspringTestUtils.loadKeymap('keymaps/base');
+      MorosTestUtils.loadKeymap('keymaps/base');
     });
 
     it('renders all the correct number of messages', function () {

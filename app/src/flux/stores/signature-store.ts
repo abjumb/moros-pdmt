@@ -1,5 +1,5 @@
 import { localized, Actions, AccountStore } from 'moros-exports';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import _ from 'underscore';
 
 export interface IDefaultSignatures {
@@ -20,7 +20,7 @@ export interface ISignatureSet {
   [key: string]: ISignature;
 }
 
-class _SignatureStore extends MailspringStore {
+class _SignatureStore extends MorosStore {
   signatures: ISignatureSet;
   defaultSignatures: IDefaultSignatures;
   selectedSignatureId: string;

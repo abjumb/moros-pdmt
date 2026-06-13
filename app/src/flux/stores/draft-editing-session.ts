@@ -1,4 +1,4 @@
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { Editor, Value, Block } from 'slate';
 
 import RegExpUtils from '../../regexp-utils';
@@ -184,7 +184,7 @@ that display Draft objects or allow for interactive editing of Drafts.
 
 Section: Drafts
 */
-export class DraftEditingSession extends MailspringStore {
+export class DraftEditingSession extends MorosStore {
   static DraftChangeSet = DraftChangeSet;
 
   _draft: MessageWithEditorState = null;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { localized, MailspringAPIRequest } from 'moros-exports';
+import { localized, MorosAPIRequest } from 'moros-exports';
 import { RetinaImg } from 'moros-component-kit';
 
 function buildShareHTML(htmlEl: HTMLElement, styleEl: HTMLStyleElement) {
@@ -67,7 +67,7 @@ export default class ShareButton extends React.Component<
       loading: true,
     });
 
-    const link = await MailspringAPIRequest.postStaticPage({
+    const link = await MorosAPIRequest.postStaticPage({
       key: `activity-${Date.now()}`,
       html: buildShareHTML(
         document.querySelector('style[source-path*="activity/styles/index.less"]'),

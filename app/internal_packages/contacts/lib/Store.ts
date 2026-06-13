@@ -6,10 +6,10 @@ import {
   ContactBook,
   MutableQuerySubscription,
 } from 'moros-exports';
-import MailspringStore from 'moros-store';
+import MorosStore from 'moros-store';
 import { ListTabular } from 'moros-component-kit';
 
-class ContactsWindowStore extends MailspringStore {
+class ContactsWindowStore extends MorosStore {
   _perspective: ContactsPerspective = { type: 'unified' };
   _listSource = new ListTabular.DataSource.DumbArrayDataSource<Contact>();
 
