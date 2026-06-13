@@ -1,0 +1,77 @@
+// Light variant of the Linear-inspired theme: white surfaces, the same
+// indigo #5E6AD2 accent and Inter type stack as ui-linear, with Linear's
+// light-mode gray text ramp and hairline borders.
+@import 'base/ui-variables';
+
+@accent-primary: var(--system-accent, #5e6ad2);
+
+@background-primary: #ffffff;
+@background-off-primary: #fcfcfd;
+@background-secondary: #f4f5f8;
+@background-tertiary: #e4e5e8;
+
+@background-gradient: none;
+
+@border-color-primary: #e4e5e8;
+@border-color-secondary: #ebecef;
+@border-color-tertiary: #d9dade;
+@border-color-divider: #ebecef;
+
+@text-color: #232529;
+@text-color-subtle: #6b6f76;
+@text-color-very-subtle: #9ca0a8;
+@text-color-heading: #232529;
+
+@text-color-link: #5e6ad2;
+@text-color-link-hover: #4f5ac2;
+@text-color-link-active: #4f5ac2;
+
+@component-active-color: @accent-primary;
+
+// Linear's type stack and density, matching ui-linear.
+@font-family-sans-serif: 'Inter', 'Inter Variable', -apple-system, BlinkMacSystemFont,
+  'Segoe UI', 'Helvetica Neue', sans-serif;
+@font-family: @font-family-sans-serif;
+@font-family-heading: @font-family-sans-serif;
+@font-size-base: 13px;
+
+@border-radius-base: 4px;
+@border-radius-large: 6px;
+@border-radius-small: 4px;
+
+@standard-shadow-color: rgba(0, 0, 0, 0.08);
+
+@btn-default-bg-color: #ffffff;
+@btn-border-color: rgba(0, 0, 0, 0.12);
+@btn-icon-color: #6b6f76;
+@btn-emphasis-bg-color: @accent-primary;
+
+@input-bg: #ffffff;
+@input-border-color: #d9dade;
+@input-border: #d9dade;
+
+@list-bg: #ffffff;
+@list-border: #ebecef;
+@list-hover-bg: #f4f5f8;
+@list-focused-color: #232529;
+@list-focused-bg: color-mix(in srgb, #5e6ad2 12%, #ffffff);
+@list-focused-border: color-mix(in srgb, #5e6ad2 40%, #ffffff);
+@list-selected-color: #232529;
+@list-selected-bg: color-mix(in srgb, #5e6ad2 8%, #ffffff);
+@list-selected-border: color-mix(in srgb, #5e6ad2 25%, #ffffff);
+
+@toolbar-background-color: #f9f9fa;
+@panel-background-color: #f9f9fa;
+@source-list-bg: @panel-background-color;
+@source-list-active-bg: rgba(0, 0, 0, 0.06);
+@source-list-active-color: #232529;
+
+@menu-item-color-hover: rgba(0, 0, 0, 0.05);
+@menu-item-color-selected: #5e6ad2;
+@menu-text-color-selected: #ffffff;
+
+@color-info: #3b82f6;
+@color-success: #2f9e6b;
+@color-warning: #d97917;
+@color-error: #d54550;
+@color-danger: #d54550;

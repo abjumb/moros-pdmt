@@ -20,6 +20,11 @@ export function todayISO() {
   return `${d.getFullYear()}-${month}-${day}`;
 }
 
+/** Directory holding all Moros module JSON files. */
+export function morosDataDirPath() {
+  return path.join(AppEnv.getConfigDirPath(), 'moros');
+}
+
 /**
  * Base class for the Moros module stores. Records live in memory and are
  * persisted as JSON beneath `<config>/moros/`, outside the mail database —
@@ -48,9 +53,9 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
     return this._items.find((item) => item.id === id);
   }
 
-  create(attrs: Omit<T, 'id' | 'createdAt' | 'updatedAt'>): T {
+  create(attrs: Omit<T, 'id' | 'createdAt' | 'updatedAt'>, presetId?: string): T {
     const now = Date.now();
-    const item = { ...attrs, id: morosId(), createdAt: now, updatedAt: now } as T;
+    const item = { ...attrs, id: presetId || morosId(), createdAt: now, updatedAt: now } as T;
     this._items = [item, ...this._items];
     this._queueSave();
     this.trigger();
@@ -77,7 +82,7 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
   }
 
   _filePath() {
-    return path.join(AppEnv.getConfigDirPath(), 'moros', this._filename);
+    return path.join(morosDataDirPath(), this._filename);
   }
 
   _load(): T[] {
@@ -88,6 +93,12 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
       // Missing on first run; if unreadable / corrupt, start empty rather than crash.
       return [];
     }
+  }
+
+  /** Persist immediately, bypassing the debounce — for ordering-sensitive writes. */
+  flush() {
+    if (this._saveTimer) clearTimeout(this._saveTimer);
+    this._save();
   }
 
   _queueSave() {

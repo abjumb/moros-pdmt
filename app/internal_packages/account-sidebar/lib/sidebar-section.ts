@@ -66,7 +66,13 @@ class SidebarSection {
     ExtensionRegistry.AccountSidebar.extensions()
       .filter((ext) => ext.sidebarItem != null)
       .forEach((ext) => {
-        const { id, name, iconName, perspective, insertAtTop } = ext.sidebarItem([account.id]);
+        // Extensions may return null to skip a section (e.g. account-agnostic
+        // items that only want to appear once, in the unified section).
+        const extItem = ext.sidebarItem([account.id]);
+        if (!extItem) {
+          return;
+        }
+        const { id, name, iconName, perspective, insertAtTop } = extItem;
         const item = SidebarItem.forPerspective(id, perspective, { name, iconName });
         if (insertAtTop) {
           return items.splice(3, 0, item);
@@ -143,17 +149,28 @@ class SidebarSection {
     ExtensionRegistry.AccountSidebar.extensions()
       .filter((ext) => ext.sidebarItem != null)
       .forEach((ext) => {
-        const { id, name, iconName, perspective, insertAtTop } = ext.sidebarItem(accountIds);
+        // Extensions may return null to skip a section (e.g. account-agnostic
+        // items that only want to appear once).
+        const extItem = ext.sidebarItem(accountIds);
+        if (!extItem) {
+          return;
+        }
+        const { id, name, iconName, perspective, insertAtTop } = extItem;
         const item = SidebarItem.forPerspective(id, perspective, {
           name,
           iconName,
-          children: accounts.map((acc) => {
-            const subItem = ext.sidebarItem([acc.id]);
-            return SidebarItem.forPerspective(subItem.id + `-${acc.id}`, subItem.perspective, {
-              name: acc.label,
-              iconName: subItem.iconName,
-            });
-          }),
+          children: accounts
+            .map((acc) => {
+              const subItem = ext.sidebarItem([acc.id]);
+              if (!subItem) {
+                return null;
+              }
+              return SidebarItem.forPerspective(subItem.id + `-${acc.id}`, subItem.perspective, {
+                name: acc.label,
+                iconName: subItem.iconName,
+              });
+            })
+            .filter(Boolean),
         });
         if (insertAtTop) {
           items.splice(3, 0, item);

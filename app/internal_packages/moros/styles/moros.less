@@ -3,6 +3,88 @@
 // Linear-style module chrome: dense rows, hairline dividers, quiet chrome
 // that picks all of its color from the active theme's variables.
 
+.moros-root .moros-header.moros-header-split {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: @spacing-standard;
+}
+
+// ------------------------------------------------------------- Net worth
+
+.moros-networth {
+  padding: @spacing-standard @spacing-double;
+
+  .moros-networth-headline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: @spacing-standard;
+  }
+
+  .moros-networth-value {
+    font-size: @font-size-base * 2;
+    font-weight: @font-weight-semi-bold;
+    font-variant-numeric: tabular-nums;
+    color: @text-color-heading;
+  }
+
+  .moros-networth-delta {
+    margin-top: 2px;
+    font-size: @font-size-small;
+    font-variant-numeric: tabular-nums;
+
+    &.is-income {
+      color: @color-success;
+    }
+    &.is-expense {
+      color: @color-error;
+    }
+  }
+
+  .moros-networth-chart {
+    display: block;
+    width: 100%;
+    height: 140px;
+    margin-top: @spacing-standard;
+
+    .moros-chart-line {
+      stroke: @accent-primary;
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .moros-chart-area {
+      fill: color-mix(in srgb, #5e6ad2 18%, transparent);
+    }
+  }
+}
+
+.moros-range-pills {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: @background-secondary;
+  border: 1px solid @border-color-divider;
+  border-radius: @border-radius-large;
+  align-self: flex-start;
+
+  .moros-range-pill {
+    border: none;
+    background: none;
+    color: @text-color-subtle;
+    font-size: @font-size-smaller;
+    padding: 3px 8px;
+    border-radius: @border-radius-base;
+    cursor: pointer;
+
+    &.is-active {
+      background: @background-primary;
+      color: @text-color;
+    }
+  }
+}
+
 .moros-root {
   display: flex;
   flex-direction: column;

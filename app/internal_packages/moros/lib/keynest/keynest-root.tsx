@@ -4,6 +4,7 @@ import { localized } from 'mailspring-exports';
 import KeyNestStore, { KeyNestEntry, KeyNestEntryKind, expiryState } from './keynest-store';
 
 const CLIPBOARD_CLEAR_MS = 30000;
+const REVEAL_HIDE_MS = 15000;
 
 type KindFilter = 'all' | KeyNestEntryKind;
 
@@ -31,6 +32,7 @@ export default class KeyNestRoot extends React.Component<
   _unlisten?: () => void;
   _copiedTimer: ReturnType<typeof setTimeout> | null = null;
   _clipboardClearTimer: ReturnType<typeof setTimeout> | null = null;
+  _revealHideTimer: ReturnType<typeof setTimeout> | null = null;
   // Held (outside state) only to verify the clipboard still contains our
   // secret before auto-clearing — never rendered.
   _copiedSecret: string | null = null;
@@ -58,8 +60,15 @@ export default class KeyNestRoot extends React.Component<
     if (this._unlisten) this._unlisten();
     if (this._copiedTimer) clearTimeout(this._copiedTimer);
     if (this._clipboardClearTimer) clearTimeout(this._clipboardClearTimer);
+    if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
     this._copiedSecret = null;
   }
+
+  _hideRevealed = () => {
+    if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
+    this._revealHideTimer = null;
+    this.setState({ revealedId: null, revealedSecret: null });
+  };
 
   _onCreate = async () => {
     const name = this.state.draftName.trim();
@@ -106,16 +115,19 @@ export default class KeyNestRoot extends React.Component<
 
   _onToggleReveal = async (entry: KeyNestEntry) => {
     if (this.state.revealedId === entry.id) {
-      this.setState({ revealedId: null, revealedSecret: null });
+      this._hideRevealed();
       return;
     }
     const secret = await KeyNestStore.getSecret(entry.id);
     this.setState({ revealedId: entry.id, revealedSecret: secret === undefined ? null : secret });
+    // Don't leave plaintext on screen if the user walks away.
+    if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
+    this._revealHideTimer = setTimeout(this._hideRevealed, REVEAL_HIDE_MS);
   };
 
   _onRemove = async (entry: KeyNestEntry) => {
     if (this.state.revealedId === entry.id) {
-      this.setState({ revealedId: null, revealedSecret: null });
+      this._hideRevealed();
     }
     await KeyNestStore.removeWithSecret(entry.id);
   };

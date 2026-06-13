@@ -1,5 +1,5 @@
 import { KeyManager } from 'mailspring-exports';
-import MorosDataStore, { MorosRecord } from '../moros-data-store';
+import MorosDataStore, { MorosRecord, morosId } from '../moros-data-store';
 
 export type KeyNestEntryKind = 'password' | 'api-key';
 
@@ -51,12 +51,21 @@ class KeyNestStore extends MorosDataStore<KeyNestEntry> {
     super('vault.json');
   }
 
+  // Write ordering matters in both directions: a crash between the two
+  // writes must never leave a *visible* entry whose secret is gone. The
+  // failure mode we accept instead is an orphaned keychain value, which is
+  // invisible, still encrypted, and overwritten if the id is ever reused.
+
   async createWithSecret(
     attrs: Omit<KeyNestEntry, 'id' | 'createdAt' | 'updatedAt'>,
     secret: string
   ) {
-    const entry = this.create(attrs);
-    await KeyManager.replacePassword(secretKeyName(entry.id), secret);
+    const id = morosId();
+    // Store the secret first; if the keychain write throws (locked keychain,
+    // safeStorage unavailable), no visible entry is ever created.
+    await KeyManager.replacePassword(secretKeyName(id), secret);
+    const entry = this.create(attrs, id);
+    this.flush();
     return entry;
   }
 
@@ -65,8 +74,13 @@ class KeyNestStore extends MorosDataStore<KeyNestEntry> {
   }
 
   async removeWithSecret(entryId: string) {
+    // Remove + durably persist metadata before deleting the keychain secret,
+    // so a crash can't leave a visible entry pointing at a deleted secret.
+    const removed = this.remove(entryId);
+    if (!removed) return undefined;
+    this.flush();
     await KeyManager.deletePassword(secretKeyName(entryId));
-    return this.remove(entryId);
+    return removed;
   }
 
   findByName(name: string): KeyNestEntry | undefined {
@@ -86,8 +100,10 @@ class KeyNestStore extends MorosDataStore<KeyNestEntry> {
   ) {
     const existing = this.findByName(name);
     if (existing) {
-      const updated = this.update(existing.id, attrs) || existing;
+      // Rotate the secret first, then persist metadata, mirroring create.
       await KeyManager.replacePassword(secretKeyName(existing.id), secret);
+      const updated = this.update(existing.id, attrs) || existing;
+      this.flush();
       return updated;
     }
     return this.createWithSecret(
