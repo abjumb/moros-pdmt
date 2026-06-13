@@ -11,6 +11,10 @@ import SubscriptionsStore, {
   parseAmountToCents,
 } from './subscriptions-store';
 import { SubscriptionCandidate, scanRecentMessages } from './subscription-detector';
+import { classifyCandidates } from './subscription-ai';
+import AiSettingsPanel from '../ai/ai-settings-panel';
+import AiSettingsStore from '../ai/ai-settings';
+import { providerById } from '../ai/ai-providers';
 import { todayISO } from '../moros-data-store';
 
 interface SubscriptionsRootState {
@@ -24,6 +28,8 @@ interface SubscriptionsRootState {
   scanning: boolean;
   scanRan: boolean;
   scanError: string | null;
+  refining: boolean;
+  aiNotice: string | null;
 }
 
 export default class SubscriptionsRoot extends React.Component<
@@ -46,6 +52,8 @@ export default class SubscriptionsRoot extends React.Component<
     scanning: false,
     scanRan: false,
     scanError: null,
+    refining: false,
+    aiNotice: null,
   };
 
   componentDidMount() {
@@ -78,7 +86,7 @@ export default class SubscriptionsRoot extends React.Component<
   };
 
   _onScan = async () => {
-    this.setState({ scanning: true, scanError: null });
+    this.setState({ scanning: true, scanError: null, aiNotice: null });
     try {
       const suggestions = await scanRecentMessages(SubscriptionsStore.trackedVendorEmails());
       if (!this._mounted) return;
@@ -91,6 +99,41 @@ export default class SubscriptionsRoot extends React.Component<
         scanning: false,
         scanRan: true,
         scanError: err instanceof Error ? err.message : String(err),
+      });
+    }
+  };
+
+  // Refine the regex-detected suggestions with the configured AI provider:
+  // drop false positives and normalize names/categories/amounts.
+  _onRefine = async () => {
+    const { provider: providerId, model } = AiSettingsStore.settings();
+    const provider = providerById(providerId);
+    if (!(await provider.isConfigured())) {
+      if (!this._mounted) return;
+      this.setState({
+        aiNotice: localized('Configure an AI provider above before refining with AI.'),
+      });
+      return;
+    }
+    this.setState({ refining: true, aiNotice: null });
+    try {
+      const refined = await classifyCandidates(provider, this.state.suggestions, { model });
+      if (!this._mounted) return;
+      this.setState({
+        suggestions: refined,
+        refining: false,
+        aiNotice: localized(
+          'AI kept %@ of %@ detected charges.',
+          `${refined.length}`,
+          `${this.state.suggestions.length}`
+        ),
+      });
+    } catch (err) {
+      AppEnv.reportError(err);
+      if (!this._mounted) return;
+      this.setState({
+        refining: false,
+        aiNotice: err instanceof Error ? err.message : String(err),
       });
     }
   };
@@ -154,13 +197,44 @@ export default class SubscriptionsRoot extends React.Component<
     );
   }
 
+  _renderAiSettings() {
+    return (
+      <div className="moros-ai-section">
+        <div className="moros-section-title">{localized('AI-assisted detection (optional)')}</div>
+        <AiSettingsPanel
+          featureName={localized('Subscription detection')}
+          dataDescription={localized('vendor names, billing addresses, and amounts')}
+          upgradeSource="MorosSubscriptions"
+          upgradeCampaign="Hosted subscription detection"
+        />
+      </div>
+    );
+  }
+
+  _renderSuggestionsHeader(showRefine: boolean) {
+    return (
+      <div className="moros-section-header">
+        <span className="moros-section-title">{localized('Detected in your inbox')}</span>
+        {showRefine && (
+          <button
+            className="btn moros-section-action"
+            disabled={this.state.refining}
+            onClick={this._onRefine}
+          >
+            {this.state.refining ? localized('Refining…') : localized('Refine with AI')}
+          </button>
+        )}
+      </div>
+    );
+  }
+
   _renderSuggestions() {
     const { suggestions, scanning, scanRan, scanError } = this.state;
     if (!scanRan && !scanning && suggestions.length === 0) return null;
     if (scanError) {
       return (
         <div className="moros-suggestions">
-          <div className="moros-section-title">{localized('Detected in your inbox')}</div>
+          {this._renderSuggestionsHeader(false)}
           <div className="moros-empty moros-scan-error">
             {localized('The inbox scan failed: %@', scanError)}
           </div>
@@ -169,7 +243,8 @@ export default class SubscriptionsRoot extends React.Component<
     }
     return (
       <div className="moros-suggestions">
-        <div className="moros-section-title">{localized('Detected in your inbox')}</div>
+        {this._renderSuggestionsHeader(suggestions.length > 0)}
+        {this.state.aiNotice && <div className="moros-settings-notice">{this.state.aiNotice}</div>}
         {suggestions.length === 0 ? (
           <div className="moros-empty">
             {scanning
@@ -327,6 +402,7 @@ export default class SubscriptionsRoot extends React.Component<
             {this.state.scanning ? localized('Scanning…') : localized('Scan inbox')}
           </button>
         </div>
+        {this._renderAiSettings()}
         {this._renderSuggestions()}
         <div className="moros-scroll-region">
           {sorted.length > 0 ? (
