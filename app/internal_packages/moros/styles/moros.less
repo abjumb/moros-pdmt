@@ -410,14 +410,93 @@
 
   .moros-chip {
     &.expiry-expired,
-    &.status-canceled {
+    &.status-canceled,
+    &.health-weak {
       color: @color-error;
       border-color: color-mix(in srgb, @color-error 40%, transparent);
     }
 
-    &.expiry-expiring-soon {
+    &.expiry-expiring-soon,
+    &.health-reused {
       color: @color-warning;
       border-color: color-mix(in srgb, @color-warning 40%, transparent);
+    }
+  }
+
+  .moros-generator,
+  .moros-health-row {
+    flex-wrap: wrap;
+  }
+
+  .moros-gen-label {
+    font-size: @font-size-small;
+    color: @text-color-subtle;
+  }
+
+  .moros-gen-length {
+    flex: 0 0 64px;
+  }
+
+  .moros-gen-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: @font-size-smaller;
+    color: @text-color-subtle;
+    cursor: pointer;
+  }
+
+  .moros-gen-error {
+    font-size: @font-size-smaller;
+    color: @color-error;
+  }
+
+  .moros-health-summary {
+    font-size: @font-size-smaller;
+    color: @text-color-subtle;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .moros-strength {
+    display: flex;
+    align-items: center;
+    gap: @spacing-half;
+    flex: 0 0 auto;
+
+    .moros-strength-bar {
+      display: flex;
+      gap: 2px;
+    }
+
+    .moros-strength-seg {
+      width: 14px;
+      height: 5px;
+      border-radius: 2px;
+      background: @border-color-divider;
+
+      &.filled {
+        background: @text-color-subtle;
+      }
+    }
+
+    .moros-strength-label {
+      font-size: @font-size-smaller;
+      color: @text-color-very-subtle;
+      min-width: 64px;
+    }
+
+    &.strength-0 .moros-strength-seg.filled,
+    &.strength-1 .moros-strength-seg.filled {
+      background: @color-error;
+    }
+
+    &.strength-2 .moros-strength-seg.filled {
+      background: @color-warning;
+    }
+
+    &.strength-3 .moros-strength-seg.filled,
+    &.strength-4 .moros-strength-seg.filled {
+      background: @color-success;
     }
   }
 
