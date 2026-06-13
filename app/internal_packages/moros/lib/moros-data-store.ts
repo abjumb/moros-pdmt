@@ -20,6 +20,11 @@ export function todayISO() {
   return `${d.getFullYear()}-${month}-${day}`;
 }
 
+/** Directory holding all Moros module JSON files. */
+export function morosDataDirPath() {
+  return path.join(AppEnv.getConfigDirPath(), 'moros');
+}
+
 /**
  * Base class for the Moros module stores. Records live in memory and are
  * persisted as JSON beneath `<config>/moros/`, outside the mail database —
@@ -77,7 +82,7 @@ export default class MorosDataStore<T extends MorosRecord> extends MailspringSto
   }
 
   _filePath() {
-    return path.join(AppEnv.getConfigDirPath(), 'moros', this._filename);
+    return path.join(morosDataDirPath(), this._filename);
   }
 
   _load(): T[] {

@@ -11,11 +11,14 @@ import FinanceStore, {
   shiftMonthPrefix,
   todayISO,
 } from './finance-store';
+import MorosSettingsStore, { CURRENCIES } from '../moros-settings-store';
+import NetWorthView from './net-worth-view';
 
 interface FinanceRootState {
   transactions: ReadonlyArray<MorosTransaction>;
   /** 'yyyy-mm' month being viewed, or null for the full history. */
   viewMonth: string | null;
+  currency: string;
   draftDescription: string;
   draftAmount: string;
   draftKind: TransactionKind;
@@ -30,10 +33,12 @@ export default class FinanceRoot extends React.Component<
   static displayName = 'FinanceRoot';
 
   _unlisten?: () => void;
+  _unlistenSettings?: () => void;
 
   state: FinanceRootState = {
     transactions: FinanceStore.items(),
     viewMonth: currentMonthPrefix(),
+    currency: MorosSettingsStore.currency(),
     draftDescription: '',
     draftAmount: '',
     draftKind: 'expense',
@@ -45,10 +50,14 @@ export default class FinanceRoot extends React.Component<
     this._unlisten = FinanceStore.listen(() =>
       this.setState({ transactions: FinanceStore.items() })
     );
+    this._unlistenSettings = MorosSettingsStore.listen(() =>
+      this.setState({ currency: MorosSettingsStore.currency() })
+    );
   }
 
   componentWillUnmount() {
     if (this._unlisten) this._unlisten();
+    if (this._unlistenSettings) this._unlistenSettings();
   }
 
   _onCreate = () => {
@@ -158,10 +167,25 @@ export default class FinanceRoot extends React.Component<
 
     return (
       <div className="moros-root moros-finance">
-        <div className="moros-header">
-          <h2>{localized('Finance')}</h2>
-          {this._renderMonthNav()}
+        <div className="moros-header moros-header-split">
+          <div>
+            <h2>{localized('Finance')}</h2>
+            {this._renderMonthNav()}
+          </div>
+          <select
+            className="moros-select"
+            title={localized('Currency')}
+            value={this.state.currency}
+            onChange={(e) => MorosSettingsStore.setCurrency(e.target.value)}
+          >
+            {CURRENCIES.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            ))}
+          </select>
         </div>
+        <NetWorthView />
         {this._renderSummary()}
         <div className="moros-toolbar-row">
           <input
