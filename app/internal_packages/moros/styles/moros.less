@@ -355,6 +355,33 @@
     border-bottom: 1px solid @border-color-divider;
   }
 
+  .moros-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @spacing-half;
+    background: @background-secondary;
+    border-bottom: 1px solid @border-color-divider;
+    padding-right: @spacing-double;
+
+    .moros-section-title {
+      flex: 1;
+      border-bottom: none;
+    }
+
+    .moros-section-action {
+      flex: 0 0 auto;
+    }
+  }
+
+  .moros-ai-section {
+    border-bottom: 1px solid @border-color-divider;
+
+    .moros-settings {
+      border-bottom: none;
+    }
+  }
+
   .moros-settings {
     padding: @spacing-half @spacing-double;
     border-bottom: 1px solid @border-color-divider;

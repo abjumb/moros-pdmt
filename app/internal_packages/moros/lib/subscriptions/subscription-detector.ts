@@ -14,6 +14,11 @@ export interface SubscriptionCandidate {
   /** Parsed from the subject when present; null when no amount was found. */
   amountCents: number | null;
   cadence: SubscriptionCadence;
+  /**
+   * Spending category. The regex detector leaves this unset; AI refinement
+   * fills it from SUBSCRIPTION_CATEGORIES. Consumers fall back to a default.
+   */
+  category?: string;
 }
 
 const SCAN_WINDOW_DAYS = 90;
