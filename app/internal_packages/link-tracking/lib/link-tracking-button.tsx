@@ -1,21 +1,12 @@
 import React from 'react';
-import {
-  localized,
-  APIError,
-  MorosAPIRequest,
-  Message,
-  DraftEditingSession,
-} from 'moros-exports';
+import { localized, APIError, MorosAPIRequest, Message, DraftEditingSession } from 'moros-exports';
 import { MetadataComposerToggleButton } from 'moros-component-kit';
 import { PLUGIN_ID, PLUGIN_NAME } from './link-tracking-constants';
 
 type Props = { draft: Message; session: DraftEditingSession };
 
 function errorMessage(error: Error) {
-  if (
-    error instanceof APIError &&
-    MorosAPIRequest.TimeoutErrorCodes.includes(error.statusCode)
-  ) {
+  if (error instanceof APIError && MorosAPIRequest.TimeoutErrorCodes.includes(error.statusCode)) {
     return localized(
       `Link tracking does not work offline. Please re-enable when you come back online.`
     );

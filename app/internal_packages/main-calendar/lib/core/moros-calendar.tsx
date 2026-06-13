@@ -117,10 +117,7 @@ interface MorosCalendarState {
   themeVersion: number;
 }
 
-export class MorosCalendar extends React.Component<
-  MorosCalendarProps,
-  MorosCalendarState
-> {
+export class MorosCalendar extends React.Component<MorosCalendarProps, MorosCalendarState> {
   static displayName = 'MorosCalendar';
 
   static DayView = DayView;

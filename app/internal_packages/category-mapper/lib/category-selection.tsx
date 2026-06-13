@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  RetinaImg,
-  DropdownMenu,
-  LabelColorizer,
-  BoldedSearchResult,
-} from 'moros-component-kit';
+import { RetinaImg, DropdownMenu, LabelColorizer, BoldedSearchResult } from 'moros-component-kit';
 import { localized, Label, Utils, imapUtf7 } from 'moros-exports';
 
 interface CategorySelectionProps {

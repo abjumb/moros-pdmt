@@ -251,9 +251,7 @@ class PreferencesIdentity extends React.Component<
         <div>
           {localizedReactFragment(
             `Thank you for using %@ and supporting independent software. Get the most out of your subscription: explore pro features below or visit the %@ to learn more about reminders, templates, activity insights, and more.`,
-            <strong
-              style={{ textTransform: 'capitalize' }}
-            >{`Moros ${planDisplayName}`}</strong>,
+            <strong style={{ textTransform: 'capitalize' }}>{`Moros ${planDisplayName}`}</strong>,
             <a href="https://community.getmailspring.com/docs?topic=241">
               {localized(`Help Center`)}
             </a>

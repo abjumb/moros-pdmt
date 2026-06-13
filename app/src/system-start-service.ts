@@ -47,12 +47,7 @@ class SystemStartServiceDarwin extends SystemStartServiceBase {
     if (!process.env.HOME) {
       return;
     }
-    const plistPath = path.join(
-      process.env.HOME,
-      'Library',
-      'LaunchAgents',
-      'com.moros.plist'
-    );
+    const plistPath = path.join(process.env.HOME, 'Library', 'LaunchAgents', 'com.moros.plist');
     fs.unlink(plistPath, () => {});
   }
 }

@@ -176,12 +176,7 @@ export default class AutoUpdateManager extends EventEmitter {
   }
 
   dialogIcon() {
-    const iconPath = path.join(
-      global.application.resourcePath,
-      'static',
-      'images',
-      'moros.png'
-    );
+    const iconPath = path.join(global.application.resourcePath, 'static', 'images', 'moros.png');
     if (!fs.existsSync(iconPath)) return undefined;
     return nativeImage.createFromPath(iconPath);
   }

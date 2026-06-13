@@ -1,12 +1,6 @@
 /* eslint global-require: 0*/
 
-import {
-  localized,
-  DraftStore,
-  Actions,
-  QuotedHTMLTransformer,
-  RegExpUtils,
-} from 'moros-exports';
+import { localized, DraftStore, Actions, QuotedHTMLTransformer, RegExpUtils } from 'moros-exports';
 
 import MorosStore from 'moros-store';
 import path from 'path';

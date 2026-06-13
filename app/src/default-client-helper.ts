@@ -77,9 +77,7 @@ export class DefaultClientHelperWindows implements DCH {
             type: 'info',
             buttons: [localized('Open Settings'), localized('Cancel')],
             defaultId: 0,
-            message: localized(
-              'Visit Windows Settings to finish making Moros your mail client'
-            ),
+            message: localized('Visit Windows Settings to finish making Moros your mail client'),
             detail: localized(
               "Click 'Open Settings' to open Windows Settings where you can set Moros as your default email app."
             ),
@@ -87,17 +85,12 @@ export class DefaultClientHelperWindows implements DCH {
           if (response === 0) {
             // On Windows 11 21H2+ (with April 2023 update), this deep links directly to
             // Moros's default app settings. On older versions, falls back to Default Apps.
-            shell
-              .openExternal('ms-settings:defaultapps?registeredAppUser=Moros')
-              .catch((err) => {
-                AppEnv.showErrorDialog({
-                  title: localized('Failed to Open Settings'),
-                  message: localized(
-                    'Moros was unable to open Windows Settings.\n\n%@',
-                    err.message
-                  ),
-                });
+            shell.openExternal('ms-settings:defaultapps?registeredAppUser=Moros').catch((err) => {
+              AppEnv.showErrorDialog({
+                title: localized('Failed to Open Settings'),
+                message: localized('Moros was unable to open Windows Settings.\n\n%@', err.message),
               });
+            });
           }
         }
         callback(null);

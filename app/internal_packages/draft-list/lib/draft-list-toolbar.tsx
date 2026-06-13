@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import {
-  ListensToObservable,
-  MultiselectToolbar,
-  InjectedComponentSet,
-} from 'moros-component-kit';
+import { ListensToObservable, MultiselectToolbar, InjectedComponentSet } from 'moros-component-kit';
 
 import DraftListStore from './draft-list-store';
 import { Message } from 'moros-exports';

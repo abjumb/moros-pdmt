@@ -2,14 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import {
-  Thread,
-  Contact,
-  Folder,
-  Message,
-  MessageStore,
-  MorosTestUtils,
-} from 'moros-exports';
+import { Thread, Contact, Folder, Message, MessageStore, MorosTestUtils } from 'moros-exports';
 
 import MessageParticipants from '../lib/message-participants';
 import MessageItemContainer from '../lib/message-item-container';

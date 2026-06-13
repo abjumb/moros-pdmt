@@ -3,13 +3,7 @@ import fs from 'fs';
 import React, { Component } from 'react';
 import { shell, ipcRenderer } from 'electron';
 import { EditableList } from 'moros-component-kit';
-import {
-  localized,
-  RegExpUtils,
-  KeyManager,
-  Account,
-  AccountAutoaddress,
-} from 'moros-exports';
+import { localized, RegExpUtils, KeyManager, Account, AccountAutoaddress } from 'moros-exports';
 
 interface AutoaddressControlProps {
   autoaddress: AccountAutoaddress;

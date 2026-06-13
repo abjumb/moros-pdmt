@@ -2,13 +2,7 @@
 
 import qs from 'querystring';
 import crypto from 'crypto';
-import {
-  Account,
-  AccountStore,
-  IdentityStore,
-  MailsyncProcess,
-  localized,
-} from 'moros-exports';
+import { Account, AccountStore, IdentityStore, MailsyncProcess, localized } from 'moros-exports';
 import MorosProviderSettings from './moros-provider-settings.json';
 import MailcoreProviderSettings from './mailcore-provider-settings.json';
 import dns from 'dns';
@@ -141,8 +135,7 @@ export async function expandAccountWithCommonSettings(account: Account) {
   // find matching template by domain or provider in the old lookup tables
   // this matches the acccount type presets ("yahoo") and common domains against
   // data derived from Thunderbirds ISPDB.
-  let mstemplate =
-    MorosProviderSettings[domain] || MorosProviderSettings[account.provider];
+  let mstemplate = MorosProviderSettings[domain] || MorosProviderSettings[account.provider];
   if (mstemplate) {
     if (mstemplate.alias) {
       mstemplate = MorosProviderSettings[mstemplate.alias];

@@ -124,9 +124,7 @@ class _AccountStore extends MorosStore {
     });
 
     if (message && AppEnv.isMainWindow()) {
-      AppEnv.showErrorDialog(
-        `Moros was unable to load your account preferences.\n\n${message}`
-      );
+      AppEnv.showErrorDialog(`Moros was unable to load your account preferences.\n\n${message}`);
     }
   };
 

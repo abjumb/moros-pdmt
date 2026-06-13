@@ -1,11 +1,5 @@
 import React, { useRef } from 'react';
-import {
-  localized,
-  Actions,
-  Message,
-  DraftEditingSession,
-  FeatureUsageStore,
-} from 'moros-exports';
+import { localized, Actions, Message, DraftEditingSession, FeatureUsageStore } from 'moros-exports';
 
 import { Menu, RetinaImg } from 'moros-component-kit';
 import { TranslatePopupOptions, translateMessageBody, TranslationsUsedLexicon } from './service';

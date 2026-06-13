@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import moment from 'moment';
-import {
-  localized,
-  Actions,
-  FeatureUsageStore,
-  Message,
-  DraftEditingSession,
-} from 'moros-exports';
+import { localized, Actions, FeatureUsageStore, Message, DraftEditingSession } from 'moros-exports';
 import { RetinaImg } from 'moros-component-kit';
 
 import SendLaterPopover from './send-later-popover';

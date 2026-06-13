@@ -188,9 +188,7 @@ export class MorosHostedProvider implements AiProvider {
   async validate() {
     if (!IdentityStore.identity()) {
       throw new Error(
-        localized(
-          'Sign in to your Moros ID (Preferences → Subscription) to use the hosted plan.'
-        )
+        localized('Sign in to your Moros ID (Preferences → Subscription) to use the hosted plan.')
       );
     }
     if (!IdentityStore.hasProFeatures()) {
