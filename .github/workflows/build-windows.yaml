@@ -91,6 +91,6 @@ jobs:
           aws s3 sync app/dist/ "s3://mailspring-builds/client/$commit/win-x64" `
             --acl public-read `
             --exclude "*" `
-            --include "MailspringSetup.exe" `
+            --include "MorosSetup.exe" `
             --include "*.nupkg" `
             --include "RELEASES"

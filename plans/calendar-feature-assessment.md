@@ -196,17 +196,17 @@ Every internal package follows this pattern:
 ```typescript
 // app/internal_packages/main-calendar/lib/main.tsx
 import { WorkspaceStore, ComponentRegistry } from 'moros-exports';
-import { MailspringCalendar } from './core/moros-calendar';
+import { MorosCalendar } from './core/moros-calendar';
 
 export function activate() {
   // Register components at specific UI locations
-  ComponentRegistry.register(MailspringCalendar, {
+  ComponentRegistry.register(MorosCalendar, {
     location: WorkspaceStore.Location.Center,
   });
 }
 
 export function deactivate() {
-  ComponentRegistry.unregister(MailspringCalendar);
+  ComponentRegistry.unregister(MorosCalendar);
 }
 ```
 
@@ -492,7 +492,7 @@ The calendar provides injection points for plugins:
 1. **Create the component:**
    ```typescript
    // app/internal_packages/main-calendar/lib/core/day-view.tsx
-   export class DayView extends React.Component<MailspringCalendarViewProps, State> {
+   export class DayView extends React.Component<MorosCalendarViewProps, State> {
      // Follow week-view.tsx patterns for:
      // - Subscribing to CalendarDataSource
      // - Rendering events

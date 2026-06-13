@@ -23,7 +23,7 @@ This document outlines the implementation plan for adding drag-and-drop interact
   - `time` - Calculated time from mouse Y position
   - `x`, `y` - Mouse coordinates
   - `mouseIsDown` - Mouse button state tracking
-- Mouse handlers in `MailspringCalendar` are currently no-ops, ready for implementation
+- Mouse handlers in `MorosCalendar` are currently no-ops, ready for implementation
 
 ---
 
@@ -570,7 +570,7 @@ Add keyboard alternatives for drag operations:
 - Shift+Arrow keys to resize selected event
 
 ```typescript
-// In MailspringCalendar
+// In MorosCalendar
 _onKeyDown = (e: React.KeyboardEvent) => {
   if (!this.state.selectedEvents.length) return;
 

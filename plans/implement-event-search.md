@@ -160,7 +160,7 @@ onSelectEvent = event => {
 
 #### Step 3.2: Calendar Integration
 
-The `MailspringCalendar` component already has the handler:
+The `MorosCalendar` component already has the handler:
 ```typescript
 _focusEvent = (event: EventOccurrence) => {
   this.setState({

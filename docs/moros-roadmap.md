@@ -30,7 +30,7 @@ The guiding constraints:
     stored locally; **secret values never touch disk in plaintext** — they are stored via
     `KeyManager`, which encrypts with Electron `safeStorage` (OS keychain).
 - [x] Shared `MorosDataStore` base class: debounced atomic JSON persistence under
-      `<config>/moros/`, change events via `MailspringStore`.
+      `<config>/moros/`, change events via `MorosStore`.
 
 ### Phase 2 — Module depth
 

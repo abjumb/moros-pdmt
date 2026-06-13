@@ -110,7 +110,7 @@ function sendEnvelope(event, release) {
     headers: {
       'Content-Type': 'application/x-sentry-envelope',
       'Content-Length': Buffer.byteLength(body),
-      'X-Sentry-Auth': `Sentry sentry_version=7, sentry_key=${publicKey}, sentry_client=mailspring/${release}`,
+      'X-Sentry-Auth': `Sentry sentry_version=7, sentry_key=${publicKey}, sentry_client=moros/${release}`,
     },
   });
   req.on('error', e => {
