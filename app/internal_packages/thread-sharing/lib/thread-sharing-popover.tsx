@@ -58,7 +58,7 @@ export default class ThreadSharingPopover extends React.Component<
             rechargeText: `${localized(
               `You can share %1$@ emails each %2$@ with Moros Basic.`
             )} ${localized('Upgrade to Pro today!')}`,
-            iconUrl: 'mailspring://thread-sharing/assets/ic-modal-image@2x.png',
+            iconUrl: 'moros://thread-sharing/assets/ic-modal-image@2x.png',
           });
         } catch (error) {
           if (error instanceof FeatureUsageStore.NoProAccessError) {

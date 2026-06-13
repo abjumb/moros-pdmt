@@ -124,7 +124,7 @@ export const TranslationsUsedLexicon: FeatureLexicon = {
   rechargeText: `${localized(
     'You can translate up to %1$@ emails each %2$@ with Moros Basic.'
   )} ${localized('Upgrade to Pro today!')}`,
-  iconUrl: 'mailspring://translation/assets/ic-translation-modal@2x.png',
+  iconUrl: 'moros://translation/assets/ic-translation-modal@2x.png',
 };
 
 function forEachTranslatableText(doc: Document, callback: (el: Node, text: string) => void) {

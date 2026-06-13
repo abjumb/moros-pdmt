@@ -244,7 +244,7 @@ export class TranslateMessageHeader extends React.Component<
           rechargeText: `${localized(
             "Unfortunately, translation services bill per character and we can't offer this feature for free."
           )} ${localized('Upgrade to Pro today!')}`,
-          iconUrl: 'mailspring://translation/assets/ic-translation-modal@2x.png',
+          iconUrl: 'moros://translation/assets/ic-translation-modal@2x.png',
         });
       } catch (err) {
         return;

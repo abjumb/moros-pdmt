@@ -40,7 +40,7 @@ class _SnoozeStore extends MorosStore {
         rechargeText: `${localized(
           `You can snooze %1$@ emails each %2$@ with Moros Basic.`
         )} ${localized('Upgrade to Pro today!')}`,
-        iconUrl: 'mailspring://thread-snooze/assets/ic-snooze-modal@2x.png',
+        iconUrl: 'moros://thread-snooze/assets/ic-snooze-modal@2x.png',
       });
 
       // move the threads to the snoozed folder

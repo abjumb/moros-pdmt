@@ -17,7 +17,7 @@ import AutoUpdateManager from './autoupdate-manager';
 import SystemAccentWatcher from './system-accent-watcher';
 import SystemTrayManager from './system-tray-manager';
 import { DefaultClientHelper } from '../default-client-helper';
-import MorosProtocolHandler from './mailspring-protocol-handler';
+import MorosProtocolHandler from './moros-protocol-handler';
 import ConfigPersistenceManager from './config-persistence-manager';
 import moveToApplications from './move-to-applications';
 import { MailsyncProcess } from '../mailsync-process';
@@ -47,7 +47,7 @@ export default class Application extends EventEmitter {
   configPersistenceManager: ConfigPersistenceManager;
   fileListCache: FileListCache;
   applicationMenu: ApplicationMenu;
-  mailspringProtocolHandler: MorosProtocolHandler;
+  morosProtocolHandler: MorosProtocolHandler;
   windowManager: WindowManager;
   autoUpdateManager: AutoUpdateManager;
   systemAccentWatcher: SystemAccentWatcher;
@@ -74,7 +74,7 @@ export default class Application extends EventEmitter {
     this.safeMode = safeMode;
 
     this.fileListCache = new FileListCache();
-    this.mailspringProtocolHandler = new MorosProtocolHandler({
+    this.morosProtocolHandler = new MorosProtocolHandler({
       configDirPath,
       resourcePath,
       safeMode,
@@ -169,9 +169,9 @@ export default class Application extends EventEmitter {
 
     if (process.platform === 'linux') {
       const helper = new DefaultClientHelper();
-      helper.registerForURLScheme('mailspring');
+      helper.registerForURLScheme('moros');
     } else {
-      app.setAsDefaultProtocolClient('mailspring');
+      app.setAsDefaultProtocolClient('moros');
     }
   }
 

@@ -73,7 +73,7 @@ const RegExpUtils = {
     return new RegExp(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/i);
   },
 
-  mailspringCommandRegex() {
+  morosCommandRegex() {
     return new RegExp(/mailspring:\S+/i);
   },
 
@@ -212,7 +212,7 @@ const RegExpUtils = {
     return new RegExp(/(<a.*?href\s*?=\s*?['"])((?!mailto).+?)(['"].*?>)([\s\S]*?)(<\/a>)/gim);
   },
 
-  mailspringSignatureRegex() {
+  morosSignatureRegex() {
     return /<signature id="([A-Za-z0-9-/\\]+)">[^]*<\/signature>/;
   },
 

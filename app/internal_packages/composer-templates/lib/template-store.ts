@@ -135,7 +135,7 @@ class TemplateStore extends MorosStore {
     const draftName = draft.subject.replace(INVALID_TEMPLATE_NAME_REGEX, '');
 
     let draftContents = QuotedHTMLTransformer.removeQuotedHTML(draft.body);
-    const sigIndex = draftContents.search(RegExpUtils.mailspringSignatureRegex());
+    const sigIndex = draftContents.search(RegExpUtils.morosSignatureRegex());
     draftContents = sigIndex > -1 ? draftContents.substr(0, sigIndex) : draftContents;
 
     if (!draftName || draftName.length === 0) {

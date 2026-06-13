@@ -9,7 +9,7 @@ export const GRAMMAR_CHECK_UPGRADE_LEXICON = {
   rechargeText: localized(
     'You can grammar check %1$@ drafts each %2$@ with Moros Basic. Upgrade to Pro for unlimited grammar checking.'
   ),
-  iconUrl: 'mailspring://composer-grammar-check/assets/ic-modal-image@2x.png',
+  iconUrl: 'moros://composer-grammar-check/assets/ic-modal-image@2x.png',
 };
 
 interface BlockCheckResult {

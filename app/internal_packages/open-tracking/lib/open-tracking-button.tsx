@@ -32,7 +32,7 @@ const OpenTrackingButtonInner: React.FC<Props> = ({ draft, session }) => {
   }
   return (
     <MetadataComposerToggleButton
-      iconUrl="mailspring://open-tracking/assets/icon-composer-eye@2x.png"
+      iconUrl="moros://open-tracking/assets/icon-composer-eye@2x.png"
       pluginId={PLUGIN_ID}
       pluginName={PLUGIN_NAME}
       metadataEnabledValue={{ open_count: 0, open_data: [] }}

@@ -247,7 +247,7 @@ class NativeNotifications {
     // Note: Windows supports up to 5 buttons total (including reply button)
     const actionsContent = (options.actions || [])
       .map((action, i) => {
-        const actionUrl = `mailspring://notification-action?${baseParams}&actionIndex=${i}`;
+        const actionUrl = `moros://notification-action?${baseParams}&actionIndex=${i}`;
         return `    <action content="${this.escapeXml(action.text)}" arguments="${this.escapeXml(
           actionUrl
         )}" activationType="protocol"/>`;
@@ -260,7 +260,7 @@ class NativeNotifications {
     // - hint-maxLines="1" prevents sender name from wrapping
     // - group attribute enables notification stacking per thread
     // - activationType="protocol" allows handling when app is closed
-    const clickUrl = `mailspring://notification-click?${baseParams}`;
+    const clickUrl = `moros://notification-click?${baseParams}`;
     return `<toast launch="${this.escapeXml(
       clickUrl
     )}" activationType="protocol" group="thread-${options.threadId || 'default'}">
@@ -297,7 +297,7 @@ ${actionsXml}
       messageId: '',
     }).toString();
 
-    const clickUrl = `mailspring://notification-click?${baseParams}`;
+    const clickUrl = `moros://notification-click?${baseParams}`;
 
     return `<toast launch="${this.escapeXml(clickUrl)}" activationType="protocol">
   <visual>

@@ -11,8 +11,8 @@ interface MorosLinkParams {
   date?: number;
 }
 
-const _parseOpenThreadUrl = (mailspringUrlString: string) => {
-  const parsedUrl = url.parse(mailspringUrlString);
+const _parseOpenThreadUrl = (morosUrlString: string) => {
+  const parsedUrl = url.parse(morosUrlString);
   const params = querystring.parse(parsedUrl.query) as any;
   return {
     subject: params.subject,
@@ -47,8 +47,8 @@ const _findCorrespondingThread = (
   ]);
 };
 
-const _onOpenThreadFromWeb = (event: Electron.IpcRendererEvent, mailspringUrl: string) => {
-  const params = _parseOpenThreadUrl(mailspringUrl);
+const _onOpenThreadFromWeb = (event: Electron.IpcRendererEvent, morosUrl: string) => {
+  const params = _parseOpenThreadUrl(morosUrl);
 
   _findCorrespondingThread(params)
     .then((thread) => {

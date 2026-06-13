@@ -88,7 +88,7 @@ export function Autolink(
       },
     ],
     ['tel:', RegExpUtils.phoneRegex({ aggressive: options.telAggressiveMatch })],
-    ['', RegExpUtils.mailspringCommandRegex()],
+    ['', RegExpUtils.morosCommandRegex()],
     ['', RegExpUtils.urlRegex()],
   ];
 

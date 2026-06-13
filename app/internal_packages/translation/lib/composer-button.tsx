@@ -62,7 +62,7 @@ const TranslateComposerButtonInner: React.FC<Props> = ({ draft, session }) => {
     >
       <RetinaImg
         mode={RetinaImg.Mode.ContentIsMask}
-        url="mailspring://translation/assets/icon-composer-translate@2x.png"
+        url="moros://translation/assets/icon-composer-translate@2x.png"
       />
       &nbsp;
       <RetinaImg name="icon-composer-dropdown.png" mode={RetinaImg.Mode.ContentIsMask} />

@@ -111,7 +111,7 @@ export default class MetadataComposerToggleButton extends React.Component<
           rechargeText: `${localized(
             `You can get open and click notifications for %1$@ emails each %2$@ with Moros Basic.`
           )} ${localized('Upgrade to Pro today!')}`,
-          iconUrl: `mailspring://${pluginId}/assets/ic-modal-image@2x.png`,
+          iconUrl: `moros://${pluginId}/assets/ic-modal-image@2x.png`,
         });
       } catch (err) {
         // user does not have access to this feature

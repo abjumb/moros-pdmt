@@ -267,7 +267,7 @@ const start = () => {
 
   protocol.registerSchemesAsPrivileged([
     {
-      scheme: 'mailspring',
+      scheme: 'moros',
       privileges: {
         secure: true,
         supportFetchAPI: true,
