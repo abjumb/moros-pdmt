@@ -293,5 +293,156 @@
     padding: @spacing-double;
     text-align: center;
     color: @text-color-very-subtle;
+
+    &.moros-scan-error {
+      color: @color-error;
+    }
+  }
+
+  .moros-filter-chips {
+    display: flex;
+    align-items: center;
+    gap: @spacing-quarter;
+  }
+
+  .moros-filter-chip {
+    padding: 2px 10px;
+    font-size: @font-size-smaller;
+    color: @text-color-subtle;
+    background: transparent;
+    border: 1px solid @border-color-divider;
+    border-radius: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background: @background-secondary;
+    }
+
+    &.selected {
+      color: @text-color-inverse;
+      background: @accent-primary;
+      border-color: @accent-primary;
+    }
+  }
+
+  .moros-chip {
+    &.expiry-expired,
+    &.status-canceled {
+      color: @color-error;
+      border-color: color-mix(in srgb, @color-error 40%, transparent);
+    }
+
+    &.expiry-expiring-soon {
+      color: @color-warning;
+      border-color: color-mix(in srgb, @color-warning 40%, transparent);
+    }
+  }
+
+  .moros-row-muted {
+    .moros-row-title,
+    .moros-amount {
+      color: @text-color-very-subtle;
+    }
+  }
+
+  .moros-section-title {
+    padding: @spacing-three-quarters @spacing-double @spacing-quarter;
+    font-size: @font-size-small;
+    font-weight: @font-weight-semi-bold;
+    color: @text-color;
+    background: @background-secondary;
+    border-bottom: 1px solid @border-color-divider;
+  }
+
+  .moros-settings {
+    padding: @spacing-half @spacing-double;
+    border-bottom: 1px solid @border-color-divider;
+
+    .moros-settings-line {
+      display: flex;
+      align-items: center;
+      gap: @spacing-half;
+      padding: @spacing-quarter 0;
+
+      .moros-input {
+        flex: 1;
+        min-width: 60px;
+        padding: 5px 9px;
+        font-size: @font-size-small;
+        color: @text-color;
+        background: @input-bg;
+        border: 1px solid @input-border-color;
+        border-radius: @border-radius-base;
+        outline: none;
+
+        &:focus {
+          border-color: @accent-primary;
+        }
+      }
+    }
+
+    .moros-settings-label {
+      flex: 0 0 150px;
+      font-size: @font-size-small;
+      color: @text-color-subtle;
+    }
+
+    .moros-settings-note {
+      font-size: @font-size-smaller;
+      color: @text-color-very-subtle;
+    }
+
+    .moros-settings-notice {
+      padding: @spacing-quarter 0;
+      font-size: @font-size-smaller;
+      color: @text-color-subtle;
+    }
+  }
+
+  .moros-brief {
+    padding: @spacing-standard @spacing-double;
+
+    .moros-brief-meta {
+      margin-bottom: @spacing-half;
+      font-size: @font-size-smaller;
+      color: @text-color-very-subtle;
+    }
+
+    .moros-brief-output {
+      max-width: 640px;
+      font-size: @font-size-small;
+      line-height: 1.55;
+
+      h3 {
+        margin: @spacing-standard 0 @spacing-quarter;
+        font-size: @font-size-base;
+        font-weight: @font-weight-semi-bold;
+        color: @text-color-heading;
+      }
+
+      p {
+        margin: @spacing-quarter 0;
+      }
+
+      ul {
+        margin: @spacing-quarter 0;
+        padding-left: @spacing-double;
+      }
+
+      li {
+        margin: 2px 0;
+      }
+    }
+  }
+
+  .moros-brief-error {
+    margin: @spacing-standard @spacing-double;
+    padding: @spacing-three-quarters @spacing-standard;
+    font-size: @font-size-small;
+    color: @color-error;
+    background: color-mix(in srgb, @color-error 8%, transparent);
+    border: 1px solid color-mix(in srgb, @color-error 30%, transparent);
+    border-radius: @border-radius-large;
   }
 }
