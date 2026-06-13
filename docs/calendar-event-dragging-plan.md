@@ -10,7 +10,7 @@ This document outlines the implementation plan for adding drag-and-drop interact
 ## Current Architecture
 
 ### Key Files
-- `app/internal_packages/main-calendar/lib/core/mailspring-calendar.tsx` - Root component with empty mouse handlers ready for implementation
+- `app/internal_packages/main-calendar/lib/core/moros-calendar.tsx` - Root component with empty mouse handlers ready for implementation
 - `app/internal_packages/main-calendar/lib/core/calendar-event-container.tsx` - Mouse event delegation with time calculation from position
 - `app/internal_packages/main-calendar/lib/core/calendar-event.tsx` - Event rendering component
 - `app/internal_packages/main-calendar/lib/core/week-view.tsx` - Week view with vertical time layout
@@ -457,7 +457,7 @@ For events spanning multiple days in month view, update `MonthViewEvent` to:
 
 #### 5.1 Event Update Logic
 
-**File: `lib/core/mailspring-calendar.tsx`**
+**File: `lib/core/moros-calendar.tsx`**
 
 When a drag completes successfully:
 
@@ -638,7 +638,7 @@ UndoStack.push({
 | `lib/core/week-view.tsx` | Integrate drag hook, render preview |
 | `lib/core/month-view.tsx` | Integrate drag hook, render preview |
 | `lib/core/month-view-event.tsx` | Add resize handles for multi-day events |
-| `lib/core/mailspring-calendar.tsx` | Handle drag completion, persist changes |
+| `lib/core/moros-calendar.tsx` | Handle drag completion, persist changes |
 | `lib/core/calendar-event-container.tsx` | Minor updates to mouse event handling |
 | `lib/styles/nylas-calendar.less` | Drag preview styles, cursor styles, resize affordances |
 

@@ -4,7 +4,7 @@
 
 ### Tier 1 — Full Modals (via `ModalStore` → `Modal` wrapper)
 
-All flow through `Actions.openModal()` → `ModalStore.openModal()` → `Modal` component rendered by `ReactDOM.render()` into `<mailspring-modal-container>` prepended to `document.body`.
+All flow through `Actions.openModal()` → `ModalStore.openModal()` → `Modal` component rendered by `ReactDOM.render()` into `<moros-modal-container>` prepended to `document.body`.
 
 | Component | Opened by | Description |
 |---|---|---|
@@ -15,7 +15,7 @@ All flow through `Actions.openModal()` → `ModalStore.openModal()` → `Modal` 
 
 ### Tier 2 — Popovers (via `PopoverStore` → `FixedPopover` wrapper)
 
-All flow through `Actions.openPopover()` → `PopoverStore.openPopover()` → `FixedPopover` rendered by `ReactDOM.render()` into `<mailspring-popover-container>`.
+All flow through `Actions.openPopover()` → `PopoverStore.openPopover()` → `FixedPopover` rendered by `ReactDOM.render()` into `<moros-popover-container>`.
 
 | Component | Trigger | Description |
 |---|---|---|

@@ -10,7 +10,7 @@ Moros has zero `aria-live` regions anywhere in its UI. This plan introduces a si
 
 ### App Root Rendering
 
-`AppEnv.initializeReactRoot()` in `app/src/app-env.ts` (lines 780–800) is the single place where React mounts. It creates `<mailspring-workspace>`, renders `SheetContainer`, and appends to `document.body`. Live region nodes must be appended to `document.body` here, before any React render, so they are always present.
+`AppEnv.initializeReactRoot()` in `app/src/app-env.ts` (lines 780–800) is the single place where React mounts. It creates `<moros-workspace>`, renders `SheetContainer`, and appends to `document.body`. Live region nodes must be appended to `document.body` here, before any React render, so they are always present.
 
 ### No Existing Live Regions
 
@@ -131,7 +131,7 @@ initializeReactRoot() {
   const { initializeLiveRegions } = require('./services/a11y-announcer');
   initializeLiveRegions();
 
-  const item = document.createElement('mailspring-workspace');
+  const item = document.createElement('moros-workspace');
   // ... rest unchanged ...
 }
 ```

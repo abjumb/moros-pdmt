@@ -685,7 +685,7 @@ Tests implemented:
 
 Key findings:
 - The `draggable` attribute is on `.list-rows` (the parent container), not individual `.list-item` elements. `MultiselectList._onDragStart` uses `itemsForMouseEvent(event)` which calls `document.elementFromPoint()` to find the item under the cursor, then checks `[data-item-id]`.
-- The sidebar drop targets use `DropZone` components wrapped around `OutlineViewItem`. The `shouldAcceptDrop` handler validates that the dragged data contains `'mailspring-threads-data'` and account IDs match.
+- The sidebar drop targets use `DropZone` components wrapped around `OutlineViewItem`. The `shouldAcceptDrop` handler validates that the dragged data contains `'moros-threads-data'` and account IDs match.
 - On drop, `SidebarItem.onDrop()` calls `perspective.receiveThreadIds()` which creates `ChangeFolderTask` via `TaskFactory.tasksForThreadsByAccountId()` with `source: 'Dragged into list'`.
 - Playwright's `dragTo` works correctly with Electron's HTML5 drag events — no special workarounds needed.
 

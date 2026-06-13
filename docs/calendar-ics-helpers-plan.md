@@ -8,7 +8,7 @@ This document outlines the implementation plan for:
 
 ### Current State
 
-When calendar events are dragged, the persistence flow in `mailspring-calendar.tsx:495-543` only updates `recurrenceStart` and `recurrenceEnd` on the Event model. The underlying ICS data (stored in `event.ics`) is not modified. This creates a mismatch between the cached time fields and the actual ICS calendar data.
+When calendar events are dragged, the persistence flow in `moros-calendar.tsx:495-543` only updates `recurrenceStart` and `recurrenceEnd` on the Event model. The underlying ICS data (stored in `event.ics`) is not modified. This creates a mismatch between the cached time fields and the actual ICS calendar data.
 
 The existing ICS utilities in `app/src/calendar-utils.ts` provide:
 - `parseICSString(ics)` - Parse ICS string into ical.js objects
@@ -173,7 +173,7 @@ export function createICSString(options: CreateEventOptions): string {
 function generateUID(): string {
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substring(2, 15);
-  return `${timestamp}-${random}@mailspring`;
+  return `${timestamp}-${random}@moros`;
 }
 ```
 
@@ -496,7 +496,7 @@ export function showRecurringEventDialog(
 
 ### 2.2 Integration with Drag Persistence
 
-Update `mailspring-calendar.tsx` `_persistDragChange` method:
+Update `moros-calendar.tsx` `_persistDragChange` method:
 
 ```typescript
 import {
@@ -766,7 +766,7 @@ _onSave = async () => {
 
 ### Phase 3: Integration
 
-1. Update `_persistDragChange` in `mailspring-calendar.tsx`
+1. Update `_persistDragChange` in `moros-calendar.tsx`
 2. Update `_onSave` in `calendar-event-popover.tsx`
 3. Add integration tests for drag persistence
 4. Test with various calendar providers (Google, Exchange, CalDAV)
@@ -817,7 +817,7 @@ _onSave = async () => {
 ### Modified Files
 - `app/src/global/moros-exports.ts` - Add ICSEventHelpers export
 - `app/src/global/moros-exports.d.ts` - Add type definitions
-- `app/internal_packages/main-calendar/lib/core/mailspring-calendar.tsx` - Update persistence
+- `app/internal_packages/main-calendar/lib/core/moros-calendar.tsx` - Update persistence
 - `app/internal_packages/main-calendar/lib/core/calendar-event-popover.tsx` - Update save method
 
 ---

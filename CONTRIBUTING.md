@@ -89,7 +89,7 @@ After you have these tools installed, run the following commands to check out
 Moros,install dependencies, and launch the app:
 
 ```
-git clone https://github.com/foundry376/mailspring
+git clone https://github.com/foundry376/moros
 cd moros-pdmt
 npm install
 npm start

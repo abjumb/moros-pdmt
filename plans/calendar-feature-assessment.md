@@ -152,7 +152,7 @@ app/
 │   │   │   ├── quick-event-button.tsx      # Toolbar "+" button
 │   │   │   ├── quick-event-popover.tsx     # Natural language event creation
 │   │   │   └── core/
-│   │   │       ├── mailspring-calendar.tsx # Root calendar component
+│   │   │       ├── moros-calendar.tsx # Root calendar component
 │   │   │       ├── calendar-data-source.ts # RxJS data observable
 │   │   │       ├── calendar-constants.ts   # Enums (CalendarView)
 │   │   │       ├── calendar-helpers.tsx    # Color calculation utilities
@@ -196,7 +196,7 @@ Every internal package follows this pattern:
 ```typescript
 // app/internal_packages/main-calendar/lib/main.tsx
 import { WorkspaceStore, ComponentRegistry } from 'moros-exports';
-import { MailspringCalendar } from './core/mailspring-calendar';
+import { MailspringCalendar } from './core/moros-calendar';
 
 export function activate() {
   // Register components at specific UI locations
@@ -460,14 +460,14 @@ selfParticipant(icsEvent: ICALEvent, accountId: string): ICSParticipant | undefi
 
 | Feature | Location | Notes |
 |---------|----------|-------|
-| **New calendar view (e.g., day view)** | `app/internal_packages/main-calendar/lib/core/day-view.tsx` | Follow `week-view.tsx` pattern; register in `calendar-constants.ts` and `mailspring-calendar.tsx` |
+| **New calendar view (e.g., day view)** | `app/internal_packages/main-calendar/lib/core/day-view.tsx` | Follow `week-view.tsx` pattern; register in `calendar-constants.ts` and `moros-calendar.tsx` |
 | **Event write operations** | `app/src/flux/tasks/syncback-event-task.ts` | Implement Task class; requires sync engine support |
 | **New event UI component** | `app/internal_packages/main-calendar/lib/core/` | Add to `core/` directory; import in parent component |
 | **Event search** | `app/internal_packages/main-calendar/lib/core/event-search-bar.tsx` | Currently stubbed; implement search logic |
 | **Calendar model changes** | `app/src/flux/models/calendar.ts` | Database schema changes require sync engine updates |
 | **ICS parsing enhancements** | `app/src/calendar-utils.ts` | Shared utility functions |
 | **New email integration** | `app/internal_packages/events/lib/` | Follow `event-header.tsx` pattern |
-| **Keyboard shortcuts** | Register in `KeyCommandsRegion` in `mailspring-calendar.tsx` | Define handlers in the component |
+| **Keyboard shortcuts** | Register in `KeyCommandsRegion` in `moros-calendar.tsx` | Define handlers in the component |
 | **Drag-and-drop** | `app/internal_packages/main-calendar/lib/core/calendar-event.tsx` | Add drag handlers to event component |
 | **New toolbar button** | `app/internal_packages/main-calendar/lib/` | Register at `WorkspaceStore.Location.Center.Toolbar` |
 | **Styles** | `app/internal_packages/main-calendar/styles/` | Use LESS; follows BEM-like naming |
@@ -509,7 +509,7 @@ The calendar provides injection points for plugins:
      DAY = 'day',  // Add new view
    }
 
-   // In mailspring-calendar.tsx
+   // In moros-calendar.tsx
    const VIEWS = {
      [CalendarView.WEEK]: WeekView,
      [CalendarView.MONTH]: MonthView,

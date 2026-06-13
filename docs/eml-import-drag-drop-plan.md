@@ -83,7 +83,7 @@ Modify `shouldAcceptDrop` to also accept native file drops:
 ```typescript
 shouldAcceptDrop(item, event) {
   // Existing thread-move logic
-  if (event.dataTransfer.types.includes('mailspring-threads-data')) {
+  if (event.dataTransfer.types.includes('moros-threads-data')) {
     // ... existing checks ...
   }
 
@@ -104,7 +104,7 @@ Modify `onDrop` to handle file drops:
 ```typescript
 onDrop(item, event) {
   // Existing thread-move path
-  const jsonString = event.dataTransfer.getData('mailspring-threads-data');
+  const jsonString = event.dataTransfer.getData('moros-threads-data');
   if (jsonString) {
     // ... existing logic ...
     return;
