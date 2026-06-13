@@ -1,5 +1,6 @@
 import {
   localized,
+  AccountStore,
   Actions,
   ComponentRegistry,
   ExtensionRegistry,
@@ -71,6 +72,14 @@ const MODULES = [
 const sidebarExtensions = MODULES.map((module) => ({
   name: module.sidebarId,
   sidebarItem(accountIds: string[]) {
+    // Moros modules are account-agnostic — contribute exactly one sidebar
+    // item. With multiple accounts the sidebar renders a unified section
+    // (all account ids) plus a per-account section for each; returning null
+    // for the single-id calls keeps modules from repeating under every
+    // account (and drops the unified item's per-account children too).
+    if (accountIds.length === 1 && AccountStore.accounts().length > 1) {
+      return null;
+    }
     return {
       id: module.sidebarId,
       name: module.sidebarName(),
