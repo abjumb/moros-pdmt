@@ -75,7 +75,14 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           mv app/dist/Moros.zip app/dist/Moros-AppleSilicon.zip
-          mv app/dist/Moros-*.dmg app/dist/Moros-AppleSilicon.dmg
+
+      # The .dmg is renamed on every arch (not just macos-latest) so both the
+      # Apple Silicon and Intel installers land in S3 under a clean, arch-
+      # labelled name instead of the raw versioned filename on Intel.
+      - name: Rename DMG installer
+        run: |
+          if [ "${{ matrix.arch }}" = "arm64" ]; then label=AppleSilicon; else label=Intel; fi
+          mv app/dist/Moros-*.dmg "app/dist/Moros-$label.dmg"
 
       - name: Sync artifacts to S3 bucket
         run: |
