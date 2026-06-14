@@ -1,6 +1,6 @@
 import React from 'react';
-import { FocusedContentStore, Actions } from 'mailspring-exports';
-import { FluxContainer } from 'mailspring-component-kit';
+import { FocusedContentStore, Actions } from 'moros-exports';
+import { FluxContainer } from 'moros-component-kit';
 
 type FocusContainerProps = {
   collection?: string;

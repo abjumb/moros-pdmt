@@ -1,4 +1,4 @@
-import { localized, MailboxPerspective } from 'mailspring-exports';
+import { localized, MailboxPerspective } from 'moros-exports';
 
 export const name = 'SnoozeAccountSidebarExtension';
 

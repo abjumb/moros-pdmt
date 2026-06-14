@@ -40,7 +40,7 @@ Example ICS content:
 ```
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Mailspring//Calendar//EN
+PRODID:-//Moros//Calendar//EN
 METHOD:REPLY
 BEGIN:VEVENT
 UID:unique-event-id@example.com
@@ -290,7 +290,7 @@ Test RSVP replies against:
 ```
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Mailspring//EN
+PRODID:-//Moros//EN
 METHOD:REPLY
 BEGIN:VEVENT
 UID:040000008200E00074C5B7101A82E00800000000B0635B7

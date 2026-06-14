@@ -1,4 +1,4 @@
-import { Message } from 'mailspring-exports';
+import { Message } from 'moros-exports';
 
 import LinkTrackingComposerExtension from '../lib/link-tracking-composer-extension';
 import { PLUGIN_ID, PLUGIN_URL } from '../lib/link-tracking-constants';

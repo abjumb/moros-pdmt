@@ -7,7 +7,7 @@ import {
   // models to be consumed by React components to render markup.
   MessageStore,
   Message,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 const tld = require('tld');
 

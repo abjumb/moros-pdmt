@@ -5,7 +5,7 @@ import {
   ComponentRegistry,
   ExtensionRegistry,
   WorkspaceStore,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 import {
   MorosTasksPerspective,

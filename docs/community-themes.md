@@ -1,6 +1,6 @@
-# Community Themes for Mailspring
+# Community Themes for Moros
 
-This document lists known third-party themes for Mailspring found on GitHub.
+This document lists known third-party themes for Moros found on GitHub.
 
 ## Official Resources
 
@@ -14,51 +14,51 @@ These themes are part of larger theme ecosystems:
 
 | Repository | Description | Stars |
 |------------|-------------|-------|
-| [catppuccin/mailspring](https://github.com/catppuccin/mailspring) | Soothing pastel theme (Catppuccin) | ⭐58 |
-| [dracula/mailspring](https://github.com/dracula/mailspring) | Official Dracula dark theme | ⭐17 |
-| [faraadi/mailspring-nord-theme](https://github.com/faraadi/mailspring-nord-theme) | Nordic color scheme | ⭐72 |
-| [getomni/mailspring](https://github.com/getomni/mailspring) | Omni theme | ⭐40 |
-| [jakubzet/mailspring-matcha-theme](https://github.com/jakubzet/mailspring-matcha-theme) | Matcha theme | ⭐42 |
+| [catppuccin/moros](https://github.com/catppuccin/moros) | Soothing pastel theme (Catppuccin) | ⭐58 |
+| [dracula/moros](https://github.com/dracula/moros) | Official Dracula dark theme | ⭐17 |
+| [faraadi/moros-nord-theme](https://github.com/faraadi/moros-nord-theme) | Nordic color scheme | ⭐72 |
+| [getomni/moros](https://github.com/getomni/moros) | Omni theme | ⭐40 |
+| [jakubzet/moros-matcha-theme](https://github.com/jakubzet/moros-matcha-theme) | Matcha theme | ⭐42 |
 
 ## Dark Themes
 
 | Repository | Description | Stars |
 |------------|-------------|-------|
-| [jpminor/mailspring-isaac-dark-theme](https://github.com/jpminor/mailspring-isaac-dark-theme) | Newton-inspired dark theme | ⭐23 |
+| [jpminor/moros-isaac-dark-theme](https://github.com/jpminor/moros-isaac-dark-theme) | Newton-inspired dark theme | ⭐23 |
 | [asparc/predawn](https://github.com/asparc/predawn) | Predawn (Atom/Sublime Text-inspired) | ⭐23 |
-| [pierrenel/mailspring-dracula](https://github.com/pierrenel/mailspring-dracula) | Dracula variant | - |
+| [pierrenel/moros-dracula](https://github.com/pierrenel/moros-dracula) | Dracula variant | - |
 | [GianniLab/Mailspring-Eleven-Dark](https://github.com/GianniLab/Mailspring-Eleven-Dark) | Windows 11-inspired dark | ⭐9 |
-| [yz2/mailspring-minimal-dark-theme](https://github.com/yz2/mailspring-minimal-dark-theme) | Clean, minimal dark theme | ⭐8 |
+| [yz2/moros-minimal-dark-theme](https://github.com/yz2/moros-minimal-dark-theme) | Clean, minimal dark theme | ⭐8 |
 | [chroxify/Sweet-Mailspring](https://github.com/chroxify/Sweet-Mailspring) | Custom dark theme | ⭐8 |
 | [ZahidHasan/Dark-Light-Theme-Mailspring](https://github.com/ZahidHasan/Dark-Light-Theme-Mailspring) | Minimalist dark theme | - |
-| [mjohnson8165/mailspring-arc-dark](https://github.com/mjohnson8165/mailspring-arc-dark) | Arc Dark theme | - |
+| [mjohnson8165/moros-arc-dark](https://github.com/mjohnson8165/moros-arc-dark) | Arc Dark theme | - |
 | [dennisotugo/Mailspring-Adapta-Theme](https://github.com/dennisotugo/Mailspring-Adapta-Theme) | Adapta Dark theme | ⭐15 |
-| [opes/mailspring-material](https://github.com/opes/mailspring-material) | Material Theme-inspired | - |
+| [opes/moros-material](https://github.com/opes/moros-material) | Material Theme-inspired | - |
 | [joelabair/Mailspring-OnLevel-Theme](https://github.com/joelabair/Mailspring-OnLevel-Theme) | N1 Level Up-inspired | - |
-| [joeroe/mailspring-gruvbox-dark](https://github.com/joeroe/mailspring-gruvbox-dark) | Gruvbox color scheme | - |
+| [joeroe/moros-gruvbox-dark](https://github.com/joeroe/moros-gruvbox-dark) | Gruvbox color scheme | - |
 | [kcaliban/Mailspring-Theme-Gruvbox](https://github.com/kcaliban/Mailspring-Theme-Gruvbox) | Gruvbox theme | - |
-| [Infamoustrey/mailspring-theme-dracula](https://github.com/Infamoustrey/mailspring-theme-dracula) | Another Dracula variant | - |
+| [Infamoustrey/moros-theme-dracula](https://github.com/Infamoustrey/moros-theme-dracula) | Another Dracula variant | - |
 | [luisfpg/Mailspring-Materia-Dark-Theme](https://github.com/luisfpg/Mailspring-Materia-Dark-Theme) | Materia Dark matching | - |
-| [runeru/mailspring-runeru-theme](https://github.com/runeru/mailspring-runeru-theme) | GitHub colors-based dark | ⭐7 |
-| [hakouguelfen/mailspring-theme](https://github.com/hakouguelfen/mailspring-theme) | Doom-One theme | - |
+| [runeru/moros-runeru-theme](https://github.com/runeru/moros-runeru-theme) | GitHub colors-based dark | ⭐7 |
+| [hakouguelfen/moros-theme](https://github.com/hakouguelfen/moros-theme) | Doom-One theme | - |
 
 ## Light Themes
 
 | Repository | Description | Stars |
 |------------|-------------|-------|
-| [jpminor/mailspring-isaac-light-theme](https://github.com/jpminor/mailspring-isaac-light-theme) | Newton-inspired light theme | ⭐13 |
+| [jpminor/moros-isaac-light-theme](https://github.com/jpminor/moros-isaac-light-theme) | Newton-inspired light theme | ⭐13 |
 | [GianniLab/Mailspring-11-light-theme](https://github.com/GianniLab/Mailspring-11-light-theme) | Windows 11-inspired light | ⭐7 |
-| [dincsi/adwaita-mailspring](https://github.com/dincsi/adwaita-mailspring) | GNOME Adwaita light theme | - |
-| [NeoMahler/mailspring-idido](https://github.com/NeoMahler/mailspring-idido) | Polymail-inspired clean theme | ⭐10 |
-| [danieljimeneznz/mailspring-agapanthus-theme](https://github.com/danieljimeneznz/mailspring-agapanthus-theme) | Inbox/Google Cloud-inspired | - |
+| [dincsi/adwaita-moros](https://github.com/dincsi/adwaita-moros) | GNOME Adwaita light theme | - |
+| [NeoMahler/moros-idido](https://github.com/NeoMahler/moros-idido) | Polymail-inspired clean theme | ⭐10 |
+| [danieljimeneznz/moros-agapanthus-theme](https://github.com/danieljimeneznz/moros-agapanthus-theme) | Inbox/Google Cloud-inspired | - |
 
 ## Other Themes
 
 | Repository | Description | Stars |
 |------------|-------------|-------|
-| [antonioprates/mailspring-matcha-dark-azul](https://github.com/antonioprates/mailspring-matcha-dark-azul) | Manjaro matcha-dark-azul matching | ⭐7 |
-| [webxperia/mailspring-theme-spark](https://github.com/webxperia/mailspring-theme-spark) | Spark theme | - |
-| [m1guelpf/mailspring-theme](https://github.com/m1guelpf/mailspring-theme) | Personalized dark material | - |
+| [antonioprates/moros-matcha-dark-azul](https://github.com/antonioprates/moros-matcha-dark-azul) | Manjaro matcha-dark-azul matching | ⭐7 |
+| [webxperia/moros-theme-spark](https://github.com/webxperia/moros-theme-spark) | Spark theme | - |
+| [m1guelpf/moros-theme](https://github.com/m1guelpf/moros-theme) | Personalized dark material | - |
 | [nukeknurs/Reborn](https://github.com/nukeknurs/Reborn) | "Less is more" minimal theme | - |
 | [tynguyen2k1/Mailspring-Nord-Theme](https://github.com/tynguyen2k1/Mailspring-Nord-Theme) | Tokyo Night-style theme | - |
 | [Kasjonus/wiertara-theme](https://github.com/Kasjonus/wiertara-theme) | Wiertara theme | - |
@@ -68,8 +68,8 @@ These themes are part of larger theme ecosystems:
 
 ## Discovering More Themes
 
-- [GitHub Topic: mailspring-theme](https://github.com/topics/mailspring-theme) - All themes tagged with this topic
-- [GitHub Topic: mailspring](https://github.com/topics/mailspring) - General Mailspring-related repos
+- [GitHub Topic: moros-theme](https://github.com/topics/moros-theme) - All themes tagged with this topic
+- [GitHub Topic: moros](https://github.com/topics/moros) - General Moros-related repos
 
 ## Creating Your Own Theme
 
@@ -84,12 +84,12 @@ To create your own theme:
 
 ### Theme Installation
 
-Install themes via **Edit > Install Theme...** (or **Mailspring > Install Theme...** on macOS) and select the theme folder.
+Install themes via **Edit > Install Theme...** (or **Moros > Install Theme...** on macOS) and select the theme folder.
 
 Alternatively, copy or symlink themes to:
-- **macOS**: `~/Library/Application Support/Mailspring/packages/`
-- **Linux**: `~/.config/Mailspring/packages/`
-- **Windows**: `%APPDATA%/Mailspring/packages/`
+- **macOS**: `~/Library/Application Support/Moros/packages/`
+- **Linux**: `~/.config/Moros/packages/`
+- **Windows**: `%APPDATA%/Moros/packages/`
 
 ### Theme Structure
 
@@ -112,7 +112,7 @@ The `package.json` should include:
   "theme": "ui",
   "version": "1.0.0",
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   }
 }
 ```

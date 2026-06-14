@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, OnlineStatusStore } from 'mailspring-exports';
-import { Notification, ListensToFluxStore } from 'mailspring-component-kit';
+import { localized, OnlineStatusStore } from 'moros-exports';
+import { Notification, ListensToFluxStore } from 'moros-component-kit';
 
 function OfflineNotification({ isOnline }: { isOnline: boolean }) {
   if (isOnline) {

@@ -6,8 +6,8 @@ import {
   SendActionsStore,
   SoundRegistry,
   Message,
-} from 'mailspring-exports';
-import { Menu, RetinaImg, ButtonDropdown } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { Menu, RetinaImg, ButtonDropdown } from 'moros-component-kit';
 
 interface SendActionButtonProps {
   tabIndex: number;

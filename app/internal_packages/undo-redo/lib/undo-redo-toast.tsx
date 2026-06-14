@@ -6,8 +6,8 @@ import {
   DatabaseStore,
   Message,
   Actions,
-} from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { PLUGIN_ID } from '../../../internal_packages/send-later/lib/send-later-constants';
 
@@ -26,6 +26,12 @@ async function sendMessageNow(block) {
         (block.tasks[0] as SyncbackMetadataTask).modelId
       ),
       newExpiry = Math.floor(Date.now() / 1000);
+
+    // Message may be null if the sync engine already processed/sent it before
+    // the user clicked "Send now". In that case there's nothing to do.
+    if (!message) {
+      return true;
+    }
 
     Actions.queueTask(
       SyncbackMetadataTask.forSaving({

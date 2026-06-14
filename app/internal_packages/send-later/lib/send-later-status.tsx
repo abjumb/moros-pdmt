@@ -8,8 +8,8 @@ import {
   SyncbackMetadataTask,
   TaskQueue,
   SendDraftTask,
-} from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 import { PLUGIN_ID } from './send-later-constants';
 
 const { DATE_FORMAT_SHORT } = DateUtils;

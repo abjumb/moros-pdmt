@@ -1,5 +1,5 @@
 import React from 'react';
-import { localized } from 'mailspring-exports';
+import { localized } from 'moros-exports';
 import FinanceStore, {
   CATEGORIES,
   MorosTransaction,

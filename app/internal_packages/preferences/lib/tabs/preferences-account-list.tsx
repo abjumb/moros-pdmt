@@ -1,6 +1,6 @@
 import React, { Component, CSSProperties } from 'react';
-import { localized, Account } from 'mailspring-exports';
-import { RetinaImg, Flexbox, EditableList } from 'mailspring-component-kit';
+import { localized, Account } from 'moros-exports';
+import { RetinaImg, Flexbox, EditableList } from 'moros-component-kit';
 import classnames from 'classnames';
 
 interface PreferencesAccountListProps {

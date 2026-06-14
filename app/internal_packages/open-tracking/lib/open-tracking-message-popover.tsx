@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, DateUtils, Message } from 'mailspring-exports';
-import { Flexbox } from 'mailspring-component-kit';
+import { localized, DateUtils, Message } from 'moros-exports';
+import { Flexbox } from 'moros-component-kit';
 import { pluckByEmail } from '../../activity/lib/activity-event-store';
 import { OpenTrackingMetadata } from './types';
 

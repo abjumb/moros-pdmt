@@ -1,4 +1,4 @@
-import { MailspringAPIRequest } from 'mailspring-exports';
+import { MorosAPIRequest } from 'moros-exports';
 
 export interface GrammarError {
   offset: number;
@@ -118,7 +118,7 @@ export class LanguageToolBackend implements GrammarCheckBackend {
 
     let data: LanguageToolResponse;
     try {
-      data = await MailspringAPIRequest.makeRequest({
+      data = await MorosAPIRequest.makeRequest({
         server: 'identity',
         method: 'POST',
         path: '/api/grammar/check',

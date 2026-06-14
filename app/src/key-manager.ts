@@ -1,5 +1,5 @@
 import { localized } from './intl';
-import { Account } from 'mailspring-exports';
+import { Account } from 'moros-exports';
 
 interface KeySet {
   [key: string]: string;
@@ -97,7 +97,7 @@ class KeyManager {
       try {
         raw = await safeStorage.decryptString(Buffer.from(encryptedCredentials, 'utf-8'));
       } catch (err) {
-        console.error('Mailspring encountered an error reading passwords from the keychain.');
+        console.error('Moros encountered an error reading passwords from the keychain.');
         console.error(err);
       }
     }
@@ -113,12 +113,12 @@ class KeyManager {
       const platformHint =
         process.platform === 'linux'
           ? localized(
-              ' On Linux, Mailspring requires a secret service such as GNOME Keyring or KWallet. Please ensure one is installed and running, then restart Mailspring.'
+              ' On Linux, Moros requires a secret service such as GNOME Keyring or KWallet. Please ensure one is installed and running, then restart Moros.'
             )
           : '';
       throw new Error(
         localized(
-          `Mailspring could not store your password securely because encryption is not available on this system.`
+          `Moros could not store your password securely because encryption is not available on this system.`
         ) + platformHint
       );
     }
@@ -129,11 +129,11 @@ class KeyManager {
   _reportFatalError(err: Error) {
     const clickedButton = require('@electron/remote').dialog.showMessageBoxSync({
       type: 'error',
-      buttons: [localized('Mailspring Help'), localized('Quit')],
+      buttons: [localized('Moros Help'), localized('Quit')],
       message:
         err.message ||
         localized(
-          `Mailspring could not store your password securely. For more information, visit %@`,
+          `Moros could not store your password securely. For more information, visit %@`,
           'https://community.getmailspring.com/t/password-management-error/199'
         ),
     });

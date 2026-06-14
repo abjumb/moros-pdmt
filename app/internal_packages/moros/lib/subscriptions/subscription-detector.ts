@@ -1,4 +1,4 @@
-import { DatabaseStore, Message } from 'mailspring-exports';
+import { DatabaseStore, Message } from 'moros-exports';
 import { SubscriptionCadence } from './subscriptions-store';
 
 /** The subset of a message the detector needs — kept flat so it's testable. */

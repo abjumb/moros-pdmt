@@ -11,8 +11,8 @@ import {
   IDefaultSignatures,
   IAliasSet,
   InlineStyleTransformer,
-} from 'mailspring-exports';
-import { Flexbox, EditableList } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { Flexbox, EditableList } from 'moros-component-kit';
 
 import { ResolveSignatureData, RenderSignatureData, DataShape } from './constants';
 import SignatureAccountDefaultPicker from './signature-account-default-picker';

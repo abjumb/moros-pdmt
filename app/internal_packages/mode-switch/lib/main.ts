@@ -1,12 +1,12 @@
-import { localized, ComponentRegistry, WorkspaceStore } from 'mailspring-exports';
-import { HasTutorialTip } from 'mailspring-component-kit';
+import { localized, ComponentRegistry, WorkspaceStore } from 'moros-exports';
+import { HasTutorialTip } from 'moros-component-kit';
 
 import ModeToggle from './mode-toggle';
 
 const ToggleWithTutorialTip = HasTutorialTip(ModeToggle, {
   title: localized('Compose with context'),
   instructions: localized(
-    'Mailspring shows you everything about your contacts right inside your inbox. See LinkedIn profiles, Twitter bios, message history, and more.'
+    'Moros shows you everything about your contacts right inside your inbox. See LinkedIn profiles, Twitter bios, message history, and more.'
   ),
 });
 

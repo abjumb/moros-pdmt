@@ -1,13 +1,7 @@
 import React, { useRef } from 'react';
-import {
-  localized,
-  Actions,
-  Message,
-  DraftEditingSession,
-  FeatureUsageStore,
-} from 'mailspring-exports';
+import { localized, Actions, Message, DraftEditingSession, FeatureUsageStore } from 'moros-exports';
 
-import { Menu, RetinaImg } from 'mailspring-component-kit';
+import { Menu, RetinaImg } from 'moros-component-kit';
 import { TranslatePopupOptions, translateMessageBody, TranslationsUsedLexicon } from './service';
 
 type Props = { draft: Message; session: DraftEditingSession };
@@ -62,7 +56,7 @@ const TranslateComposerButtonInner: React.FC<Props> = ({ draft, session }) => {
     >
       <RetinaImg
         mode={RetinaImg.Mode.ContentIsMask}
-        url="mailspring://translation/assets/icon-composer-translate@2x.png"
+        url="moros://translation/assets/icon-composer-translate@2x.png"
       />
       &nbsp;
       <RetinaImg name="icon-composer-dropdown.png" mode={RetinaImg.Mode.ContentIsMask} />
@@ -70,7 +64,7 @@ const TranslateComposerButtonInner: React.FC<Props> = ({ draft, session }) => {
   );
 };
 // Our render method doesn't use the provided `draft`, and the draft changes
-// constantly (on every keystroke!). Memoizing on `session` keeps Mailspring fast.
+// constantly (on every keystroke!). Memoizing on `session` keeps Moros fast.
 export const TranslateComposerButton = React.memo(
   TranslateComposerButtonInner,
   (prev, next) => prev.session === next.session

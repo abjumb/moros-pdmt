@@ -6,13 +6,13 @@ import {
   Thread,
   DraftFactory,
   DatabaseChangeRecord,
-} from 'mailspring-exports';
-import MailspringStore from 'mailspring-store';
+} from 'moros-exports';
+import MorosStore from 'moros-store';
 
 import { PLUGIN_ID } from './send-reminders-constants';
 import { updateReminderMetadata } from './send-reminders-utils';
 
-class SendRemindersStore extends MailspringStore {
+class SendRemindersStore extends MorosStore {
   _lastFocusedThread = null;
   _unsubscribers: (() => void)[] = [];
 
@@ -29,9 +29,9 @@ class SendRemindersStore extends MailspringStore {
 
   _sendReminderEmail = async (thread: Thread, sentHeaderMessageId: string) => {
     const body = `
-      <strong>Mailspring Reminder:</strong> This thread has been moved to the top of
-      your inbox by Mailspring because no one has replied to your message.</p>
-      <p>--The Mailspring Team</p>`;
+      <strong>Moros Reminder:</strong> This thread has been moved to the top of
+      your inbox by Moros because no one has replied to your message.</p>
+      <p>--The Moros Team</p>`;
 
     const draft = await DraftFactory.createDraftForResurfacing(thread, sentHeaderMessageId, body);
     Actions.queueTask(SendDraftTask.forSending(draft, { silent: true }));

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Contact } from 'mailspring-exports';
+import { Contact } from 'moros-exports';
 import { ContactBase } from './ContactInfoMapping';
 import { YYMMDDInput } from './YYMMDDInput';
 import { ListEditor } from './ListEditor';
 import { TypeaheadFreeInput } from './TypeaheadFreeInput';
 import * as Icons from './SVGIcons';
-import { ContactProfilePhoto } from 'mailspring-component-kit';
+import { ContactProfilePhoto } from 'moros-component-kit';
 
 const BaseTypes = ['Home', 'Work', 'Other'];
 

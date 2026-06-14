@@ -1,5 +1,5 @@
-import { MailspringAPIRequest, Utils } from 'mailspring-exports';
-const { makeRequest } = MailspringAPIRequest;
+import { MorosAPIRequest, Utils } from 'moros-exports';
+const { makeRequest } = MorosAPIRequest;
 
 const CACHE_SIZE = 200;
 const CACHE_INDEX_KEY = 'pp-cache-v3-keys';

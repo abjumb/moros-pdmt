@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  MailspringAPIRequest,
+  MorosAPIRequest,
   APIError,
   localized,
   FeatureUsageStore,
   Message,
   DraftEditingSession,
-} from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 import classnames from 'classnames';
 import _ from 'underscore';
 
@@ -84,7 +84,7 @@ export default class MetadataComposerToggleButton extends React.Component<
         AppEnv.reportError(error);
       } else if (error.statusCode === 400) {
         AppEnv.reportError(error);
-      } else if (MailspringAPIRequest.TimeoutErrorCodes.includes(error.statusCode)) {
+      } else if (MorosAPIRequest.TimeoutErrorCodes.includes(error.statusCode)) {
         title = localized('Offline');
       }
 
@@ -109,9 +109,9 @@ export default class MetadataComposerToggleButton extends React.Component<
         await FeatureUsageStore.displayUpgradeModal(pluginId, {
           headerText: localized(`All used up!`),
           rechargeText: `${localized(
-            `You can get open and click notifications for %1$@ emails each %2$@ with Mailspring Basic.`
+            `You can get open and click notifications for %1$@ emails each %2$@ with Moros Basic.`
           )} ${localized('Upgrade to Pro today!')}`,
-          iconUrl: `mailspring://${pluginId}/assets/ic-modal-image@2x.png`,
+          iconUrl: `moros://${pluginId}/assets/ic-modal-image@2x.png`,
         });
       } catch (err) {
         // user does not have access to this feature

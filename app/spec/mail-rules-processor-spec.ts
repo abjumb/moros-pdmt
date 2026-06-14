@@ -6,7 +6,7 @@ import {
   DatabaseStore,
   TaskQueue,
   Actions,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 const MailRulesProcessor = require('../src/mail-rules-processor').default;
 

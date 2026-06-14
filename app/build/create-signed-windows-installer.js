@@ -13,17 +13,17 @@ const { version } = require(path.join(appDir, 'package.json'));
 const config = {
   usePackageJson: false,
   outputDirectory: path.join(appDir, 'dist'),
-  appDirectory: path.join(appDir, 'dist', 'mailspring-win32-x64'),
+  appDirectory: path.join(appDir, 'dist', 'moros-win32-x64'),
   loadingGif: path.join(appDir, 'build', 'resources', 'win', 'loading.gif'),
   iconUrl: 'http://mailspring-builds.s3.amazonaws.com/assets/mailspring-square.ico',
-  description: 'Mailspring',
+  description: 'Moros',
   version: version,
-  title: 'Mailspring',
+  title: 'Moros',
   authors: 'Foundry 376, LLC',
-  setupIcon: path.join(appDir, 'build', 'resources', 'win', 'mailspring-square.ico'),
-  setupExe: 'MailspringSetup.exe',
-  exe: 'mailspring.exe',
-  name: 'Mailspring',
+  setupIcon: path.join(appDir, 'build', 'resources', 'win', 'moros-square.ico'),
+  setupExe: 'MorosSetup.exe',
+  exe: 'moros.exe',
+  name: 'Moros',
 };
 
 console.log(config);

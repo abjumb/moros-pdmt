@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized } from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+import { localized } from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 import * as OnboardingActions from './onboarding-actions';
 import AccountProviders from './account-providers';
 

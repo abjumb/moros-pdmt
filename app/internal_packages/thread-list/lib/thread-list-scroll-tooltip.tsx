@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, DateUtils, Thread } from 'mailspring-exports';
-import { ScrollRegionTooltipComponentProps } from 'mailspring-component-kit';
+import { localized, DateUtils, Thread } from 'moros-exports';
+import { ScrollRegionTooltipComponentProps } from 'moros-component-kit';
 import ThreadListStore from './thread-list-store';
 
 function indexFor({ viewportCenter, totalHeight }: ScrollRegionTooltipComponentProps) {

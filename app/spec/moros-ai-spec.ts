@@ -1,4 +1,4 @@
-// Direct imports from source — the plugin is not registered in mailspring-exports.
+// Direct imports from source — the plugin is not registered in moros-exports.
 import { sanitizeForPrompt } from '../internal_packages/moros/lib/ai/ai-providers';
 import { buildBriefPrompt } from '../internal_packages/moros/lib/briefing/briefing-store';
 import {

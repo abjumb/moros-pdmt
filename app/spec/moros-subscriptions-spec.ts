@@ -1,5 +1,5 @@
 // Import the functions under test directly from the source files.
-// We use relative paths because the plugin is not registered in mailspring-exports.
+// We use relative paths because the plugin is not registered in moros-exports.
 import {
   daysUntil,
   monthlyCents,

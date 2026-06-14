@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized } from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+import { localized } from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 
 export const QuotedTextControl: React.FunctionComponent<{
   quotedTextPresent: boolean;

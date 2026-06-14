@@ -1,11 +1,11 @@
 import React from 'react';
-import { Actions, Message } from 'mailspring-exports';
+import { Actions, Message } from 'moros-exports';
 import {
   FluxContainer,
   FocusContainer,
   EmptyListState,
   MultiselectList,
-} from 'mailspring-component-kit';
+} from 'moros-component-kit';
 import DraftListStore from './draft-list-store';
 import * as DraftListColumns from './draft-list-columns';
 

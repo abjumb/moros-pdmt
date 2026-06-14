@@ -1,4 +1,4 @@
-import { Utils, localized } from 'mailspring-exports';
+import { Utils, localized } from 'moros-exports';
 import React, { Component, CSSProperties } from 'react';
 import { DropZone } from './drop-zone';
 import { RetinaImg } from './retina-img';
@@ -174,7 +174,7 @@ export class OutlineView extends Component<OutlineViewProps, OutlineViewState> {
         }}
       >
         <RetinaImg
-          url="mailspring://account-sidebar/assets/icon-sidebar-addcategory@2x.png"
+          url="moros://account-sidebar/assets/icon-sidebar-addcategory@2x.png"
           style={{ height: 15, width: 14 }}
           mode={RetinaImg.Mode.ContentIsMask}
           alt=""

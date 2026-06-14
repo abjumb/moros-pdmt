@@ -2,10 +2,10 @@ import { protocol } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-// Handles requests with 'mailspring' protocol.
+// Handles requests with 'moros' protocol.
 //
 // It's created by {Application} upon instantiation and is used to create a
-// custom resource loader for 'mailspring://' URLs.
+// custom resource loader for 'moros://' URLs.
 //
 // The following directories are searched in order:
 //   * <config-dir>/assets
@@ -13,7 +13,7 @@ import path from 'path';
 //   * <config-dir>/packages
 //   * RESOURCE_PATH/node_modules
 //
-export default class MailspringProtocolHandler {
+export default class MorosProtocolHandler {
   loadPaths: string[] = [];
 
   constructor({ configDirPath, resourcePath, safeMode }) {
@@ -26,9 +26,9 @@ export default class MailspringProtocolHandler {
     this.registerProtocol();
   }
 
-  // Creates the 'Mailspring' custom protocol handler.
+  // Creates the 'Moros' custom protocol handler.
   registerProtocol() {
-    const scheme = 'mailspring';
+    const scheme = 'moros';
 
     protocol.handle(scheme, (request) => {
       const relativePath = path.normalize(request.url.substr(scheme.length + 1));

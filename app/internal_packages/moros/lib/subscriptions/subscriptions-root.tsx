@@ -1,5 +1,5 @@
 import React from 'react';
-import { localized, Actions, Contact } from 'mailspring-exports';
+import { localized, Actions, Contact } from 'moros-exports';
 import SubscriptionsStore, {
   CADENCE_LABELS,
   MorosSubscription,

@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, fireEvent, cleanup } from '@testing-library/react';
 
-import { Contact } from 'mailspring-exports';
-import { KeyCommandsRegion, TokenizingTextField, Menu } from 'mailspring-component-kit';
+import { Contact } from 'moros-exports';
+import { KeyCommandsRegion, TokenizingTextField, Menu } from 'moros-component-kit';
 
 class CustomToken extends React.Component<{ token: any }> {
   render() {
@@ -23,7 +23,7 @@ const participant1 = new Contact({
 const participant2 = new Contact({
   id: '2',
   email: 'burgers@mailspring.com',
-  name: 'Mailspring Burger Basket',
+  name: 'Moros Burger Basket',
   hidden: false,
   source: 'mail',
 });
@@ -194,9 +194,9 @@ describe('TokenizingTextField', function () {
       tokenEl.dispatchEvent(dragStartEvt);
 
       expect(dragStartEventData).toEqual({
-        'mailspring-token-items':
-          '[{"id":"2","name":"Mailspring Burger Basket","h":false,"s":"mail","email":"burgers@mailspring.com","gis":[],"__cls":"Contact"}]',
-        'text/plain': 'Mailspring Burger Basket <burgers@mailspring.com>',
+        'moros-token-items':
+          '[{"id":"2","name":"Moros Burger Basket","h":false,"s":"mail","email":"burgers@mailspring.com","gis":[],"__cls":"Contact"}]',
+        'text/plain': 'Moros Burger Basket <burgers@mailspring.com>',
       });
 
       const dropDataTransfer = {

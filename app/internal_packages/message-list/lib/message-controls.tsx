@@ -9,8 +9,8 @@ import {
   EmlUtils,
   Thread,
   Message,
-} from 'mailspring-exports';
-import { RetinaImg, ButtonDropdown, Menu } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { RetinaImg, ButtonDropdown, Menu } from 'moros-component-kit';
 
 interface MessageControlsProps {
   thread: Thread;

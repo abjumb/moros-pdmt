@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, AccountStore, SendActionsStore } from 'mailspring-exports';
-import { ListensToFluxStore } from 'mailspring-component-kit';
+import { localized, AccountStore, SendActionsStore } from 'moros-exports';
+import { ListensToFluxStore } from 'moros-component-kit';
 import ConfigSchemaItem from './config-schema-item';
 
 function getExtendedSendingSchema(configSchema) {

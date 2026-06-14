@@ -1,6 +1,6 @@
 import React from 'react';
-import { RetinaImg } from 'mailspring-component-kit';
-import { localizedReactFragment } from 'mailspring-exports';
+import { RetinaImg } from 'moros-component-kit';
+import { localizedReactFragment } from 'moros-exports';
 
 const ActivityListEmptyState = function ActivityListEmptyState() {
   return (

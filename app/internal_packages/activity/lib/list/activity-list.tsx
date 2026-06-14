@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
-import { localized, Actions, FocusedPerspectiveStore } from 'mailspring-exports';
-import { Flexbox, ScrollRegion, RetinaImg } from 'mailspring-component-kit';
+import { localized, Actions, FocusedPerspectiveStore } from 'moros-exports';
+import { Flexbox, ScrollRegion, RetinaImg } from 'moros-component-kit';
 
 import ActivityEventStore from '../activity-event-store';
 import * as ActivityActions from '../activity-actions';

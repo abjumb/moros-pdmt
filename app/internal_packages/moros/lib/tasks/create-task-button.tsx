@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, Thread } from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+import { localized, Thread } from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 import TasksStore from './tasks-store';
 
 /**

@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, Thread } from 'mailspring-exports';
-import { HasTutorialTip } from 'mailspring-component-kit';
+import { localized, Thread } from 'moros-exports';
+import { HasTutorialTip } from 'moros-component-kit';
 import SendRemindersPopoverButton from './send-reminders-popover-button';
 
 const SendRemindersPopoverButtonWithTip = HasTutorialTip(SendRemindersPopoverButton, {

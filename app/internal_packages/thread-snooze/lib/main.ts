@@ -1,5 +1,5 @@
-import { localized, ComponentRegistry, ExtensionRegistry } from 'mailspring-exports';
-import { HasTutorialTip } from 'mailspring-component-kit';
+import { localized, ComponentRegistry, ExtensionRegistry } from 'moros-exports';
+import { HasTutorialTip } from 'moros-component-kit';
 
 import { ToolbarSnooze, QuickActionSnooze } from './snooze-buttons';
 import * as AccountSidebarExtension from './snooze-account-sidebar-extension';

@@ -3,13 +3,13 @@
 ## Overview
 
 Allow users to drag `.eml` files from their desktop/file manager onto a folder
-in the Mailspring sidebar to upload those messages to the remote mail server via
+in the Moros sidebar to upload those messages to the remote mail server via
 IMAP APPEND. This is the natural complement to the EML export feature.
 
 ## Motivation
 
-Users have requested a way to import email messages into Mailspring without
-needing an external client like Thunderbird. Since Mailspring already supports
+Users have requested a way to import email messages into Moros without
+needing an external client like Thunderbird. Since Moros already supports
 dragging threads between folders in the sidebar, extending the drop handler to
 accept native `.eml` files is a natural fit.
 
@@ -72,7 +72,7 @@ export class AppendMessageTask extends Task {
 }
 ```
 
-Register in `mailspring-exports.js` and `.d.ts`.
+Register in `moros-exports.js` and `.d.ts`.
 
 ### 2. Extend Sidebar Drop Handlers
 
@@ -83,7 +83,7 @@ Modify `shouldAcceptDrop` to also accept native file drops:
 ```typescript
 shouldAcceptDrop(item, event) {
   // Existing thread-move logic
-  if (event.dataTransfer.types.includes('mailspring-threads-data')) {
+  if (event.dataTransfer.types.includes('moros-threads-data')) {
     // ... existing checks ...
   }
 
@@ -104,7 +104,7 @@ Modify `onDrop` to handle file drops:
 ```typescript
 onDrop(item, event) {
   // Existing thread-move path
-  const jsonString = event.dataTransfer.getData('mailspring-threads-data');
+  const jsonString = event.dataTransfer.getData('moros-threads-data');
   if (jsonString) {
     // ... existing logic ...
     return;

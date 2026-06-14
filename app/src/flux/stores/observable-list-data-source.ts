@@ -1,4 +1,4 @@
-import { ListTabular } from 'mailspring-component-kit';
+import { ListTabular } from 'moros-component-kit';
 import { Disposable } from 'event-kit';
 
 /**

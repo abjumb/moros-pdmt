@@ -2,7 +2,7 @@
 import * as Attributes from '../attributes';
 import { ModelWithMetadata } from './model-with-metadata';
 import { AttributeValues } from './model';
-import { MailsyncProcessExit } from 'mailspring-exports';
+import { MailsyncProcessExit } from 'moros-exports';
 
 let CategoryStore = null;
 let Contact = null;
@@ -12,8 +12,8 @@ export interface AccountAutoaddress {
   type: 'cc' | 'bcc';
 }
 /*
- * Public: The Account model represents a Account served by the Mailspring Platform API.
- * Every object on the Mailspring platform exists within a Account, which typically represents
+ * Public: The Account model represents a Account served by the Moros Platform API.
+ * Every object on the Moros platform exists within a Account, which typically represents
  * an email account.
  *
  * ## Attributes

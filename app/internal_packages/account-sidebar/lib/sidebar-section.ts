@@ -12,7 +12,7 @@ import {
   ExtensionRegistry,
   RegExpUtils,
   localized,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 import SidebarItem, { createCategory } from './sidebar-item';
 import * as SidebarActions from './sidebar-actions';

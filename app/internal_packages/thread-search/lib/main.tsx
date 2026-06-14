@@ -4,8 +4,8 @@ import {
   localized,
   ComponentRegistry,
   WorkspaceStore,
-} from 'mailspring-exports';
-import { HasTutorialTip } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { HasTutorialTip } from 'moros-component-kit';
 
 import ThreadSearchBar from './thread-search-bar';
 

@@ -13,7 +13,7 @@ import {
   AccountStore,
   TaskQueue,
   EmlUtils,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 type TemplateItem =
   | {
@@ -35,7 +35,8 @@ export default class ThreadListContextMenu {
   menuItemTemplate() {
     return DatabaseStore.modelify<Thread>(Thread, this.threadIds)
       .then((threads) => {
-        this.threads = threads;
+        // modelify returns undefined for IDs not found in the DB (e.g. deleted threads)
+        this.threads = threads.filter(Boolean);
 
         return Promise.all<TemplateItem>([
           this.findWithFrom(),
@@ -175,7 +176,7 @@ export default class ThreadListContextMenu {
         const fs = require('fs');
         const tempDir = pathModule.join(
           require('@electron/remote').app.getPath('temp'),
-          `mailspring-fwd-${message.id}`
+          `moros-fwd-${message.id}`
         );
         fs.mkdirSync(tempDir, { recursive: true });
         const tempPath = pathModule.join(tempDir, 'Forwarded Message.eml');

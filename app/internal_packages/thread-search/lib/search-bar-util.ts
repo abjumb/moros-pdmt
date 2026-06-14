@@ -5,7 +5,7 @@ import {
   SearchQueryParser,
   Thread,
   ContactStore,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 // start of string or preceding whitespace
 // a known token

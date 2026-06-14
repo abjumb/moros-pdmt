@@ -1,4 +1,4 @@
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 import {
   Rx,
   Message,
@@ -10,10 +10,10 @@ import {
   FocusedPerspectiveStore,
   DatabaseStore,
   QueryResultSet,
-} from 'mailspring-exports';
-import { ListTabular, ListDataSource } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { ListTabular, ListDataSource } from 'moros-component-kit';
 
-class DraftListStore extends MailspringStore {
+class DraftListStore extends MorosStore {
   constructor() {
     super();
     this.listenTo(FocusedPerspectiveStore, this._onPerspectiveChanged);

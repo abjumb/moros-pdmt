@@ -1,5 +1,5 @@
 import React from 'react';
-import { localized, Utils } from 'mailspring-exports';
+import { localized, Utils } from 'moros-exports';
 
 class CopyButton extends React.Component<
   { copyValue: string; btnLabel: string } & React.HTMLProps<HTMLButtonElement>,

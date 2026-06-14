@@ -12,7 +12,7 @@ import {
   AttachmentStore,
   SanitizeTransformer,
   InlineStyleTransformer,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 import DraftFactory from '../../src/flux/stores/draft-factory';
 
@@ -463,7 +463,7 @@ describe('DraftFactory', function draftFactory() {
         );
         expect(
           this.model.body.indexOf(
-            'Cc: mg@mailspring.com, Mailspring Test &lt;tester@mailspring.com&gt;'
+            'Cc: mg@mailspring.com, Moros Test &lt;tester@mailspring.com&gt;'
           ) > 0
         ).toBe(true);
       });

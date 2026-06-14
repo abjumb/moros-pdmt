@@ -12,14 +12,14 @@ import {
   ICSEventHelpers,
   CalendarUtils,
   SyncbackEventTask,
-} from 'mailspring-exports';
+} from 'moros-exports';
 import {
   DatePicker,
   RetinaImg,
   ScrollRegion,
   TabGroupRegion,
   TimePicker,
-} from 'mailspring-component-kit';
+} from 'moros-component-kit';
 import { EventAttendeesInput } from './event-attendees-input';
 import { EventOccurrence, EventAttendee } from './calendar-data-source';
 import { EventPropertyRow } from './event-property-row';

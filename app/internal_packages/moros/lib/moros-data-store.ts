@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 
 export interface MorosRecord {
   id: string;
@@ -34,7 +34,7 @@ export function morosDataDirPath() {
  * Writes are debounced and atomic (temp file + rename) so a crash mid-save
  * can't truncate the data file.
  */
-export default class MorosDataStore<T extends MorosRecord> extends MailspringStore {
+export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
   _filename: string;
   _items: T[];
   _saveTimer: ReturnType<typeof setTimeout> | null = null;

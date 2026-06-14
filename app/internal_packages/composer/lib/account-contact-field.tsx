@@ -8,8 +8,8 @@ import {
   Contact,
   DraftEditingSession,
   Message,
-} from 'mailspring-exports';
-import { Menu, ButtonDropdown, InjectedComponentSet } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { Menu, ButtonDropdown, InjectedComponentSet } from 'moros-component-kit';
 
 interface AccountContactFieldProps {
   accounts: Account[];

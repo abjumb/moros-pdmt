@@ -11,7 +11,7 @@
   "isOptional": true,
 
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "windowTypes": {
     "default": true,

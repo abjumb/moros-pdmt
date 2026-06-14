@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { localized, Actions, Message } from 'mailspring-exports';
-import { Menu, RetinaImg } from 'mailspring-component-kit';
+import { localized, Actions, Message } from 'moros-exports';
+import { Menu, RetinaImg } from 'moros-component-kit';
 import TemplateStore from './template-store';
 
 class TemplatePopover extends React.Component<{ headerMessageId: string }> {
@@ -123,7 +123,7 @@ class TemplatePicker extends React.Component<{
         aria-label={localized('Quick Reply')}
       >
         <RetinaImg
-          url="mailspring://composer-templates/assets/icon-composer-templates@2x.png"
+          url="moros://composer-templates/assets/icon-composer-templates@2x.png"
           mode={RetinaImg.Mode.ContentIsMask}
           aria-hidden="true"
         />

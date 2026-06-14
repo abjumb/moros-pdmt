@@ -11,9 +11,9 @@ export const GMAIL_CLIENT_ID =
 //
 // We could run a small web app that receives the code and exchanges it for the refresh token (storing this on the server), but
 // that web flow would still hand the resulting client secret to the desktop app, whose authenticity it can't verify.
-// (It can verify the connection is secure, but not that the receiving party is /this/ copy of Mailspring.)
+// (It can verify the connection is secure, but not that the receiving party is /this/ copy of Moros.)
 //
-// Note: This is not a security risk for the end-user -- it just means someone could "fork" Mailspring and re-use it's
+// Note: This is not a security risk for the end-user -- it just means someone could "fork" Moros and re-use it's
 // Client ID and Secret. For now, it seems we're on the honor code - Please don't do this.
 //
 export const GMAIL_CLIENT_SECRET =
@@ -39,7 +39,10 @@ export const O365_CLIENT_ID =
   process.env.MS_O365_CLIENT_ID || '8787a430-6eee-41e1-b914-681d90d35625';
 
 export const O365_SCOPES = [
-  'user.read', // email address
+  'openid', // required for id_token to be returned
+  'email', // email claim in id_token
+  'profile', // displayName / name claims in id_token
+  'user.read', // email address via Graph /me
   'offline_access',
   'Contacts.ReadWrite', // contacts
   'Contacts.ReadWrite.Shared', // contacts

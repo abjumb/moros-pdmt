@@ -1,8 +1,8 @@
 import React from 'react';
 import { shell } from 'electron';
-import { localized } from 'mailspring-exports';
+import { localized } from 'moros-exports';
 import { RetinaImg } from './retina-img';
-import { OpenIdentityPageButton } from 'mailspring-component-kit';
+import { OpenIdentityPageButton } from 'moros-component-kit';
 
 export default class FeatureUsedUpModal extends React.Component<{
   modalClass: string;
@@ -30,7 +30,7 @@ export default class FeatureUsedUpModal extends React.Component<{
         </div>
         <div className="feature-cta">
           <div className="pro-description">
-            <h3>{localized('Upgrade to Mailspring Pro')}</h3>
+            <h3>{localized('Upgrade to Moros Pro')}</h3>
             <ul>
               <li>{localized('Unlimited Connected Accounts')}</li>
               <li>{localized('Unlimited Contact Profiles')}</li>

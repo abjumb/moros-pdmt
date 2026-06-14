@@ -1,10 +1,5 @@
 /* eslint global-require: 0 */
-import {
-  localized,
-  PreferencesUIStore,
-  ComponentRegistry,
-  ExtensionRegistry,
-} from 'mailspring-exports';
+import { localized, PreferencesUIStore, ComponentRegistry, ExtensionRegistry } from 'moros-exports';
 import TemplatePicker from './template-picker';
 import TemplateStatusBar from './template-status-bar';
 import TemplateComposerExtension from './template-composer-extension';

@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Message, MailspringTestUtils } from 'mailspring-exports';
+import { Message, MorosTestUtils } from 'moros-exports';
 import OpenTrackingMessageStatus from '../lib/open-tracking-message-status';
 import { PLUGIN_ID } from '../lib/open-tracking-constants';
 
-const { renderIntoDocument } = MailspringTestUtils;
+const { renderIntoDocument } = MorosTestUtils;
 
 function makeIcon(message, props = {}) {
   return renderIntoDocument(

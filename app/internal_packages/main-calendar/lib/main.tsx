@@ -1,7 +1,7 @@
 import React from 'react';
-import { WorkspaceStore, ComponentRegistry, localized } from 'mailspring-exports';
+import { WorkspaceStore, ComponentRegistry, localized } from 'moros-exports';
 import { QuickEventButton } from './quick-event-button';
-import { MailspringCalendar } from './core/mailspring-calendar';
+import { MorosCalendar } from './core/moros-calendar';
 import { EventSearchBar } from './core/event-search-bar';
 
 const Notice = () =>
@@ -86,7 +86,7 @@ function adjustMenus() {
 export function activate() {
   adjustMenus();
 
-  ComponentRegistry.register(MailspringCalendar, {
+  ComponentRegistry.register(MorosCalendar, {
     location: WorkspaceStore.Location.Center,
   });
   ComponentRegistry.register(Notice, {
@@ -101,7 +101,7 @@ export function activate() {
 }
 
 export function deactivate() {
-  ComponentRegistry.unregister(MailspringCalendar);
+  ComponentRegistry.unregister(MorosCalendar);
   ComponentRegistry.unregister(QuickEventButton);
   ComponentRegistry.unregister(EventSearchBar);
 }

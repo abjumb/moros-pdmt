@@ -8,7 +8,7 @@ import {
   DraftEditingSession,
   MessageWithEditorState,
   File,
-} from 'mailspring-exports';
+} from 'moros-exports';
 import { webUtils } from 'electron';
 import {
   DropZone,
@@ -21,7 +21,7 @@ import {
   ComposerEditorPlaintext,
   ComposerSupport,
   RovingTabIndexToolbar,
-} from 'mailspring-component-kit';
+} from 'moros-component-kit';
 import { ComposerHeader } from './composer-header';
 import { SendActionButton } from './send-action-button';
 import { ActionBarPlugins } from './action-bar-plugins';
@@ -282,8 +282,8 @@ export default class ComposerView extends React.Component<ComposerViewProps, Com
   };
 
   _nonNativeFilePathForDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    if (event.dataTransfer.types.includes('text/mailspring-file-url')) {
-      const downloadURL = event.dataTransfer.getData('text/mailspring-file-url');
+    if (event.dataTransfer.types.includes('text/moros-file-url')) {
+      const downloadURL = event.dataTransfer.getData('text/moros-file-url');
       const downloadFilePath = downloadURL.split('file://')[1];
       if (downloadFilePath) {
         return downloadFilePath;

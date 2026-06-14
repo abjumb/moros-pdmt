@@ -1,6 +1,6 @@
 import React from 'react';
-import { Account, localized, Actions } from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+import { Account, localized, Actions } from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 import { ipcRenderer } from 'electron';
 import * as AccountCommands from '../account-commands';
 

@@ -1,10 +1,10 @@
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 import { Contact } from '../models/contact';
 import RegExpUtils from '../../regexp-utils';
 import DatabaseStore from './database-store';
 import { AccountStore } from './account-store';
 import ComponentRegistry from '../../registries/component-registry';
-import { ContactGroup } from 'mailspring-exports';
+import { ContactGroup } from 'moros-exports';
 
 /**
 Public: ContactStore provides convenience methods for searching contacts and
@@ -13,7 +13,7 @@ with additional actions.
 
 Section: Stores
 */
-class ContactStore extends MailspringStore {
+class ContactStore extends MorosStore {
   async searchContactGroups(_search: string) {
     const search = _search.toLowerCase();
 

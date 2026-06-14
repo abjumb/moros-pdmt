@@ -66,11 +66,11 @@
   },
   "settings": {
     "import/core-modules": [
-      "mailspring-exports",
-      "mailspring-component-kit",
+      "moros-exports",
+      "moros-component-kit",
       "electron",
-      "mailspring-store",
-      "mailspring-observables"
+      "moros-store",
+      "moros-observables"
     ]
   }
 }

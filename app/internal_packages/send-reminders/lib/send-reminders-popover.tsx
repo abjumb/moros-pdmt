@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import { localized, DateUtils } from 'mailspring-exports';
-import { DatePickerPopover } from 'mailspring-component-kit';
+import { localized, DateUtils } from 'moros-exports';
+import { DatePickerPopover } from 'moros-component-kit';
 
 const SendRemindersOptions = {
   [localized('In 3 Hours')]: () => DateUtils.minutesFromNow(180),

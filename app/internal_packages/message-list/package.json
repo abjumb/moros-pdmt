@@ -7,7 +7,7 @@
   "private": true,
   "syncInit": true,
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "windowTypes": {
     "default": true,

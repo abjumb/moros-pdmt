@@ -5,8 +5,8 @@ import {
   Thread,
   Folder,
   Label,
-  Event as MailspringEvent,
-} from 'mailspring-exports';
+  Event as MorosEvent,
+} from 'moros-exports';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -26,8 +26,8 @@ function makeThread(id: string, accountId: string, folders: Folder[] = []): Thre
   return t;
 }
 
-function makeEvent(overrides: Partial<MailspringEvent> = {}): MailspringEvent {
-  return new MailspringEvent({
+function makeEvent(overrides: Partial<MorosEvent> = {}): MorosEvent {
+  return new MorosEvent({
     id: 'event-id-1',
     accountId: 'test-account-id',
     calendarId: 'calendar-id-1',

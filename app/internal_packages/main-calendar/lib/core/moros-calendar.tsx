@@ -12,13 +12,13 @@ import {
   Event,
   SyncbackEventTask,
   ICSEventHelpers,
-} from 'mailspring-exports';
+} from 'moros-exports';
 import {
   ScrollRegion,
   ResizableRegion,
   KeyCommandsRegion,
   MiniMonthView,
-} from 'mailspring-component-kit';
+} from 'moros-component-kit';
 import { CalendarMenuCommands } from '../calendar-menu-commands';
 import { DayView } from './day-view';
 import { WeekView } from './week-view';
@@ -53,9 +53,9 @@ import {
 import { showRecurringEventDialog } from './recurring-event-dialog';
 import { modifyEventWithRecurringSupport, EventTimeChangeOptions } from './recurring-event-actions';
 
-const DISABLED_CALENDARS = 'mailspring.disabledCalendars';
-const CALENDAR_VIEW = 'mailspring.calendarView';
-const CALENDAR_LIST_VISIBLE = 'mailspring.calendarListVisible';
+const DISABLED_CALENDARS = 'moros.disabledCalendars';
+const CALENDAR_VIEW = 'moros.calendarView';
+const CALENDAR_LIST_VISIBLE = 'moros.calendarListVisible';
 
 const VIEWS = {
   [CalendarView.DAY]: DayView,
@@ -72,7 +72,7 @@ export interface EventRendererProps {
   onEventFocused: (event: EventOccurrence) => void;
 }
 
-export interface MailspringCalendarViewProps extends EventRendererProps {
+export interface MorosCalendarViewProps extends EventRendererProps {
   dataSource: CalendarDataSource;
   disabledCalendars: string[];
   focusedMoment: Moment;
@@ -98,11 +98,11 @@ export interface MailspringCalendarViewProps extends EventRendererProps {
 }
 
 /*
- * Mailspring Calendar
+ * Moros Calendar
  */
-interface MailspringCalendarProps {}
+interface MorosCalendarProps {}
 
-interface MailspringCalendarState {
+interface MorosCalendarState {
   view: CalendarView;
   selectedEvents: EventOccurrence[];
   focusedEvent: FocusedEventInfo | null;
@@ -117,11 +117,8 @@ interface MailspringCalendarState {
   themeVersion: number;
 }
 
-export class MailspringCalendar extends React.Component<
-  MailspringCalendarProps,
-  MailspringCalendarState
-> {
-  static displayName = 'MailspringCalendar';
+export class MorosCalendar extends React.Component<MorosCalendarProps, MorosCalendarState> {
+  static displayName = 'MorosCalendar';
 
   static DayView = DayView;
   static WeekView = WeekView;
@@ -135,7 +132,7 @@ export class MailspringCalendar extends React.Component<
   _unlisten?: () => void;
   _dataSource = new CalendarDataSource();
 
-  constructor(props: MailspringCalendarProps) {
+  constructor(props: MorosCalendarProps) {
     super(props);
     this.state = {
       calendars: [],
@@ -851,7 +848,7 @@ export class MailspringCalendar extends React.Component<
         hasSelectedEvents={this.state.selectedEvents.length > 0}
       >
         <KeyCommandsRegion
-          className="mailspring-calendar"
+          className="moros-calendar"
           localHandlers={{
             'core:remove-from-view': this._onDeleteSelectedEvents,
             'calendar:move-event-up': () => this._onMoveSelectedEvent('up', false),

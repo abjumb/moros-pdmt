@@ -1,4 +1,4 @@
-import { DOMUtils } from 'mailspring-exports';
+import { DOMUtils } from 'moros-exports';
 import UnifiedDOMParser from './unified-dom-parser';
 
 export default class RealDOMParser extends UnifiedDOMParser {

@@ -1,4 +1,4 @@
-import { Message } from 'mailspring-exports';
+import { Message } from 'moros-exports';
 import OpenTrackingComposerExtension, {
   encodeOpenTrackingToken,
 } from '../lib/open-tracking-composer-extension';

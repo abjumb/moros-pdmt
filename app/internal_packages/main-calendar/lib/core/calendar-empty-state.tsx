@@ -1,5 +1,5 @@
 import React from 'react';
-import { Actions, localized } from 'mailspring-exports';
+import { Actions, localized } from 'moros-exports';
 
 export function CalendarEmptyState() {
   const onOpenAccountPreferences = () => {
@@ -13,7 +13,7 @@ export function CalendarEmptyState() {
         <h2 className="calendar-empty-state-title">{localized('No Calendars')}</h2>
         <p className="calendar-empty-state-message">
           {localized(
-            'None of your connected accounts provide calendars. Mailspring supports calendars from Gmail and other providers with CalDAV support.'
+            'None of your connected accounts provide calendars. Moros supports calendars from Gmail and other providers with CalDAV support.'
           )}
         </p>
         <button className="btn btn-large btn-emphasis" onClick={onOpenAccountPreferences}>

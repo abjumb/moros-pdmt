@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import { RetinaImg } from 'mailspring-component-kit';
-import { localized, DateUtils, Thread, Message } from 'mailspring-exports';
+import { RetinaImg } from 'moros-component-kit';
+import { localized, DateUtils, Thread, Message } from 'moros-exports';
 
 import { updateReminderMetadata } from './send-reminders-utils';
 import { PLUGIN_ID } from './send-reminders-constants';

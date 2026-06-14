@@ -10,8 +10,8 @@ import {
   DraftEditingSession,
   ContactGroup,
   DatabaseStore,
-} from 'mailspring-exports';
-import { TokenizingTextField, Menu, InjectedComponentSet } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { TokenizingTextField, Menu, InjectedComponentSet } from 'moros-component-kit';
 
 const TokenRenderer = (props: { token: object }) => {
   const contact = props.token as Contact;

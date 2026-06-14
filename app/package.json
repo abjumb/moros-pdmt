@@ -1,11 +1,11 @@
 {
-  "name": "mailspring",
-  "productName": "Mailspring",
-  "desktopName": "Mailspring.desktop",
+  "name": "moros",
+  "productName": "Moros",
+  "desktopName": "Moros.desktop",
   "version": "1.21.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/foundry376/mailspring.git"
+    "url": "git://github.com/abjumb/moros-pdmt.git"
   },
   "commitHash": "COMMIT_INSERTED_DURING_PACKAGING",
   "description": "The best email app for people and teams at work",

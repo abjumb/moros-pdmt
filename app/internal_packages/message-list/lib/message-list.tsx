@@ -16,7 +16,7 @@ import {
   EmlUtils,
   SearchableComponentStore,
   SearchableComponentMaker,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 import {
   Spinner,
@@ -27,7 +27,7 @@ import {
   MailImportantIcon,
   KeyCommandsRegion,
   InjectedComponentSet,
-} from 'mailspring-component-kit';
+} from 'moros-component-kit';
 
 import FindInThread from './find-in-thread';
 import MessageItemContainer from './message-item-container';
@@ -158,7 +158,7 @@ class MessageList extends React.Component<Record<string, unknown>, MessageListSt
     // the attachment has a clean display name.
     const tempDir = pathModule.join(
       require('@electron/remote').app.getPath('temp'),
-      `mailspring-fwd-${message.id}`
+      `moros-fwd-${message.id}`
     );
     fs.mkdirSync(tempDir, { recursive: true });
     const tempPath = pathModule.join(tempDir, 'Forwarded Message.eml');

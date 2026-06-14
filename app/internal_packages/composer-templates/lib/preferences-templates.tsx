@@ -1,8 +1,8 @@
 import fs from 'fs';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Flexbox, EditableList, ComposerEditor, ComposerSupport } from 'mailspring-component-kit';
-import { Actions, localized, localizedReactFragment } from 'mailspring-exports';
+import { Flexbox, EditableList, ComposerEditor, ComposerSupport } from 'moros-component-kit';
+import { Actions, localized, localizedReactFragment } from 'moros-exports';
 import { Value } from 'slate';
 
 import TemplateStore from './template-store';

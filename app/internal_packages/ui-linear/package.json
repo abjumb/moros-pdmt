@@ -6,7 +6,7 @@
   "description": "A dark theme modeled on Linear's visual language — the default Moros look",
   "license": "GPL-3.0",
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "private": true
 }

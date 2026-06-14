@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, DateUtils } from 'mailspring-exports';
-import { DatePickerPopover } from 'mailspring-component-kit';
+import { localized, DateUtils } from 'moros-exports';
+import { DatePickerPopover } from 'moros-component-kit';
 
 const SendLaterOptions = {
   [localized('In 1 hour')]: DateUtils.in1Hour,

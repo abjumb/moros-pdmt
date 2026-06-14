@@ -1,4 +1,4 @@
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 import {
   localized,
   Actions,
@@ -8,7 +8,7 @@ import {
   DatabaseStore,
   NativeNotifications,
   FocusedPerspectiveStore,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 interface ActivityAction {
   messageId: string;
@@ -32,7 +32,7 @@ export function pluckByEmail(recipients: Contact[], email: string) {
   return null;
 }
 
-class ActivityEventStore extends MailspringStore {
+class ActivityEventStore extends MorosStore {
   _throttlingTimestamps = {};
   _actions = [];
   _unreadCount = 0;

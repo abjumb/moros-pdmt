@@ -1,6 +1,6 @@
 import React from 'react';
-import { localized, Actions } from 'mailspring-exports';
-import { RetinaImg, RovingTabIndexToolbar } from 'mailspring-component-kit';
+import { localized, Actions } from 'moros-exports';
+import { RetinaImg, RovingTabIndexToolbar } from 'moros-component-kit';
 import Fields from './fields';
 
 interface ComposerHeaderActionsProps {

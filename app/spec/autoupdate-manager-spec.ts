@@ -2,13 +2,13 @@ import AutoUpdateManager from '../src/browser/autoupdate-manager';
 
 describe('AutoUpdateManager', function () {
   beforeEach(function () {
-    this.mailspringIdentityId = null;
+    this.morosIdentityId = null;
     this.specMode = true;
     this.config = {
       set: jasmine.createSpy('config.set'),
       get: (key) => {
         if (key === 'identity.id') {
-          return this.mailspringIdentityId;
+          return this.morosIdentityId;
         }
         if (key === 'env') {
           return 'production';
@@ -48,7 +48,7 @@ describe('AutoUpdateManager', function () {
 
   describe('when an update identity is already set', () =>
     it('should send it and not save any changes', function () {
-      this.mailspringIdentityId = 'test-mailspring-id';
+      this.morosIdentityId = 'test-mailspring-id';
       const m = new AutoUpdateManager('3.222.1', this.config, this.specMode);
       expect(m.feedURL).toEqual(
         'https://updates.getmailspring.com/check/' +
@@ -64,8 +64,8 @@ describe('AutoUpdateManager', function () {
       const m = new AutoUpdateManager('3.222.1', this.config, this.specMode);
       spyOn(m, 'setupAutoUpdater');
       expect(m.feedURL.includes('anonymous')).toEqual(true);
-      this.mailspringIdentityId = 'test-mailspring-id';
+      this.morosIdentityId = 'test-mailspring-id';
       m.updateFeedURL();
-      expect(m.feedURL.includes(this.mailspringIdentityId)).toEqual(true);
+      expect(m.feedURL.includes(this.morosIdentityId)).toEqual(true);
     }));
 });

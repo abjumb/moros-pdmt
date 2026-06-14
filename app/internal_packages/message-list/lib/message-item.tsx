@@ -7,8 +7,8 @@ import {
   Actions,
   AttachmentStore,
   MessageStore,
-} from 'mailspring-exports';
-import { RetinaImg, InjectedComponentSet, InjectedComponent } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { RetinaImg, InjectedComponentSet, InjectedComponent } from 'moros-component-kit';
 
 import MessageParticipants from './message-participants';
 import MessageItemBody from './message-item-body';

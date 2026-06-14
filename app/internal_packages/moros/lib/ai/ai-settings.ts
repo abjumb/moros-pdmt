@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 import { AiProviderId, DEFAULT_MODEL } from './ai-providers';
 
 export interface AiSettings {
@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS: AiSettings = { provider: 'byok', model: DEFAULT_MODEL };
  * detection). Persisted as JSON beside the other Moros data files rather than
  * in AppEnv.config, which is reserved for schema-backed core settings.
  */
-class AiSettingsStore extends MailspringStore {
+class AiSettingsStore extends MorosStore {
   _settings: AiSettings;
 
   constructor() {

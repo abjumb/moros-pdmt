@@ -1,5 +1,5 @@
 import React from 'react';
-import { localized } from 'mailspring-exports';
+import { localized } from 'moros-exports';
 import BriefingStore, { BRIEF_WINDOW_HOURS, MorosBrief } from './briefing-store';
 import AiSettingsPanel from '../ai/ai-settings-panel';
 

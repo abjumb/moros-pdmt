@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { localized, Actions, AccountStore, Message, DraftEditingSession } from 'mailspring-exports';
+import { localized, Actions, AccountStore, Message, DraftEditingSession } from 'moros-exports';
 import {
   KeyCommandsRegion,
   ParticipantsTextField,
   ListensToFluxStore,
   TabGroupContext,
-} from 'mailspring-component-kit';
+} from 'moros-component-kit';
 import AccountContactField from './account-contact-field';
 import ComposerHeaderActions from './composer-header-actions';
 import Fields from './fields';

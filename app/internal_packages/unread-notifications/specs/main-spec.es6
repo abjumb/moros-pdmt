@@ -8,7 +8,7 @@ import {
   AccountStore,
   SoundRegistry,
   NativeNotifications,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 import { Notifier } from '../lib/main';
 

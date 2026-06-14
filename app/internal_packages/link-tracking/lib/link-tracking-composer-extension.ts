@@ -1,10 +1,4 @@
-import {
-  ComposerExtension,
-  RegExpUtils,
-  FeatureUsageStore,
-  Message,
-  Contact,
-} from 'mailspring-exports';
+import { ComposerExtension, RegExpUtils, FeatureUsageStore, Message, Contact } from 'moros-exports';
 import { PLUGIN_ID, PLUGIN_URL } from './link-tracking-constants';
 
 function forEachATagInBody(

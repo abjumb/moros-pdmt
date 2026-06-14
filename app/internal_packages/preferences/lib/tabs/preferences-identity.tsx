@@ -5,8 +5,8 @@ import {
   localized,
   localizedReactFragment,
   IIdentity,
-} from 'mailspring-exports';
-import { OpenIdentityPageButton, RetinaImg } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { OpenIdentityPageButton, RetinaImg } from 'moros-component-kit';
 import { shell, ipcRenderer } from 'electron';
 
 class RefreshButton extends React.Component<Record<string, unknown>, { refreshing: boolean }> {
@@ -51,7 +51,7 @@ const ProTourFeatures = [
     icon: `icon-composer-reminders.png`,
     title: localized(`Follow-up reminders`),
     text: localized(
-      `Never forget to follow up! Mailspring reminds you if your messages haven't received replies.`
+      `Never forget to follow up! Moros reminds you if your messages haven't received replies.`
     ),
   },
   {
@@ -168,7 +168,7 @@ class PreferencesIdentity extends React.Component<
           <div style={{ display: 'flex', alignItems: 'flex-start' }}>
             <div className="basic-explanation" style={{ display: 'flex' }}>
               {localizedReactFragment(
-                `You are not signed in to Mailspring. Link the app to a free Mailspring ID to use great free features like send later and snoozing, or upgrade to Mailspring Pro for unlimited message translation and more.`
+                `You are not signed in to Moros. Link the app to a free Moros ID to use great free features like send later and snoozing, or upgrade to Moros Pro for unlimited message translation and more.`
               )}
               <div
                 className="btn btn-emphasis"
@@ -176,13 +176,13 @@ class PreferencesIdentity extends React.Component<
                 style={{ verticalAlign: 'top', flexShrink: 0, marginLeft: 30 }}
               >
                 <RetinaImg name="ic-upgrade.png" mode={RetinaImg.Mode.ContentIsMask} />{' '}
-                {localized(`Setup Mailspring ID`)}
+                {localized(`Setup Moros ID`)}
               </div>
             </div>
           </div>
         </div>
         <div className="row padded" style={{ paddingTop: 0 }}>
-          <ExploreMailspringPro />
+          <ExploreMorosPro />
         </div>
       </>
     );
@@ -196,12 +196,12 @@ class PreferencesIdentity extends React.Component<
           <div className="basic-explanation">
             {localizedReactFragment(
               `You are using %@, which is free! You can try pro features like snooze, send later, read receipts and reminders a few times a week.`,
-              <strong>{localized('Mailspring Basic')}</strong>
+              <strong>{localized('Moros Basic')}</strong>
             )}
             {process.platform === 'linux' && (
               <span>
                 {localizedReactFragment(
-                  `Mailspring is independent %@ software, and subscription revenue allows us spend time maintaining and improving the product.`,
+                  `Moros is independent %@ software, and subscription revenue allows us spend time maintaining and improving the product.`,
                   <a href="https://github.com/Foundry376/Mailspring/">{localized('open source')}</a>
                 )}
               </span>
@@ -210,9 +210,9 @@ class PreferencesIdentity extends React.Component<
             <br />
             {localizedReactFragment(
               `Upgrade to %@ to use all these great features permanently:`,
-              <a onClick={onLearnMore}>{localized('Mailspring Pro')}</a>
+              <a onClick={onLearnMore}>{localized('Moros Pro')}</a>
             )}
-            <ExploreMailspringSmall />
+            <ExploreMorosSmall />
           </div>
           <div className="subscription-actions">
             <div className="pro-feature-ring">
@@ -221,7 +221,7 @@ class PreferencesIdentity extends React.Component<
               <div className="period">{localized('Monthly')}</div>
             </div>
             <OpenIdentityPageButton
-              label={localized('Get Mailspring Pro')}
+              label={localized('Get Moros Pro')}
               path="/payment"
               source="Preferences Billing"
               campaign="Dashboard"
@@ -230,7 +230,7 @@ class PreferencesIdentity extends React.Component<
             />
           </div>
         </div>
-        <ExploreMailspringPro />
+        <ExploreMorosPro />
       </div>
     );
   }
@@ -241,7 +241,7 @@ class PreferencesIdentity extends React.Component<
     const unpaidNote = effectivePlanName !== planName && (
       <p>
         {localized(
-          `Note: Due to issues with your most recent payment, you've been temporarily downgraded to Mailspring %@. Click 'Billing' below to correct the issue.`,
+          `Note: Due to issues with your most recent payment, you've been temporarily downgraded to Moros %@. Click 'Billing' below to correct the issue.`,
           effectivePlanName
         )}
       </p>
@@ -251,16 +251,14 @@ class PreferencesIdentity extends React.Component<
         <div>
           {localizedReactFragment(
             `Thank you for using %@ and supporting independent software. Get the most out of your subscription: explore pro features below or visit the %@ to learn more about reminders, templates, activity insights, and more.`,
-            <strong
-              style={{ textTransform: 'capitalize' }}
-            >{`Mailspring ${planDisplayName}`}</strong>,
+            <strong style={{ textTransform: 'capitalize' }}>{`Moros ${planDisplayName}`}</strong>,
             <a href="https://community.getmailspring.com/docs?topic=241">
               {localized(`Help Center`)}
             </a>
           )}
           {unpaidNote}
         </div>
-        <ExploreMailspringPro />
+        <ExploreMorosPro />
         <div style={{ paddingTop: 15 }}>
           <OpenIdentityPageButton
             label={localized('Manage Billing')}
@@ -293,7 +291,7 @@ class PreferencesIdentity extends React.Component<
   }
 }
 
-const ExploreMailspringSmall: React.FunctionComponent = () => (
+const ExploreMorosSmall: React.FunctionComponent = () => (
   <div className="features">
     <ul>
       <li>
@@ -382,9 +380,9 @@ const ExploreMailspringSmall: React.FunctionComponent = () => (
   </div>
 );
 
-const ExploreMailspringPro: React.FunctionComponent = () => (
+const ExploreMorosPro: React.FunctionComponent = () => (
   <>
-    <div className="feature-explore-title">{localized('Explore Mailspring Pro')}</div>
+    <div className="feature-explore-title">{localized('Explore Moros Pro')}</div>
     <div className="feature-explore-grid">
       {ProTourFeatures.map((item) => (
         <a key={item.title} className="feature" href={item.link}>
@@ -408,7 +406,7 @@ const ExploreMailspringPro: React.FunctionComponent = () => (
 
 const IdentitySummary: React.FunctionComponent<{ identity: IIdentity }> = (props) => {
   const { firstName, lastName, emailAddress } = props.identity;
-  const logout = () => Actions.logoutMailspringIdentity();
+  const logout = () => Actions.logoutMorosIdentity();
   return (
     <div className="row padded">
       <div className="identity-info">

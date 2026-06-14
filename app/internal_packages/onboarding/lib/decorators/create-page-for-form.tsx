@@ -1,8 +1,8 @@
 import { shell } from 'electron';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { RetinaImg } from 'mailspring-component-kit';
-import { localized, Account } from 'mailspring-exports';
+import { RetinaImg } from 'moros-component-kit';
+import { localized, Account } from 'moros-exports';
 
 import * as OnboardingActions from '../onboarding-actions';
 import { finalizeAndValidateAccount } from '../onboarding-helpers';
@@ -153,7 +153,7 @@ const CreatePageForForm = (FormComponent: React.ComponentType<any> & Record<stri
           buttons: [localized('Go Back'), localized('Continue')],
           message: localized('Are you sure?'),
           detail: localized(
-            `This looks like a Gmail account! While it's possible to setup an App Password and connect to Gmail via IMAP, Mailspring also supports Google OAuth. Go back and select "Gmail & Google Apps" from the provider screen.`
+            `This looks like a Gmail account! While it's possible to setup an App Password and connect to Gmail via IMAP, Moros also supports Google OAuth. Go back and select "Gmail & Google Apps" from the provider screen.`
           ),
         });
         if (buttonIndex === 0) {

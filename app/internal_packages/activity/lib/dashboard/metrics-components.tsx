@@ -1,6 +1,6 @@
 import React from 'react';
-import { RetinaImg } from 'mailspring-component-kit';
-import { localized, isRTL } from 'mailspring-exports';
+import { RetinaImg } from 'moros-component-kit';
+import { localized, isRTL } from 'moros-exports';
 import { SubjectStatsEntry } from './root';
 
 export class MetricContainer extends React.Component<{ name: string }> {

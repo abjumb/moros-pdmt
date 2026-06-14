@@ -1,7 +1,7 @@
 import fs from 'fs';
 import React from 'react';
 import { shell } from 'electron';
-import { ScrollRegion, ListensToFluxStore, RetinaImg } from 'mailspring-component-kit';
+import { ScrollRegion, ListensToFluxStore, RetinaImg } from 'moros-component-kit';
 import {
   localized,
   localizedReactFragment,
@@ -10,7 +10,7 @@ import {
   DatabaseStore,
   FocusedPerspectiveStore,
   Actions,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 import {
   MetricContainer,
@@ -329,7 +329,7 @@ class RootWithTimespan extends React.Component<
         AppEnv.showErrorDialog({
           title: localized('Export Failed'),
           message: localized(
-            `Mailspring was unable to write to the file location you specified (%@).` +
+            `Moros was unable to write to the file location you specified (%@).` +
               `Try choosing another location.\n\n%@`,
             filepath,
             err.toString()

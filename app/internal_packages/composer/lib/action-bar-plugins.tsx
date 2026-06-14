@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
-import { ComponentRegistry, Message, DraftEditingSession } from 'mailspring-exports';
-import { InjectedComponentSet } from 'mailspring-component-kit';
+import { ComponentRegistry, Message, DraftEditingSession } from 'moros-exports';
+import { InjectedComponentSet } from 'moros-component-kit';
 
 const ROLE = 'Composer:ActionButton';
 

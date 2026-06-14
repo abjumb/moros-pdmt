@@ -1,12 +1,12 @@
 # Moros Productivity — Roadmap
 
-Moros is a fork of Mailspring that turns the mail client into a lightweight all-in-one
+Moros is a fork of Moros that turns the mail client into a lightweight all-in-one
 productivity tool: **mail, tasks, personal finance, and an encrypted API key / password
 vault**, presented with a UI/UX modeled closely on [Linear](https://linear.app).
 
 The guiding constraints:
 
-- **Lightweight.** Reuse Mailspring's existing infrastructure (package system, workspace
+- **Lightweight.** Reuse Moros's existing infrastructure (package system, workspace
   sheets, flux stores, theming, build/installer pipeline) instead of adding new frameworks
   or dependencies.
 - **Linear-grade UI.** Dark, dense, keyboard-friendly. Indigo `#5E6AD2` accent, Inter type
@@ -30,7 +30,7 @@ The guiding constraints:
     stored locally; **secret values never touch disk in plaintext** — they are stored via
     `KeyManager`, which encrypts with Electron `safeStorage` (OS keychain).
 - [x] Shared `MorosDataStore` base class: debounced atomic JSON persistence under
-      `<config>/moros/`, change events via `MailspringStore`.
+      `<config>/moros/`, change events via `MorosStore`.
 
 ### Phase 2 — Module depth
 
@@ -68,7 +68,7 @@ The guiding constraints:
 - [ ] App-level navigation rail (Mail / Tasks / Finance / …) replacing the sidebar
       injection entirely.
 - [ ] Command palette (`Cmd/Ctrl+K`) covering navigation and module actions — Linear's
-      primary interaction model. Mailspring's keymap + menu infrastructure already
+      primary interaction model. Moros's keymap + menu infrastructure already
       provides most of the plumbing.
 - [x] Linear-style light theme variant (`ui-linear-light`).
 
@@ -82,7 +82,7 @@ The guiding constraints:
 
 ### Phase 4 — Rebrand
 
-- [ ] Product naming: Mailspring → Moros (productName, window titles, about dialog,
+- [ ] Product naming: Moros → Moros (productName, window titles, about dialog,
       onboarding copy). Keep config directory and sync-engine identifiers compatible.
 - [ ] New icon set / wordmark.
 

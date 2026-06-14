@@ -1,0 +1,16 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+# Seeds node_modules from the repo root via APFS clonefile (fast, no extra
+# disk), then runs `npm install`. `postinstall` rebuilds native modules
+# against Electron only if needed and downloads the mailsync binary.
+# See .conductor/setup.sh. Runs in the workspace directory.
+setup = "sh .conductor/setup.sh"
+
+# Electron desktop app (no HTTP port). `--config-dir-path` gives each workspace
+# its OWN dev data dir so multiple Mailspring instances can run side by side
+# without corrupting a shared SQLite database / config.
+run = "npm start -- --config-dir-path \"$HOME/Library/Application Support/Mailspring-dev-$CONDUCTOR_WORKSPACE_NAME\""
+
+# Safe because each workspace runs against an isolated config dir (see above).
+run_mode = "concurrent"

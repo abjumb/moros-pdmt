@@ -8,7 +8,7 @@
   "scripts": {
   },
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "syncInit": true,
   "windowTypes": {

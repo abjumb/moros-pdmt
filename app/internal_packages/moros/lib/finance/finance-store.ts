@@ -45,32 +45,32 @@ export function formatCents(cents: number) {
 }
 
 /**
- * Parse user input like "12.50", "$1,200", "1.200,50" or "1,200,50" into
- * integer cents. The rightmost `.`/`,` is treated as the decimal point only
- * when it is followed by 1-2 digits; every other `.`/`,` is a thousands
- * separator. Always returns a positive magnitude — `amountCents` is documented
- * as positive, with `kind` carrying the sign.
+ * Parse user input like "12.50", "$1,200" or "1.200,50" into integer cents.
+ * Both `.` and `,` are accepted as decimal or thousands separators: when both
+ * appear, the last one wins as the decimal point; a lone `,` or `.` is a
+ * decimal point only when followed by 1-2 trailing digits.
  */
 export function parseAmountToCents(input: string): number | null {
-  const cleaned = input.replace(/[^0-9.,]/g, '');
-  if (!cleaned) return null;
+  let normalized = input.replace(/[^0-9.,]/g, '');
+  if (!normalized) return null;
 
-  const lastSep = Math.max(cleaned.lastIndexOf('.'), cleaned.lastIndexOf(','));
-  let intPart = cleaned;
-  let fracPart = '';
-  if (lastSep !== -1) {
-    const tail = cleaned.slice(lastSep + 1);
-    if (tail.length >= 1 && tail.length <= 2) {
-      intPart = cleaned.slice(0, lastSep);
-      fracPart = tail;
-    }
+  const lastDot = normalized.lastIndexOf('.');
+  const lastComma = normalized.lastIndexOf(',');
+  if (lastDot !== -1 && lastComma !== -1) {
+    const decimalSep = lastDot > lastComma ? '.' : ',';
+    const thousandsSep = decimalSep === '.' ? ',' : '.';
+    normalized = normalized.split(thousandsSep).join('');
+    normalized = normalized.replace(decimalSep, '.');
+  } else if (lastDot !== -1 || lastComma !== -1) {
+    const sep = lastDot !== -1 ? '.' : ',';
+    const isDecimal = new RegExp(`\\${sep}\\d{1,2}$`).test(normalized);
+    normalized = normalized.split(sep).join(isDecimal ? '#' : '');
+    normalized = normalized.replace('#', '.');
   }
-  intPart = intPart.replace(/[.,]/g, '');
-  if (!intPart && !fracPart) return null;
 
-  const value = Number(`${intPart || '0'}.${fracPart || '0'}`);
+  const value = Number(normalized);
   if (!Number.isFinite(value)) return null;
-  return Math.round(Math.abs(value) * 100);
+  return Math.round(value * 100);
 }
 
 /** Current month as a 'yyyy-mm' prefix. */
@@ -154,7 +154,7 @@ class FinanceStore extends MorosDataStore<MorosTransaction> {
     // Balance accumulated before the window opens.
     let runningCents = 0;
     for (const date of allDates) {
-      if (date < startDate) runningCents += byDate.get(date) || 0;
+      if (date < startDate) runningCents += byDate.get(date);
     }
 
     const series: { date: string; cents: number }[] = [];

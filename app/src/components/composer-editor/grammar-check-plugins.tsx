@@ -1,6 +1,6 @@
 import React from 'react';
 import { Editor, Decoration, Mark, Point, Text } from 'slate';
-import { localized } from 'mailspring-exports';
+import { localized } from 'moros-exports';
 import { ComposerEditorPlugin, ComposerEditorPluginTopLevelComponentProps } from './types';
 
 export const GRAMMAR_ERROR_MARK = 'grammar-error';
@@ -568,7 +568,7 @@ function onChange(editor: Editor, next: () => void) {
 }
 
 // --- Public API consumed by the composer-grammar-check internal package ---
-// Exported here and re-exported via mailspring-exports so the package can import
+// Exported here and re-exported via moros-exports so the package can import
 // without a fragile relative path back into app/src/.
 export const GrammarCheckPluginAPI = {
   setGrammarCheckStore,

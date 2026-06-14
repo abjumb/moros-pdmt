@@ -9,7 +9,7 @@
   "scripts": {
   },
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "windowTypes": {
     "contacts": true

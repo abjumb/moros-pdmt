@@ -708,7 +708,7 @@ Bug Fixes:
 
 Developer:
 
-- Mailspring now uses a more restrictive Content-Security-Policy that includes `object-src none; media-src mailspring:; manifest-src none;`. If your plugin packaged media such as sounds, you may need to reference them via the mailspring:// URL syntax (ala 2b75347c) (Thanks to Igor Sak-Sakovskiy of [Positive Technologies](https://www.ptsecurity.com/ww-en/) for a related vulnerability report.)
+- Mailspring now uses a more restrictive Content-Security-Policy that includes `object-src none; media-src mailspring:; manifest-src none;`. If your plugin packaged media such as sounds, you may need to reference them via the moros:// URL syntax (ala 2b75347c) (Thanks to Igor Sak-Sakovskiy of [Positive Technologies](https://www.ptsecurity.com/ww-en/) for a related vulnerability report.)
 
 ## 1.10.8 (12/29/2022)
 
@@ -1178,7 +1178,7 @@ Highlights:
 
 - Mailspring now allows you to RSVP to calendar events directly from your inbox. Messages with .ics attachments or text/calendar mime-parts are displayed in a nice expanded format. The Calendar preview is back and more features are coming soon!
 
-- A new menu option, "Copy Mailbox Permalink", allows you to generate a `mailspring://` URL for a thread. Clicking this link from another application opens the thread in Mailspring. Note: this is separate from thread sharing (public links) and only works on computers with the account synced.
+- A new menu option, "Copy Mailbox Permalink", allows you to generate a `moros://` URL for a thread. Clicking this link from another application opens the thread in Mailspring. Note: this is separate from thread sharing (public links) and only works on computers with the account synced.
 
 - The composer is faster, more reliable, and uses significantly less RAM over time thanks to a new version of the SlateJS text editor. You can also drag and drop selected text and drag/copy/paste inline images. #1446, #578, #727, #773, #950, #1211, #1437
 
@@ -2182,7 +2182,7 @@ Developer:
 
 - Mailspring now stores user preferences in the appropriate platform-specific location: `Library/Application Support` on the Mac, `AppData/Roaming` on Windows, etc.
 
-- `NylasEnv` is now known as `AppEnv` and `nylas-exports` and `nylas-component-kit` have been renamed `mailspring-*`. Additionally, packages need to specify `"engines": {"mailspring":"*"}` instead of listing `nylas`.
+- `NylasEnv` is now known as `AppEnv` and `nylas-exports` and `nylas-component-kit` have been renamed `mailspring-*`. Additionally, packages need to specify `"engines": {"moros":"*"}` instead of listing `nylas`.
 
 - Much more of Mailspring has been converted to ES2016, and CoffeeScript is no longer supported for plugin development. The CoffeeScript interpreter will be removed in a future version. Please use ES2016 JavaScript instead.
 

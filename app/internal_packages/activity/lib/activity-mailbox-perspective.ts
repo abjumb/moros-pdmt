@@ -1,4 +1,4 @@
-import { WorkspaceStore, MailboxPerspective } from 'mailspring-exports';
+import { WorkspaceStore, MailboxPerspective } from 'moros-exports';
 
 export default class ActivityMailboxPerspective extends MailboxPerspective {
   sheet() {

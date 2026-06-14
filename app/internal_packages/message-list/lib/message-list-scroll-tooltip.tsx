@@ -1,5 +1,5 @@
 import React from 'react';
-import { localized, Utils } from 'mailspring-exports';
+import { localized, Utils } from 'moros-exports';
 
 export class MessageListScrollTooltip extends React.Component<
   { viewportCenter: number; totalHeight: number },

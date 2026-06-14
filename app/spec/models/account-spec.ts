@@ -1,4 +1,4 @@
-import { Account, Contact, CategoryStore } from 'mailspring-exports';
+import { Account, Contact, CategoryStore } from 'moros-exports';
 
 describe('Account', function () {
   describe('constructor defaults', function () {

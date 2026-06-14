@@ -1,6 +1,6 @@
 import React from 'react';
 import Rx, { Disposable } from 'rx-lite';
-import { Flexbox } from 'mailspring-component-kit';
+import { Flexbox } from 'moros-component-kit';
 
 import { Template } from './scenario-editor-models';
 

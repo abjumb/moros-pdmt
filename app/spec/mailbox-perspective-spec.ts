@@ -4,7 +4,7 @@ import {
   TaskFactory,
   Label,
   CategoryStore,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 describe('MailboxPerspective', function mailboxPerspective() {
   beforeEach(() => {

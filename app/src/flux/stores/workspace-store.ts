@@ -6,7 +6,7 @@
 import _ from 'underscore';
 import { webFrame } from 'electron';
 import * as Actions from '../actions';
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 import { Disposable } from 'event-kit';
 
 let Sheet = {} as SheetSet;
@@ -63,7 +63,7 @@ documentation.
 
 Section: Stores
 */
-class WorkspaceStore extends MailspringStore {
+class WorkspaceStore extends MorosStore {
   Location: SheetLocations = (Location = {} as SheetLocations);
   Sheet: SheetSet = (Sheet = {} as SheetSet);
 

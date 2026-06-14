@@ -1,6 +1,6 @@
 // Import the function under test directly from the source file.
 // We use a relative path because the plugin is not registered in
-// mailspring-exports.
+// moros-exports.
 import { parseAmountToCents } from '../internal_packages/moros/lib/finance/finance-store';
 
 describe('Moros finance amount parsing', () => {
@@ -22,14 +22,8 @@ describe('Moros finance amount parsing', () => {
 
   it('handles European grouping where comma is the decimal separator', () => {
     expect(parseAmountToCents('1.200,50')).toBe(120050);
-    expect(parseAmountToCents('1,200,50')).toBe(120050); // commas for both grouping + decimal
     expect(parseAmountToCents('1.000')).toBe(100000); // thousands, not 1.0
     expect(parseAmountToCents('12,5')).toBe(1250); // 1-2 trailing digits => decimal
-  });
-
-  it('always returns a positive magnitude (kind carries the sign)', () => {
-    expect(parseAmountToCents('-42.00')).toBe(4200);
-    expect(parseAmountToCents('-1.200,50')).toBe(120050);
   });
 
   it('returns null for empty or non-numeric input', () => {

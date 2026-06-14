@@ -44,7 +44,7 @@ export default class PackageManager {
 
     this.discoverPackages();
 
-    // If the user starts without a Mailspring ID and then links one, immediately turn on the
+    // If the user starts without a Moros ID and then links one, immediately turn on the
     // packages that require it. (Note: When you log OUT we currently just reboot the app, so
     // this only goes one way, which is also convenient because unloading the built-in packages
     // hasn't been tested much.)
@@ -133,7 +133,7 @@ export default class PackageManager {
       // don't use AppEnv.reportError, I don't want to know about these.
       console.error(
         localized(
-          `This plugin or theme %@ does not list "mailspring" in it's package.json's "engines" field. Ask the developer to test the plugin with Mailspring and add it, or follow the instructions here: %@`,
+          `This plugin or theme %@ does not list "moros" in it's package.json's "engines" field. Ask the developer to test the plugin with Moros and add it, or follow the instructions here: %@`,
           pkg.name,
           `http://support.getmailspring.com/hc/en-us/articles/115001918391`
         )
@@ -186,7 +186,7 @@ export default class PackageManager {
       cancelId: 0,
       message: localized('Only install plugins from sources you trust'),
       detail: localized(
-        'Mailspring plugins run in the application and have access to your email data. Only install plugins from developers you trust.'
+        'Moros plugins run in the application and have access to your email data. Only install plugins from developers you trust.'
       ),
     });
     if (response !== 1) {
@@ -236,11 +236,11 @@ export default class PackageManager {
       );
     }
 
-    if (!json.engines || !json.engines.mailspring) {
+    if (!json.engines || !json.engines.moros) {
       return callback(
         new Error(
           localized(
-            `The plugin or theme you selected has not been upgraded to support Mailspring. If you're the developer, update the package.json's engines field to include "mailspring".\n\nFor more information, see this migration guide: %@`,
+            `The plugin or theme you selected has not been upgraded to support Moros. If you're the developer, update the package.json's engines field to include "moros".\n\nFor more information, see this migration guide: %@`,
             `http://support.getmailspring.com/hc/en-us/articles/115001918391`
           )
         )

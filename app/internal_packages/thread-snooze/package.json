@@ -13,7 +13,7 @@
     "default": true
   },
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "license": "GPL-3.0"
 }

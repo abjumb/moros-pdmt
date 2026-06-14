@@ -1,9 +1,4 @@
-import {
-  localized,
-  PreferencesUIStore,
-  ExtensionRegistry,
-  ComponentRegistry,
-} from 'mailspring-exports';
+import { localized, PreferencesUIStore, ExtensionRegistry, ComponentRegistry } from 'moros-exports';
 
 import SignatureComposerExtension from './signature-composer-extension';
 import SignatureComposerDropdown from './signature-composer-dropdown';

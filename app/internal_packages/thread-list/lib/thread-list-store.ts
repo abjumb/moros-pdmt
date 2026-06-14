@@ -1,4 +1,4 @@
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 
 import {
   Rx,
@@ -8,11 +8,11 @@ import {
   WorkspaceStore,
   FocusedContentStore,
   FocusedPerspectiveStore,
-} from 'mailspring-exports';
-import { ListTabular, ListDataSource } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { ListTabular, ListDataSource } from 'moros-component-kit';
 import ThreadListDataSource from './thread-list-data-source';
 
-class ThreadListStore extends MailspringStore {
+class ThreadListStore extends MorosStore {
   _dataSource?: ListDataSource;
   _dataSourceUnlisten: () => void;
 

@@ -7,8 +7,8 @@ import {
   SendActionsStore,
   Actions,
   localized,
-} from 'mailspring-exports';
-import { HasTutorialTip } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { HasTutorialTip } from 'moros-component-kit';
 
 import SendLaterButton from './send-later-button';
 import SendLaterStatus from './send-later-status';
@@ -19,7 +19,7 @@ let unlisten = null;
 const SendLaterButtonWithTip = HasTutorialTip(SendLaterButton, {
   title: localized('Send on your own schedule'),
   instructions: localized(
-    'Schedule this message to send at the ideal time. Mailspring makes it easy to control the fabric of spacetime!'
+    'Schedule this message to send at the ideal time. Moros makes it easy to control the fabric of spacetime!'
   ),
 });
 

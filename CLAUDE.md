@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Install dependencies
 npm install
 
-# Run the app in development mode (uses --dev flag, data stored in Mailspring-dev folder)
+# Run the app in development mode (uses --dev flag, data stored in Moros-dev folder)
 npm start
 
 # Run with specific language locale
@@ -32,7 +32,7 @@ npm run build
 
 ## Architecture Overview
 
-Mailspring is an Electron-based email client written in TypeScript with React. It uses a plugin architecture where features are implemented as internal packages.
+Moros is an Electron-based email client written in TypeScript with React. It uses a plugin architecture where features are implemented as internal packages.
 
 ### Key Directories
 
@@ -42,7 +42,7 @@ Mailspring is an Electron-based email client written in TypeScript with React. I
   - `components/` - Reusable React UI components
   - `services/` - Application services (search, sanitization, etc.)
   - `registries/` - Extension registries (components, extensions, database objects)
-  - `global/` - Global exports (`mailspring-exports`, `mailspring-component-kit`)
+  - `global/` - Global exports (`moros-exports`, `moros-component-kit`)
 
 - **`app/internal_packages/`** - Built-in plugins implementing features (composer, message-list, thread-list, preferences, themes, etc.)
 
@@ -53,8 +53,8 @@ Mailspring is an Electron-based email client written in TypeScript with React. I
 ### Core Modules
 
 **Global exports for plugins:**
-- `mailspring-exports` - Core APIs: Actions, Stores, Models, Tasks, Utils, database access
-- `mailspring-component-kit` - Reusable UI components
+- `moros-exports` - Core APIs: Actions, Stores, Models, Tasks, Utils, database access
+- `moros-component-kit` - Reusable UI components
 
 **Flux Architecture:**
 - **Models** (`flux/models/`) - Data models: Message, Thread, Contact, Account, Folder, Label, etc.
@@ -201,8 +201,8 @@ UI Updates ← QuerySubscription ← DatabaseStore.trigger() ← stdout deltas
 
 - Hot reload is available via `CTRL+R` (Windows/Linux) or `CMD+R` (macOS)
 - Dev tools accessible via Menu > Developer > Toggle Developer Tools
-- In dev tools console, `$m` provides access to `mailspring-exports` for debugging
-- Dev mode data is stored separately (e.g., `~/.config/Mailspring-dev/` on Linux)
+- In dev tools console, `$m` provides access to `moros-exports` for debugging
+- Dev mode data is stored separately (e.g., `~/.config/Moros-dev/` on Linux)
 
 ## Claude Hooks
 

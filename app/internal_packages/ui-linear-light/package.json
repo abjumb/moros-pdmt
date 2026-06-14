@@ -6,7 +6,7 @@
   "description": "The light variant of the Linear-inspired Moros theme",
   "license": "GPL-3.0",
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "private": true
 }

@@ -1,8 +1,8 @@
-# Contributing to Mailspring
+# Contributing to Moros
 
-Thanks for checking out Mailspring! We'd love for you to contribute. Whether
+Thanks for checking out Moros! We'd love for you to contribute. Whether
 you're a first-time open source contributor or an experienced developer, there
-are ways you can help make Mailspring great!
+are ways you can help make Moros great!
 
 ## Contributing Code
 
@@ -27,7 +27,7 @@ especially looking for anything marked `for-plugin`.
 The first time you submit a pull request, a bot will ask you to sign a
 standard, bare-bones Contributor License Agreement. The CLA states that you
 waive any patent or copyright claims you might have to the code you're
-contributing. (For example, you can't submit a PR and then sue Mailspring
+contributing. (For example, you can't submit a PR and then sue Moros
 for using your code.)
 
 ## Triaging Issues
@@ -48,16 +48,16 @@ We're in the process of migrating. If someone has already reported a bug or
 requested the feature you have in mind,  **vote for it** at the top.
 Higher voted issues are more likely to be addressed.
 
-For bugs, please verify that you're running the latest version of Mailspring.
+For bugs, please verify that you're running the latest version of Moros.
 If you file an issue without providing detail, we may close it without comment.
 
 **Under no circumstances should you report an issue via GitHub. The GitHub
-Issues feature is exclusively for Mailspring contributors to track tasks
+Issues feature is exclusively for Moros contributors to track tasks
 which have been diagnosed, accepted, and scheduled on the roadmap.**
 
 # Build and Run From Source
 
-If you want to understand how Mailspring works or want to debug an issue,
+If you want to understand how Moros works or want to debug an issue,
 you'll want to get the source, build it, and run it locally.
 
 ## Installing Prerequisites
@@ -86,11 +86,11 @@ recommended. Based on your platform, you'll also need:
   - On Red Hat-based Linux: `sudo yum install libX11-devel.x86_64 libxkbfile-devel.x86_64 libsecret-1-dev libsecret-devel`.
 
 After you have these tools installed, run the following commands to check out
-Mailspring,install dependencies, and launch the app:
+Moros,install dependencies, and launch the app:
 
 ```
-git clone https://github.com/foundry376/mailspring
-cd mailspring
+git clone https://github.com/foundry376/moros
+cd moros-pdmt
 npm install
 npm start
 ```
@@ -99,26 +99,26 @@ npm start
 
 ### App Data
 
-When you're running Mailspring with `npm start`, it runs with the `--dev` flag
-and user data is located in a `Mailspring-dev` folder alongside the regular
+When you're running Moros with `npm start`, it runs with the `--dev` flag
+and user data is located in a `Moros-dev` folder alongside the regular
 settings folder:
 
-- Mac: `~/Library/Application Support/Mailspring-dev`
-- Windows: `C:\Users\<you>\AppData\Roaming\Mailspring-dev`
-- Linux: `~/.config/Mailspring-dev/`
+- Mac: `~/Library/Application Support/Moros-dev`
+- Windows: `C:\Users\<you>\AppData\Roaming\Moros-dev`
+- Linux: `~/.config/Moros-dev/`
 
 ### Developer Tools
 
-From Mailspring, you can open the Developer Tools from the
+From Moros, you can open the Developer Tools from the
 menu: `Menu > Developer > Toggle Developer Tools`. Here are a few tips for
 getting started:
 
 - Errors and warnings will show in the console.
 
-- On the console, `$m` is a shorthand for `mailspring-exports`, and allows you
+- On the console, `$m` is a shorthand for `moros-exports`, and allows you
   to access global `Stores` and `Model` classes.
 
-- You don't need to stop and restart the development version of Mailspring
+- You don't need to stop and restart the development version of Moros
   after each change. You can just reload the window via `CTRL+R` (Windows/Linux)
   or `CMD+R` (macOS).
 
@@ -132,8 +132,8 @@ submitting a pull request to ensure the CI servers accept your code.
 
 Back in 2015 and 2016, the Nylas Mail team made a huge effort to document
 the codebase. The docs are still
-[available on GitHub pages](https://foundry376.github.io/Mailspring/), and are
-still largely relevant to Mailspring development.
+[available on GitHub pages](https://foundry376.github.io/Moros/), and are
+still largely relevant to Moros development.
 
 ### Testing Localization
 

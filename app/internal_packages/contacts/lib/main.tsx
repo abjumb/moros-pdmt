@@ -1,10 +1,4 @@
-import {
-  WorkspaceStore,
-  ComponentRegistry,
-  Actions,
-  AccountStore,
-  localized,
-} from 'mailspring-exports';
+import { WorkspaceStore, ComponentRegistry, Actions, AccountStore, localized } from 'moros-exports';
 import { ContactPerspectivesList } from './ContactPerspectivesList';
 import { ContactDetailToolbar } from './ContactDetailToolbar';
 import { AddContactToolbar } from './AddContactToolbar';

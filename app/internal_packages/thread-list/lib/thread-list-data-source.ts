@@ -6,7 +6,7 @@ import {
   Message,
   QueryResultSet,
   QuerySubscription,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 const _observableForThreadMessages = (id: string, initialModels: Message[]) => {
   const subscription = new QuerySubscription<Message>(

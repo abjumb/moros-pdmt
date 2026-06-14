@@ -1,13 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-import {
-  Thread,
-  Actions,
-  CategoryStore,
-  TaskFactory,
-  MailboxPerspective,
-} from 'mailspring-exports';
+import { Thread, Actions, CategoryStore, TaskFactory, MailboxPerspective } from 'moros-exports';
 import {
   ToggleStarredButton,
   ToggleUnreadButton,

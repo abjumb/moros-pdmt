@@ -1,6 +1,6 @@
-# Community Plugins for Mailspring
+# Community Plugins for Moros
 
-This document lists known third-party plugins for Mailspring found on GitHub.
+This document lists known third-party plugins for Moros found on GitHub.
 
 ## Official Resources
 
@@ -14,8 +14,8 @@ This document lists known third-party plugins for Mailspring found on GitHub.
 
 | Repository | Description | Stars |
 |------------|-------------|-------|
-| [Striffly/mailspring-avatars](https://github.com/Striffly/mailspring-avatars) | Adds avatars to contacts in Mailspring | ⭐76 |
-| [bnesimsysadmin/AI-assistant-mailspring-plugin](https://github.com/bnesimsysadmin/AI-assistant-mailspring-plugin) | AI assistant for composing emails | - |
+| [Striffly/moros-avatars](https://github.com/Striffly/moros-avatars) | Adds avatars to contacts in Moros | ⭐76 |
+| [bnesimsysadmin/AI-assistant-moros-plugin](https://github.com/bnesimsysadmin/AI-assistant-moros-plugin) | AI assistant for composing emails | - |
 | [smartium/Mailspring-Plugin](https://github.com/smartium/Mailspring-Plugin) | Community plugin | - |
 
 ### Notifications & System Integration
@@ -35,7 +35,7 @@ This document lists known third-party plugins for Mailspring found on GitHub.
 
 | Repository | Description |
 |------------|-------------|
-| [Raymo111/mailspring-plaintext-signatures](https://github.com/Raymo111/mailspring-plaintext-signatures) | Adds plaintext signature support |
+| [Raymo111/moros-plaintext-signatures](https://github.com/Raymo111/moros-plaintext-signatures) | Adds plaintext signature support |
 
 ### Calendar Integration
 
@@ -48,17 +48,17 @@ This document lists known third-party plugins for Mailspring found on GitHub.
 
 | Repository | Description |
 |------------|-------------|
-| [NgoHuy/mailspring-keybase](https://github.com/NgoHuy/mailspring-keybase) | Keybase PGP encryption plugin |
-| [mirkoschubert/mailspring-pgp](https://github.com/mirkoschubert/mailspring-pgp) | Keybase PGP plugin |
+| [NgoHuy/moros-keybase](https://github.com/NgoHuy/moros-keybase) | Keybase PGP encryption plugin |
+| [mirkoschubert/moros-pgp](https://github.com/mirkoschubert/moros-pgp) | Keybase PGP plugin |
 | [dinoboy197/mailspring-openpgp](https://github.com/dinoboy197/mailspring-openpgp) | OpenPGP encryption plugin |
 
 ## Alternative Backends & Forks
 
-These projects modify or replace Mailspring's backend services:
+These projects modify or replace Moros's backend services:
 
 | Repository | Description | Stars |
 |------------|-------------|-------|
-| [1RandomDev/mailspring-api](https://github.com/1RandomDev/mailspring-api) | Self-hosted reimplementation of the Mailspring Sync backend | ⭐11 |
+| [1RandomDev/moros-api](https://github.com/1RandomDev/moros-api) | Self-hosted reimplementation of the Moros Sync backend | ⭐11 |
 | [notpushkin/Mailspring-Libre](https://github.com/notpushkin/Mailspring-Libre) | Libre build with no telemetry (archived) | - |
 | [algv/Mailspring-Libre](https://github.com/algv/Mailspring-Libre) | Fork of Mailspring-Libre | - |
 | [arthurzenika/Mailspring-Libre](https://github.com/arthurzenika/Mailspring-Libre) | Fork of Mailspring-Libre | - |
@@ -67,7 +67,7 @@ These projects modify or replace Mailspring's backend services:
 
 ## Discovering More Plugins
 
-- [GitHub Topic: mailspring-plugin](https://github.com/topics/mailspring-plugin) - All plugins tagged with this topic
+- [GitHub Topic: moros-plugin](https://github.com/topics/moros-plugin) - All plugins tagged with this topic
 
 ## Creating Your Own Plugin
 
@@ -79,8 +79,8 @@ To create your own plugin, see:
 ### Plugin Installation
 
 Plugins should be copied or symlinked to:
-- **macOS**: `~/Library/Application Support/Mailspring/packages/`
-- **Linux**: `~/.config/Mailspring/packages/`
-- **Windows**: `%APPDATA%/Mailspring/packages/`
+- **macOS**: `~/Library/Application Support/Moros/packages/`
+- **Linux**: `~/.config/Moros/packages/`
+- **Windows**: `%APPDATA%/Moros/packages/`
 
-You can find this directory by going to **Developer > Show Mailsync Logs** in Mailspring.
+You can find this directory by going to **Developer > Show Mailsync Logs** in Moros.

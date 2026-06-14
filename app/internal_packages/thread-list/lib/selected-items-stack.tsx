@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import React, { Component } from 'react';
-import { ListensToObservable } from 'mailspring-component-kit';
-import { localized } from 'mailspring-exports';
+import { ListensToObservable } from 'moros-component-kit';
+import { localized } from 'moros-exports';
 import ThreadListStore from './thread-list-store';
 
 function getObservable() {

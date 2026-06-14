@@ -1,5 +1,5 @@
-import { RetinaImg, RovingTabIndexToolbar } from 'mailspring-component-kit';
-import { localized } from 'mailspring-exports';
+import { RetinaImg, RovingTabIndexToolbar } from 'moros-component-kit';
+import { localized } from 'moros-exports';
 import React from 'react';
 import { isWaylandSession } from '../../../../src/browser/is-wayland';
 import SystemTrayIconStore from '../../../system-tray/lib/system-tray-icon-store';

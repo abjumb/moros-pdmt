@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import MailspringStore from 'mailspring-store';
+import MorosStore from 'moros-store';
 import { morosDataDirPath } from './moros-data-store';
 
 const SETTINGS_FILENAME = 'settings.json';
@@ -12,7 +12,7 @@ interface MorosSettings {
 }
 
 /** Small persisted key/value settings shared by the Moros modules. */
-class MorosSettingsStore extends MailspringStore {
+class MorosSettingsStore extends MorosStore {
   _settings: MorosSettings;
   _saveTimer: ReturnType<typeof setTimeout> | null = null;
 

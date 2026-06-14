@@ -8,8 +8,8 @@ import {
   ISignature,
   ISignatureSet,
   MessageWithEditorState,
-} from 'mailspring-exports';
-import { Menu, RetinaImg, ButtonDropdown } from 'mailspring-component-kit';
+} from 'moros-exports';
+import { Menu, RetinaImg, ButtonDropdown } from 'moros-component-kit';
 
 import { applySignature, currentSignatureIdSlate, currentSignatureId } from './signature-utils';
 

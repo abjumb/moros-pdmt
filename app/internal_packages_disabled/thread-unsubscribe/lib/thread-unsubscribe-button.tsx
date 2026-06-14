@@ -1,6 +1,6 @@
 import React from 'react';
-import { Message, localized, PropTypes, Thread } from 'mailspring-exports';
-import { RetinaImg, BindGlobalCommands } from 'mailspring-component-kit';
+import { Message, localized, PropTypes, Thread } from 'moros-exports';
+import { RetinaImg, BindGlobalCommands } from 'moros-component-kit';
 
 function unsubscribe(message) {
   //

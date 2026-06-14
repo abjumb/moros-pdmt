@@ -1,5 +1,5 @@
 import React from 'react';
-import { localized, AccountStore, imapUtf7 } from 'mailspring-exports';
+import { localized, AccountStore, imapUtf7 } from 'moros-exports';
 
 interface SyncActivityProps {
   syncState: {

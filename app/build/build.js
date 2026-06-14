@@ -205,7 +205,7 @@ function buildPackagerOptions() {
     appVersion: packageJSON.version,
     platform,
     protocols: [
-      { name: 'Mailspring Protocol', schemes: ['mailspring'] },
+      { name: 'Moros Protocol', schemes: ['moros'] },
       { name: 'Mailto Protocol', schemes: ['mailto'] },
     ],
     dir: appDir,
@@ -217,11 +217,11 @@ function buildPackagerOptions() {
       linux: process.arch,
     }[platform],
     icon: {
-      darwin: path.resolve(appDir, 'build', 'resources', 'mac', 'mailspring.icns'),
-      win32: path.resolve(appDir, 'build', 'resources', 'win', 'mailspring-square.ico'),
+      darwin: path.resolve(appDir, 'build', 'resources', 'mac', 'moros.icns'),
+      win32: path.resolve(appDir, 'build', 'resources', 'win', 'moros-square.ico'),
       linux: undefined,
     }[platform],
-    name: { darwin: 'Mailspring', win32: 'Mailspring', linux: 'mailspring' }[platform],
+    name: { darwin: 'Moros', win32: 'Moros', linux: 'moros' }[platform],
     appCopyright: `Copyright (C) 2014-${new Date().getFullYear()} Foundry 376, LLC. All rights reserved.`,
     derefSymlinks: false,
     asar: {
@@ -300,7 +300,7 @@ function buildPackagerOptions() {
             // cannot match to a profile scoped to that binary.
             // Note: electron-osx-sign passes the .app bundle path (not the
             // inner executable path) when signing the top-level app bundle.
-            const isMainExecutable = filePath.endsWith('/Mailspring.app');
+            const isMainExecutable = filePath.endsWith('/Moros.app');
             return {
               hardenedRuntime: true,
               entitlements: path.resolve(
@@ -324,16 +324,16 @@ function buildPackagerOptions() {
       : undefined,
     win32metadata: {
       CompanyName: 'Foundry 376, LLC',
-      FileDescription: 'Mailspring',
+      FileDescription: 'Moros',
       LegalCopyright: `Copyright (C) 2014-${new Date().getFullYear()} Foundry 376, LLC. All rights reserved.`,
-      ProductName: 'Mailspring',
+      ProductName: 'Moros',
     },
     // NOTE: The following plist keys can NOT be set in the extra.plist since
     // they are manually overridden by electron-packager based on this config:
     //   CFBundleDisplayName, CFBundleExecutable, CFBundleIdentifier, CFBundleName
     // See https://github.com/electron-userland/electron-packager/blob/master/mac.js#L50
     extendInfo: path.resolve(appDir, 'build', 'resources', 'mac', 'extra.plist'),
-    appBundleId: 'com.mailspring.mailspring',
+    appBundleId: 'com.moros.moros',
     afterCopy: [
       runCopyPlatformSpecificResources,
       runWriteCommitHashIntoPackage,
@@ -367,15 +367,15 @@ async function runPackager() {
 }
 
 async function createMacZip() {
-  const zipPath = path.join(outputDir, 'Mailspring.zip');
+  const zipPath = path.join(outputDir, 'Moros.zip');
   if (fs.existsSync(zipPath)) {
     fs.unlinkSync(zipPath);
   }
   const arch = process.env.OVERRIDE_TO_INTEL ? 'x64' : process.arch;
-  const cwd = path.join(outputDir, `Mailspring-darwin-${arch}`);
+  const cwd = path.join(outputDir, `Moros-darwin-${arch}`);
   await spawn({
     cmd: 'zip',
-    args: ['-9', '-y', '-r', '-9', '-X', zipPath, 'Mailspring.app'],
+    args: ['-9', '-y', '-r', '-9', '-X', zipPath, 'Moros.app'],
     opts: { cwd },
   });
   console.log(`>> Created ${zipPath}`);
@@ -393,7 +393,7 @@ const linuxArch = { ia32: 'i386', x64: 'amd64', arm64: 'arm64' }[process.arch];
 async function createDebInstaller() {
   if (!linuxArch) throw new Error(`Unsupported arch ${process.arch}`);
 
-  const contentsDir = path.join(outputDir, `mailspring-linux-${process.arch}`);
+  const contentsDir = path.join(outputDir, `moros-linux-${process.arch}`);
   const linuxAssetsDir = path.resolve(path.join(buildDir, 'resources', 'linux'));
 
   // `du` failures (e.g. permission errors) are non-fatal — fall back to a
@@ -411,28 +411,28 @@ async function createDebInstaller() {
     name: packageJSON.name,
     description: packageJSON.description,
     productName: packageJSON.productName,
-    linuxShareDir: '/usr/share/mailspring',
+    linuxShareDir: '/usr/share/moros',
     arch: linuxArch,
     section: 'mail',
-    maintainer: 'Mailspring Team <support@getmailspring.com>',
+    maintainer: 'Moros Team <support@getmailspring.com>',
     installedSize,
   };
   writeFromTemplate(path.join(linuxAssetsDir, 'debian', 'control.in'), data);
-  writeFromTemplate(path.join(linuxAssetsDir, 'Mailspring.desktop.in'), data);
-  writeFromTemplate(path.join(linuxAssetsDir, 'mailspring.appdata.xml.in'), data);
+  writeFromTemplate(path.join(linuxAssetsDir, 'Moros.desktop.in'), data);
+  writeFromTemplate(path.join(linuxAssetsDir, 'moros.appdata.xml.in'), data);
 
   const icon = path.join(appDir, 'build', 'resources', 'linux', 'icons', '512.png');
   await spawn({
     cmd: path.join(appDir, 'script', 'mkdeb'),
     args: [packageJSON.version, linuxArch, icon, linuxAssetsDir, contentsDir, outputDir],
   });
-  console.log(`Created ${outputDir}/mailspring-${packageJSON.version}-${linuxArch}.deb`);
+  console.log(`Created ${outputDir}/moros-${packageJSON.version}-${linuxArch}.deb`);
 }
 
 async function createRpmInstaller() {
   if (!linuxArch) throw new Error(`Unsupported arch ${process.arch}`);
 
-  const contentsDir = path.join(outputDir, `mailspring-linux-${process.arch}`);
+  const contentsDir = path.join(outputDir, `moros-linux-${process.arch}`);
   const linuxAssetsDir = path.resolve(path.join(buildDir, 'resources', 'linux'));
   const rpmDir = path.join(outputDir, 'rpm');
   if (fs.existsSync(rpmDir)) {
@@ -444,14 +444,14 @@ async function createRpmInstaller() {
     version: packageJSON.version,
     description: packageJSON.description,
     productName: packageJSON.productName,
-    linuxShareDir: '/usr/local/share/mailspring',
+    linuxShareDir: '/usr/local/share/moros',
     linuxAssetsDir,
     contentsDir,
   };
 
-  writeFromTemplate(path.join(linuxAssetsDir, 'redhat', 'mailspring.spec.in'), templateData);
-  writeFromTemplate(path.join(linuxAssetsDir, 'Mailspring.desktop.in'), templateData);
-  writeFromTemplate(path.join(linuxAssetsDir, 'mailspring.appdata.xml.in'), templateData);
+  writeFromTemplate(path.join(linuxAssetsDir, 'redhat', 'moros.spec.in'), templateData);
+  writeFromTemplate(path.join(linuxAssetsDir, 'Moros.desktop.in'), templateData);
+  writeFromTemplate(path.join(linuxAssetsDir, 'moros.appdata.xml.in'), templateData);
 
   await spawn({
     cmd: path.join(appDir, 'script', 'mkrpm'),

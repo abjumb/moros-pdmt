@@ -6,7 +6,7 @@ import {
   SearchQueryParser,
   ComponentRegistry,
   MutableQuerySubscription,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 class SearchQuerySubscription extends MutableQuerySubscription<Thread> {
   _searchQuery: string;

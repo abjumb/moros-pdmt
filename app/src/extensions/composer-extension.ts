@@ -1,4 +1,4 @@
-import { Message, Contact } from 'mailspring-exports';
+import { Message, Contact } from 'moros-exports';
 
 /*
  * decaffeinate suggestions:
@@ -70,8 +70,8 @@ export class ComposerExtension {
   //
   // - `tooltip`: A one or two word description of what your icon does
   //
-  // - `iconUrl`: The url of your icon. It should be in the `mailspring://`
-  // scheme.  For example: `mailspring://your-package-name/assets/my-icon@2x.png`.
+  // - `iconUrl`: The url of your icon. It should be in the `moros://`
+  // scheme.  For example: `moros://your-package-name/assets/my-icon@2x.png`.
   // Note, we will downsample your image by 2x (for Retina screens), so make
   // sure it's twice the resolution. The icon should be black and white. We
   // will directly pass the `url` prop of a {RetinaImg}

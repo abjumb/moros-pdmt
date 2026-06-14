@@ -10,16 +10,16 @@ import {
   Utils,
   localized,
   IdentityStore,
-  MailspringAPIRequest,
+  MorosAPIRequest,
   SearchableComponentStore,
-} from 'mailspring-exports';
+} from 'moros-exports';
 import IFrameSearcher from '../searchable-components/iframe-searcher';
 import url from 'url';
 import _ from 'underscore';
 import path from 'path';
 import fs from 'fs';
 
-const { rootURLForServer } = MailspringAPIRequest;
+const { rootURLForServer } = MorosAPIRequest;
 
 type EventedIFrameProps = {
   searchable?: boolean;

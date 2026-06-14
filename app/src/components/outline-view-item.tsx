@@ -1,6 +1,6 @@
 /* eslint global-require:0 */
 
-import { Utils, localized } from 'mailspring-exports';
+import { Utils, localized } from 'moros-exports';
 import classnames from 'classnames';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';

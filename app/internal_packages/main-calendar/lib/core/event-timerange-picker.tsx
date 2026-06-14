@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React from 'react';
-import { DateUtils } from 'mailspring-exports';
-import { DatePicker, RetinaImg, TimePicker } from 'mailspring-component-kit';
+import { DateUtils } from 'moros-exports';
+import { DatePicker, RetinaImg, TimePicker } from 'moros-component-kit';
 
 export const EventTimerangePicker: React.FunctionComponent<{
   start: number;

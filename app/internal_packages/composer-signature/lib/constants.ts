@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import URL from 'url';
-import { localized } from 'mailspring-exports';
+import { localized } from 'moros-exports';
 import ReactDOMServer from 'react-dom/server';
 import Templates from './templates';
 

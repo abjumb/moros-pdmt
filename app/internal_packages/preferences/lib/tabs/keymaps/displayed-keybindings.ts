@@ -1,4 +1,4 @@
-import { localized } from 'mailspring-exports';
+import { localized } from 'moros-exports';
 
 export default [
   {

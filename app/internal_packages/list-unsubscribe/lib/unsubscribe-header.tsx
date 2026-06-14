@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { localized } from 'mailspring-exports';
-import { RetinaImg } from 'mailspring-component-kit';
+import { localized } from 'moros-exports';
+import { RetinaImg } from 'moros-component-kit';
 import {
   UnsubscribeOption,
   UnsubscribeResult,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Actions, Utils, AttachmentStore, File } from 'mailspring-exports';
-import { AttachmentItem, ImageAttachmentItem } from 'mailspring-component-kit';
+import { Actions, Utils, AttachmentStore, File } from 'moros-exports';
+import { AttachmentItem, ImageAttachmentItem } from 'moros-component-kit';
 
 interface MessageAttachmentsProps {
   files: File[];

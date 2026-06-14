@@ -1,4 +1,4 @@
-import { WorkspaceStore, MailboxPerspective } from 'mailspring-exports';
+import { WorkspaceStore, MailboxPerspective } from 'moros-exports';
 
 /**
  * Sidebar perspectives for the Moros sheets. Like ActivityMailboxPerspective,

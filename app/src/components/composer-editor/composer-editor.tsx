@@ -4,7 +4,7 @@ import * as Immutable from 'immutable';
 import { Editor, Value, Operation, Range, Block, Text } from 'slate';
 import { Editor as SlateEditorComponent, EditorProps, Plugin } from 'slate-react';
 import { clipboard as ElectronClipboard } from 'electron';
-import { InlineStyleTransformer, SanitizeTransformer } from 'mailspring-exports';
+import { InlineStyleTransformer, SanitizeTransformer } from 'moros-exports';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
@@ -373,7 +373,7 @@ export function handleFilePasted(event: ClipboardEvent, onFileReceived: (path: s
       const reader = new FileReader();
       reader.addEventListener('loadend', () => {
         const buffer = Buffer.from(new Uint8Array(reader.result as any));
-        const tmpFolder = path.join(os.tmpdir(), `-mailspring-attachment-${crypto.randomUUID()}`);
+        const tmpFolder = path.join(os.tmpdir(), `-moros-attachment-${crypto.randomUUID()}`);
         const tmpPath = path.join(tmpFolder, `Pasted File${ext}`);
         fs.mkdir(tmpFolder, () => {
           fs.writeFile(tmpPath, buffer, () => {

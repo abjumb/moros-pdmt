@@ -1,4 +1,4 @@
-import { MailboxPerspective } from 'mailspring-exports';
+import { MailboxPerspective } from 'moros-exports';
 
 export interface ISidebarItem {
   id: string;

@@ -9,10 +9,10 @@ import {
   MessageBodyProcessor,
   IdentityStore,
   FeatureUsageStore,
-} from 'mailspring-exports';
+} from 'moros-exports';
 
 import { translateMessageBody, AllLanguages, TranslationsUsedLexicon } from './service';
-import { Menu, ButtonDropdown, RetinaImg } from 'mailspring-component-kit';
+import { Menu, ButtonDropdown, RetinaImg } from 'moros-component-kit';
 
 interface TranslateMessageHeaderProps {
   message: Message;
@@ -240,11 +240,11 @@ export class TranslateMessageHeader extends React.Component<
     if (!IdentityStore.hasProFeatures()) {
       try {
         await FeatureUsageStore.displayUpgradeModal('translation', {
-          headerText: localized('Translate automatically with Mailspring Pro'),
+          headerText: localized('Translate automatically with Moros Pro'),
           rechargeText: `${localized(
             "Unfortunately, translation services bill per character and we can't offer this feature for free."
           )} ${localized('Upgrade to Pro today!')}`,
-          iconUrl: 'mailspring://translation/assets/ic-translation-modal@2x.png',
+          iconUrl: 'moros://translation/assets/ic-translation-modal@2x.png',
         });
       } catch (err) {
         return;
@@ -268,7 +268,7 @@ export class TranslateMessageHeader extends React.Component<
       buttons: [localized('Yes'), localized('Cancel')],
       message: localized('Are you sure?'),
       detail: localized(
-        'Mailspring will no longer offer to translate messages written in %@.',
+        'Moros will no longer offer to translate messages written in %@.',
         AllLanguages[this.state.detected]
       ),
     });
@@ -294,10 +294,7 @@ export class TranslateMessageHeader extends React.Component<
         <div className="translate-message-header">
           <div className="message with-actions">
             <div className="message-centered">
-              {localized(
-                'Mailspring has translated this message into %@.',
-                AllLanguages[result.toLang]
-              )}
+              {localized('Moros has translated this message into %@.', AllLanguages[result.toLang])}
             </div>
           </div>
           <div className="actions">

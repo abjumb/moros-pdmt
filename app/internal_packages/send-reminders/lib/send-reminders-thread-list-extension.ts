@@ -1,4 +1,4 @@
-import { Thread } from 'mailspring-exports';
+import { Thread } from 'moros-exports';
 import { PLUGIN_ID } from './send-reminders-constants';
 import { SendRemindersMetadata } from './types';
 

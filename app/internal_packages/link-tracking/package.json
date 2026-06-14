@@ -20,7 +20,7 @@
     "url": ""
   },
   "engines": {
-    "mailspring": "*"
+    "moros": "*"
   },
   "windowTypes": {
     "default": true,

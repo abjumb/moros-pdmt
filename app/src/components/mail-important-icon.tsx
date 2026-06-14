@@ -11,7 +11,7 @@ import {
   Thread,
   Category,
   Label,
-} from 'mailspring-exports';
+} from 'moros-exports';
 import { Disposable } from 'rx-core';
 
 const ShowImportantKey = 'core.workspace.showImportant';

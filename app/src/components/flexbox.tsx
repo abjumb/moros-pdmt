@@ -1,4 +1,4 @@
-import { Utils } from 'mailspring-exports';
+import { Utils } from 'moros-exports';
 import React from 'react';
 
 type FlexboxProps = {

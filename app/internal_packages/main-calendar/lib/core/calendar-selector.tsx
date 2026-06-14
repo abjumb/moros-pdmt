@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Account } from 'mailspring-exports';
+import { Calendar, Account } from 'moros-exports';
 import { calcColor, getEditableCalendars } from './calendar-helpers';
 
 interface CalendarSelectorProps {

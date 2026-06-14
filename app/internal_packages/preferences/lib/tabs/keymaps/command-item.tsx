@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Flexbox } from 'mailspring-component-kit';
-import { localized } from 'mailspring-exports';
+import { Flexbox } from 'moros-component-kit';
+import { localized } from 'moros-exports';
 import fs from 'fs';
 
 import { keyAndModifiersForEvent } from './mousetrap-keybinding-helpers';
@@ -126,7 +126,7 @@ export default class CommandKeybinding extends React.Component<
         fs.writeFileSync(keymapPath, JSON.stringify(keymaps, null, 2));
       } catch (err) {
         AppEnv.showErrorDialog(
-          localized(`Mailspring was unable to modify your keymaps at %@.`, keymapPath) +
+          localized(`Moros was unable to modify your keymaps at %@.`, keymapPath) +
             ' ' +
             err.toString()
         );

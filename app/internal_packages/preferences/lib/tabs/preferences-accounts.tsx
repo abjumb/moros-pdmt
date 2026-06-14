@@ -1,6 +1,6 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
-import { AccountStore, Actions, Account } from 'mailspring-exports';
+import { AccountStore, Actions, Account } from 'moros-exports';
 import PreferencesAccountList from './preferences-account-list';
 import PreferencesAccountDetails from './preferences-account-details';
 
@@ -87,10 +87,12 @@ class PreferencesAccounts extends React.Component<
             onSelectAccount={this._onSelectAccount}
             onRemoveAccount={this._onRemoveAccount}
           />
-          <PreferencesAccountDetails
-            account={this.state.selected}
-            onAccountUpdated={this._onAccountUpdated}
-          />
+          {this.state.selected && (
+            <PreferencesAccountDetails
+              account={this.state.selected}
+              onAccountUpdated={this._onAccountUpdated}
+            />
+          )}
         </div>
       </div>
     );

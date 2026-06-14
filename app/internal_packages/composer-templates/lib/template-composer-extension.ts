@@ -1,4 +1,4 @@
-import { localized, ComposerExtension } from 'mailspring-exports';
+import { localized, ComposerExtension } from 'moros-exports';
 
 export default class TemplatesComposerExtension extends ComposerExtension {
   static warningsForSending({ draft }) {
