@@ -381,6 +381,94 @@ async function createMacZip() {
   console.log(`>> Created ${zipPath}`);
 }
 
+// Builds the native macOS installer: a compressed .dmg laid out as the
+// standard "drag Moros.app onto Applications" disk image. Dependency-free —
+// it shells out to `hdiutil` (and best-effort `osascript` for the Finder
+// window styling), so it only runs on a macOS build machine, mirroring how
+// the Windows installer only runs on Windows. The .app it contains is the
+// launcher; packager has already (optionally) signed and notarized it.
+async function createMacDmg() {
+  const arch = process.env.OVERRIDE_TO_INTEL ? 'x64' : process.arch;
+  const appName = 'Moros.app';
+  const volName = 'Moros';
+  const srcAppDir = path.join(outputDir, `Moros-darwin-${arch}`);
+  const dmgPath = path.join(outputDir, `Moros-${packageJSON.version}-${arch}.dmg`);
+  const tmpDmgPath = path.join(outputDir, 'Moros-temp.dmg');
+  const stagingDir = path.join(tmpdir, 'moros-dmg-staging');
+  const backgroundSrc = path.resolve(buildDir, 'resources', 'mac', 'DMG-Background.png');
+
+  [dmgPath, tmpDmgPath].forEach(p => {
+    if (fs.existsSync(p)) fs.unlinkSync(p);
+  });
+  fsPlus.removeSync(stagingDir);
+  fsExtra.mkdirpSync(stagingDir);
+
+  // Stage the app, an /Applications symlink (the drop target), and the
+  // background image inside a hidden .background folder.
+  fsPlus.copySync(path.join(srcAppDir, appName), path.join(stagingDir, appName));
+  await spawn({ cmd: 'ln', args: ['-s', '/Applications', path.join(stagingDir, 'Applications')] });
+  if (fs.existsSync(backgroundSrc)) {
+    const bgDir = path.join(stagingDir, '.background');
+    fsExtra.mkdirpSync(bgDir);
+    fsPlus.copySync(backgroundSrc, path.join(bgDir, 'background.png'));
+  }
+
+  // Create a read-write image we can lay out, then compress it read-only.
+  await spawn({
+    cmd: 'hdiutil',
+    args: ['create', '-srcfolder', stagingDir, '-volname', volName, '-fs', 'HFS+',
+      '-format', 'UDRW', '-ov', tmpDmgPath],
+  });
+
+  // Style the Finder window (icon positions + background). Best-effort: a
+  // headless CI runner without Finder access still yields a fully functional
+  // drag-to-install DMG, so failures here are non-fatal.
+  const mountPoint = path.join('/Volumes', volName);
+  try {
+    await spawn({
+      cmd: 'hdiutil',
+      args: ['attach', tmpDmgPath, '-readwrite', '-noverify', '-noautoopen'],
+    });
+    const appleScript = `
+      tell application "Finder"
+        tell disk "${volName}"
+          open
+          set current view of container window to icon view
+          set toolbar visible of container window to false
+          set statusbar visible of container window to false
+          set the bounds of container window to {200, 120, 740, 480}
+          set opts to the icon view options of container window
+          set arrangement of opts to not arranged
+          set icon size of opts to 100
+          set background picture of opts to file ".background:background.png"
+          set position of item "${appName}" of container window to {150, 200}
+          set position of item "Applications" of container window to {390, 200}
+          update without registering applications
+          delay 1
+          close
+        end tell
+      end tell`;
+    await spawn({ cmd: 'osascript', args: ['-e', appleScript] });
+    await spawn({ cmd: 'sync', args: [] });
+    await spawn({ cmd: 'hdiutil', args: ['detach', mountPoint] });
+  } catch (err) {
+    console.warn(`---> DMG Finder styling skipped (${err.message}); image is still functional`);
+    try {
+      await spawn({ cmd: 'hdiutil', args: ['detach', mountPoint, '-force'] });
+    } catch (e) {
+      // Not mounted — nothing to detach.
+    }
+  }
+
+  await spawn({
+    cmd: 'hdiutil',
+    args: ['convert', tmpDmgPath, '-format', 'UDZO', '-imagekey', 'zlib-level=9', '-o', dmgPath],
+  });
+  fs.unlinkSync(tmpDmgPath);
+  fsPlus.removeSync(stagingDir);
+  console.log(`>> Created ${dmgPath}`);
+}
+
 function writeFromTemplate(filePath, data) {
   const template = _.template(String(fs.readFileSync(filePath)));
   const finishedPath = path.join(outputDir, path.basename(filePath).replace('.in', ''));
@@ -469,7 +557,10 @@ async function main() {
   }
 
   if (platform === 'darwin') {
+    // .zip feeds the Squirrel.Mac auto-updater; .dmg is the user-facing
+    // native installer.
     await createMacZip();
+    await createMacDmg();
   } else if (platform === 'linux') {
     await createDebInstaller();
     await createRpmInstaller();

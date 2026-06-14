@@ -90,6 +90,13 @@ The guiding constraints:
 
 - [ ] Windows installer built from the existing `electron-winstaller` + `app/build`
       pipeline, producing `MorosSetup.exe`.
+- [x] macOS native installer: `createMacDmg()` in `app/build/build.js` produces a
+      compressed drag-to-Applications `.dmg` (`Moros-<version>-<arch>.dmg`) using the
+      bundled `DMG-Background.png`, dependency-free via `hdiutil` (+ best-effort
+      `osascript` window styling). The `.app` it contains is the launcher; packager
+      already signs/notarizes it. The macOS CI workflow renames it to
+      `Moros-AppleSilicon.dmg` and uploads it to S3 alongside the auto-update `.zip`.
+- [ ] Notarize/staple the `.dmg` itself (the `.app` inside is already notarized).
 - [ ] CI release workflow for tagged builds.
 
 ## Review gate
