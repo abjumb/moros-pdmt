@@ -1,6 +1,6 @@
 import React from 'react';
 import { localized } from 'mailspring-exports';
-import FinanceStore, { MorosTransaction, formatCents } from './finance-store';
+import FinanceStore, { formatCents } from './finance-store';
 import MorosSettingsStore from '../moros-settings-store';
 
 // Range pills modeled on Origin's net worth dashboard (1W/1M/3M/1Y/ALL).
@@ -16,7 +16,6 @@ const CHART_WIDTH = 600;
 const CHART_HEIGHT = 140;
 
 interface NetWorthViewState {
-  transactions: ReadonlyArray<MorosTransaction>;
   rangeKey: string;
 }
 
@@ -35,15 +34,13 @@ export default class NetWorthView extends React.Component<
   _unlistenSettings?: () => void;
 
   state: NetWorthViewState = {
-    transactions: FinanceStore.items(),
     rangeKey: '1M',
   };
 
   componentDidMount() {
-    this._unlisten = FinanceStore.listen(() =>
-      this.setState({ transactions: FinanceStore.items() })
-    );
-    // Re-render amounts when the configured currency changes.
+    // render() reads balances and amounts straight from the store singletons,
+    // so a forceUpdate on either change is all that's needed.
+    this._unlisten = FinanceStore.listen(() => this.forceUpdate());
     this._unlistenSettings = MorosSettingsStore.listen(() => this.forceUpdate());
   }
 
