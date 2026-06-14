@@ -1,10 +1,11 @@
 "$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
 
 [scripts]
-# Installs root deps, then `postinstall` installs app/ deps against Electron
-# (rebuilds native modules like better-sqlite3) and downloads the prebuilt
-# mailsync C++ binary for this platform. Runs in the workspace directory.
-setup = "npm install"
+# Seeds node_modules from the repo root via APFS clonefile (fast, no extra
+# disk), then runs `npm install`. `postinstall` rebuilds native modules
+# against Electron only if needed and downloads the mailsync binary.
+# See .conductor/setup.sh. Runs in the workspace directory.
+setup = "sh .conductor/setup.sh"
 
 # Electron desktop app (no HTTP port). `--config-dir-path` gives each workspace
 # its OWN dev data dir so multiple Mailspring instances can run side by side
