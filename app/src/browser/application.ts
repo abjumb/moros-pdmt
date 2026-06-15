@@ -1060,13 +1060,19 @@ export default class Application extends EventEmitter {
     // blocking modal or unresolved await in headless mode), force-exit with a
     // non-zero code after a configurable timeout so CI gets a fast, labelled
     // failure instead of burning the full step timeout.
+    //
+    // Only armed for exit-when-done (headless CI) runs. Interactive runs from
+    // the menu (application:run-all-specs) pass exitWhenDone: false and may
+    // legitimately run a long time on a slow machine, so they must not be
+    // force-quit mid-session.
+    //
     // A non-positive or non-numeric MOROS_SPEC_TIMEOUT disables the watchdog
     // (e.g. MOROS_SPEC_TIMEOUT=0 to opt out). The `|| '10'` only covers an
     // empty/unset value; without this guard parseInt would yield 0 or NaN and
     // setTimeout(..., 0 | NaN) would fire on the next tick, exiting before a
     // single spec runs.
     const watchdogMinutes = parseInt(process.env.MOROS_SPEC_TIMEOUT || '10', 10);
-    if (Number.isFinite(watchdogMinutes) && watchdogMinutes > 0) {
+    if (specWindowOptions.exitWhenDone && Number.isFinite(watchdogMinutes) && watchdogMinutes > 0) {
       const watchdogTimer = setTimeout(() => {
         console.error(
           `\n[spec watchdog] Spec suite did not complete within ${watchdogMinutes} minute(s). ` +
