@@ -1,4 +1,4 @@
-import { Actions, ComponentRegistry, WorkspaceStore } from 'moros-exports';
+import { Actions, ComponentRegistry, WorkspaceStore, localized } from 'moros-exports';
 
 import {
   MorosTasksPerspective,
@@ -15,6 +15,24 @@ import SubscriptionsRoot from './subscriptions/subscriptions-root';
 import BriefingRoot from './briefing/briefing-root';
 import CommandPaletteController from './command-palette';
 import NavRail from './nav-rail';
+import NetWorthView from './finance/net-worth-view';
+import MorosWidgetWindow from './panels/widget-window';
+import { MOROS_WIDGET_WINDOW_TYPE } from './panels/widget-launcher';
+import MorosSettingsStore from './moros-settings-store';
+import TasksStore from './tasks/tasks-store';
+import FinanceStore from './finance/finance-store';
+import BudgetsStore from './finance/finance-budgets-store';
+import KeyNestStore from './keynest/keynest-store';
+import SubscriptionsStore from './subscriptions/subscriptions-store';
+import BriefingStore from './briefing/briefing-store';
+import { registerWidget } from './panels/widget-registry';
+
+// Panels that can be popped out into their own widget window. Only standalone
+// components (those that subscribe to their own Moros store and need no props)
+// are eligible — the file-watch live-sync then keeps every window in step.
+// Registered once at module load so both the main window (to show the pop-out
+// affordance) and widget windows (to render content) share the same map.
+registerWidget('finance', 'networth', localized('Net worth'), NetWorthView);
 
 const MODULES = [
   {
@@ -50,6 +68,17 @@ const MODULES = [
 ];
 
 export function activate() {
+  // Widget popout windows render a single panel's component into the Center
+  // location and nothing else — no sheets, nav rail, or command palette. The
+  // component is resolved from the widget registry by MorosWidgetWindow using
+  // the window's props. This mirrors the composer's per-window-type activation.
+  if (AppEnv.getWindowType() === MOROS_WIDGET_WINDOW_TYPE) {
+    ComponentRegistry.register(MorosWidgetWindow, {
+      location: WorkspaceStore.Location.Center,
+    });
+    return;
+  }
+
   for (const module of MODULES) {
     WorkspaceStore.defineSheet(
       module.sheetName,
@@ -88,6 +117,24 @@ export function activate() {
 }
 
 export function deactivate() {
+  // Release every Moros store's cross-window file watcher (and pending save
+  // timer) in all window types so deactivation doesn't leak fs.watch handles —
+  // each store is instantiated in every window via its root component's import.
+  for (const store of [
+    MorosSettingsStore,
+    TasksStore,
+    FinanceStore,
+    BudgetsStore,
+    KeyNestStore,
+    SubscriptionsStore,
+    BriefingStore,
+  ]) {
+    store.dispose();
+  }
+  if (AppEnv.getWindowType() === MOROS_WIDGET_WINDOW_TYPE) {
+    ComponentRegistry.unregister(MorosWidgetWindow);
+    return;
+  }
   CommandPaletteController.unregister();
   ComponentRegistry.unregister(CreateTaskButton);
   for (const module of MODULES) {

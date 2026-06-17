@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import MorosStore from 'moros-store';
+import MorosFileWatch from './moros-file-watch';
 
 export interface MorosRecord {
   id: string;
@@ -38,11 +39,58 @@ export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
   _filename: string;
   _items: T[];
   _saveTimer: ReturnType<typeof setTimeout> | null = null;
+  // Cross-window live sync: watches our JSON file and reloads when another
+  // window writes it. See `_startWatching` for why this is off under specs.
+  _watch: MorosFileWatch;
 
   constructor(filename: string) {
     super();
     this._filename = filename;
     this._items = this._load();
+    this._watch = new MorosFileWatch(this._filePath(), (content) =>
+      this._onExternalChange(content)
+    );
+    this._startWatching();
+  }
+
+  /**
+   * Start file-watching for cross-window sync. Disabled under specs: spec
+   * windows reuse the same on-disk config and a real `fs.watch` would fire
+   * unpredictably across tests (and could hang the suite), so the watcher must
+   * be inert there. The single-window app is otherwise unaffected — with one
+   * window open, nothing else writes the file, so the watcher never fires.
+   */
+  _startWatching() {
+    const enabled = !(typeof AppEnv !== 'undefined' && AppEnv.inSpecMode && AppEnv.inSpecMode());
+    this._watch.start(enabled);
+  }
+
+  /** Another window changed our file: adopt its contents and notify listeners. */
+  _onExternalChange(content: string) {
+    // If we have an unsaved local edit pending, flushing it (last-writer-wins)
+    // is safer than adopting the external file and then overwriting it when our
+    // debounce fires — which would silently drop the pending local edit. Our
+    // own flush echo is suppressed by the watcher.
+    if (this._saveTimer) {
+      this.flush();
+      return;
+    }
+    try {
+      const parsed = JSON.parse(content);
+      this._items = Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+      return; // Corrupt/partial read; keep current state and wait for the next event.
+    }
+    this.trigger();
+  }
+
+  /** Flush any pending save, then stop watching. Call on package deactivate. */
+  dispose() {
+    // Persist a pending debounced edit before tearing down, so a create/update/
+    // remove made just before deactivation isn't lost. flush() clears the timer
+    // and writes synchronously.
+    if (this._saveTimer) this.flush();
+    this._watch.stop();
   }
 
   items(): ReadonlyArray<T> {
@@ -110,10 +158,18 @@ export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
     this._saveTimer = null;
     const filePath = this._filePath();
     const tempPath = `${filePath}.tmp`;
+    const content = JSON.stringify(this._items, null, 2);
     try {
       fs.mkdirSync(path.dirname(filePath), { recursive: true });
-      fs.writeFileSync(tempPath, JSON.stringify(this._items, null, 2), 'utf8');
+      fs.writeFileSync(tempPath, content, 'utf8');
       fs.renameSync(tempPath, filePath);
+      // Record the self-write only *after* a successful save, so a failed write
+      // can't leave a marker that later suppresses a real external change with
+      // the same content.
+      this._watch.noteWrite(content);
+      // The directory may not have existed when we first tried to watch it; now
+      // that a save has created it, ensure the watcher is armed (no-op if already).
+      this._startWatching();
     } catch (err) {
       AppEnv.reportError(err);
     }

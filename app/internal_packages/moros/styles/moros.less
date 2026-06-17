@@ -1401,7 +1401,8 @@
       color: @text-color-subtle;
     }
 
-    .moros-panel-hide {
+    .moros-panel-hide,
+    .moros-panel-popout {
       border: none;
       background: none;
       color: @text-color-very-subtle;
@@ -1415,7 +1416,13 @@
       }
     }
 
-    &:hover .moros-panel-hide {
+    .moros-panel-popout {
+      // Slightly smaller than the close glyph so it reads as a secondary action.
+      font-size: @font-size-large - 1;
+    }
+
+    &:hover .moros-panel-hide,
+    &:hover .moros-panel-popout {
       opacity: 1;
     }
   }
@@ -1451,5 +1458,69 @@
       width: 2px;
       background: @accent-primary;
     }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Pop-out widget window
+//
+// The widget window is frameless and always-on-top (see widget-launcher.ts). It
+// renders a single panel's component below a slim draggable title bar that moves
+// the frameless window. The body reuses `.moros-root`, so module sub-views look
+// identical to how they appear in the in-window tiling grid.
+// ---------------------------------------------------------------------------
+.moros-widget-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: @background-primary;
+
+  .moros-widget-titlebar {
+    display: flex;
+    align-items: center;
+    gap: @spacing-half;
+    flex: none;
+    padding: @spacing-half @spacing-three-quarters;
+    border-bottom: 1px solid @border-color-divider;
+    background: @background-secondary;
+    // Lets the user drag the frameless window by its title bar.
+    -webkit-app-region: drag;
+    user-select: none;
+
+    .moros-widget-title {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: @font-size-smaller;
+      font-weight: @font-weight-semi-bold;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: @text-color-subtle;
+    }
+
+    .moros-widget-close {
+      // Opt back out of the drag region so the button stays clickable.
+      -webkit-app-region: no-drag;
+      border: none;
+      background: none;
+      color: @text-color-very-subtle;
+      cursor: pointer;
+      font-size: @font-size-large;
+      line-height: 1;
+
+      &:hover {
+        color: @text-color;
+      }
+    }
+  }
+
+  .moros-widget-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: @spacing-standard;
   }
 }

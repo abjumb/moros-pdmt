@@ -13,6 +13,13 @@ export interface MorosWindowSettings {
   title?: string;
   width?: number;
   height?: number;
+  // Minimum content size, forwarded to BrowserWindow when present. Used by
+  // small popout windows (e.g. Moros widgets) to stay usable when resized down.
+  minWidth?: number;
+  minHeight?: number;
+  // Keep the window floating above others. Forwarded to BrowserWindow when set;
+  // used by always-on-top popout widgets.
+  alwaysOnTop?: boolean;
   hidden?: boolean;
   toolbar?: boolean;
   resizable?: boolean;
@@ -62,12 +69,16 @@ export default class MorosWindow extends EventEmitter {
     super();
 
     let frame, height, pathToOpen, resizable, title, width, autoHideMenuBar, titleBarStyle;
+    let minWidth, minHeight, alwaysOnTop;
 
     ({
       frame,
       title,
       width,
       height,
+      minWidth,
+      minHeight,
+      alwaysOnTop,
       // toolbar, present but passed through to client-side
       resizable,
       pathToOpen,
@@ -112,6 +123,20 @@ export default class MorosWindow extends EventEmitter {
       },
       autoHideMenuBar,
     };
+
+    // Forward optional sizing/stacking hints only when provided, so the
+    // defaults for every existing window are completely unchanged. Small
+    // popout windows (Moros widgets) use these to float on top and to keep a
+    // sensible minimum size.
+    if (typeof minWidth === 'number') {
+      browserWindowOptions.minWidth = minWidth;
+    }
+    if (typeof minHeight === 'number') {
+      browserWindowOptions.minHeight = minHeight;
+    }
+    if (alwaysOnTop) {
+      browserWindowOptions.alwaysOnTop = true;
+    }
 
     if (this.neverClose || this.isSpec) {
       // Prevents DOM timers from being suspended when the main window is hidden.

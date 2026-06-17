@@ -1,6 +1,8 @@
 import React from 'react';
 import { localized } from 'moros-exports';
 import PanelLayoutStore from './panel-layout-store';
+import { hasWidget } from './widget-registry';
+import { openWidgetWindow } from './widget-launcher';
 import {
   PanelLayout,
   MIN_PANEL_SIZE,
@@ -210,6 +212,13 @@ export default class PanelGrid extends React.Component<PanelGridProps, PanelGrid
     this._commit(toggleHidden(this.state.layout, id));
   };
 
+  // Pop this panel out into its own always-on-top widget window. Only offered
+  // for panels with a registered standalone widget component (see widget-registry).
+  _onPopOut = (id: string) => {
+    const def = this._panelDef(id);
+    openWidgetWindow(this.props.moduleId, id, def ? def.title : id);
+  };
+
   _onRestore = (id: string) => {
     this._commit(toggleHidden(this.state.layout, id));
     this.setState({ hiddenMenuOpen: false });
@@ -277,6 +286,17 @@ export default class PanelGrid extends React.Component<PanelGridProps, PanelGrid
             ⠿
           </span>
           <span className="moros-panel-title">{def.title}</span>
+          {hasWidget(this.props.moduleId, id) ? (
+            <button
+              type="button"
+              className="moros-panel-popout"
+              title={localized('Pop out into its own window')}
+              aria-label={localized('Pop out %@', def.title)}
+              onClick={() => this._onPopOut(id)}
+            >
+              ⇱
+            </button>
+          ) : null}
           <button
             type="button"
             className="moros-panel-hide"

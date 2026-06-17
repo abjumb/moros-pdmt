@@ -84,6 +84,11 @@ class BriefingStore extends MorosStore {
     this._briefs.listen(() => this.trigger());
   }
 
+  /** Stop the underlying record store's file watcher and pending save timer. */
+  dispose() {
+    this._briefs.dispose();
+  }
+
   isWorking() {
     return this._working;
   }
