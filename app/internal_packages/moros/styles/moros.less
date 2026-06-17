@@ -500,6 +500,55 @@
     }
   }
 
+  .moros-import-row {
+    flex-wrap: wrap;
+  }
+
+  .moros-totp {
+    display: flex;
+    align-items: center;
+    gap: @spacing-quarter;
+    flex: 0 0 auto;
+
+    .moros-totp-code {
+      font-family: @font-family-monospace;
+      font-size: @font-size-base;
+      font-weight: @font-weight-medium;
+      letter-spacing: 1px;
+      color: @text-color;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .moros-totp-countdown {
+      font-size: @font-size-smaller;
+      color: @text-color-very-subtle;
+      font-variant-numeric: tabular-nums;
+      min-width: 28px;
+    }
+
+    .moros-totp-input {
+      flex: 0 0 180px;
+    }
+
+    .moros-totp-remove {
+      border: none;
+      background: none;
+      color: @text-color-very-subtle;
+      font-size: @font-size-large;
+      line-height: 1;
+      padding: 0 4px;
+      cursor: pointer;
+
+      &:hover {
+        color: @color-error;
+      }
+    }
+  }
+
+  .moros-totp-add {
+    opacity: 0.8;
+  }
+
   .moros-row-muted {
     .moros-row-title,
     .moros-amount {

@@ -1,6 +1,7 @@
 import { KeyManager } from 'moros-exports';
 import MorosDataStore, { MorosRecord, morosId } from '../moros-data-store';
 import { analyzeHealth, HealthSummary } from './password-health';
+import { ImportedEntry } from './importers';
 
 export type KeyNestEntryKind = 'password' | 'api-key';
 
@@ -29,12 +30,24 @@ export interface KeyNestEntry extends MorosRecord {
   url: string;
   /** ISO date (yyyy-mm-dd) the credential expires, or '' when it doesn't. */
   expiresAt: string;
+  /**
+   * Whether this entry has a TOTP (2FA) seed stored in the keychain. Only the
+   * flag lives in metadata — the base32 seed itself is a secret and is stored
+   * exclusively through KeyManager, never written to vault.json.
+   */
+  totp?: boolean;
 }
 
 // KeyNest grew out of the original Vault module — the keychain prefix and the
 // data filename are unchanged so existing entries and secrets survive.
 function secretKeyName(entryId: string) {
   return `moros-vault-${entryId}`;
+}
+
+// TOTP seeds are stored under a distinct keychain key per entry so the primary
+// secret (password / API key) and the 2FA seed never collide.
+function totpKeyName(entryId: string) {
+  return `moros-vault-${entryId}-totp`;
 }
 
 export function expiryState(entry: Pick<KeyNestEntry, 'expiresAt'>, now = new Date()): ExpiryState {
@@ -81,7 +94,41 @@ class KeyNestStore extends MorosDataStore<KeyNestEntry> {
     if (!removed) return undefined;
     this.flush();
     await KeyManager.deletePassword(secretKeyName(entryId));
+    // Also clear any TOTP seed — the metadata entry that referenced it is gone.
+    if (removed.totp) {
+      await KeyManager.deletePassword(totpKeyName(entryId));
+    }
     return removed;
+  }
+
+  // --- TOTP (2FA) seeds -----------------------------------------------------
+  //
+  // The seed is a secret, so it follows the same crash-safe ordering as the
+  // primary secret: store the seed in the keychain *before* the `totp:true`
+  // flag becomes durable, and clear the flag (durably) *before* deleting the
+  // keychain seed. The accepted failure mode is an orphaned, still-encrypted
+  // keychain value — never a visible flag pointing at a missing seed.
+
+  async setTotpSeed(entryId: string, seedBase32: string) {
+    const existing = this.get(entryId);
+    if (!existing) return undefined;
+    await KeyManager.replacePassword(totpKeyName(entryId), seedBase32);
+    const updated = this.update(entryId, { totp: true }) || existing;
+    this.flush();
+    return updated;
+  }
+
+  async getTotpSeed(entryId: string): Promise<string | undefined> {
+    return KeyManager.getPassword(totpKeyName(entryId));
+  }
+
+  async clearTotpSeed(entryId: string) {
+    const existing = this.get(entryId);
+    if (!existing) return undefined;
+    const updated = this.update(entryId, { totp: false }) || existing;
+    this.flush();
+    await KeyManager.deletePassword(totpKeyName(entryId));
+    return updated;
   }
 
   findByName(name: string): KeyNestEntry | undefined {
@@ -133,6 +180,45 @@ class KeyNestStore extends MorosDataStore<KeyNestEntry> {
       }))
     );
     return analyzeHealth(withSecrets);
+  }
+
+  /**
+   * Create a password entry for each imported credential, routing its password
+   * through the secure KeyManager path exactly like a manual add. The parsed
+   * password is held only transiently here and is never written to vault.json
+   * or logged. Returns how many entries were imported and how many were
+   * skipped (e.g. a keychain write failed). Entries with an empty name are
+   * assumed already filtered out by the parser.
+   */
+  async importEntries(entries: ImportedEntry[]): Promise<{ imported: number; skipped: number }> {
+    let imported = 0;
+    let skipped = 0;
+    for (const entry of entries) {
+      const name = (entry.name || '').trim();
+      if (!name) {
+        skipped += 1;
+        continue;
+      }
+      try {
+        await this.createWithSecret(
+          {
+            name,
+            kind: 'password',
+            username: (entry.username || '').trim(),
+            url: (entry.url || '').trim(),
+            expiresAt: '',
+          },
+          entry.password || ''
+        );
+        imported += 1;
+      } catch (err) {
+        // A single failed keychain write shouldn't abort the whole import;
+        // report it (without the secret) and keep going.
+        AppEnv.reportError(err);
+        skipped += 1;
+      }
+    }
+    return { imported, skipped };
   }
 }
 

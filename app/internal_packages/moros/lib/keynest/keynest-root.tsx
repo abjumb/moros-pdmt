@@ -1,4 +1,5 @@
 import React from 'react';
+import fs from 'fs';
 import { clipboard } from 'electron';
 import { localized } from 'moros-exports';
 import KeyNestStore, { KeyNestEntry, KeyNestEntryKind, expiryState } from './keynest-store';
@@ -12,6 +13,13 @@ import {
 } from './password-generator';
 import { estimateStrength, StrengthScore } from './password-strength';
 import { HealthSummary } from './password-health';
+import {
+  generateTotp,
+  secondsRemaining,
+  isValidBase32Seed,
+  DEFAULT_TOTP_STEP_SECONDS,
+} from './totp';
+import { ImportFormat, parseImport } from './importers';
 
 type BooleanGeneratorOption = 'lowercase' | 'uppercase' | 'digits' | 'symbols';
 
@@ -19,6 +27,18 @@ const CLIPBOARD_CLEAR_MS = 30000;
 const REVEAL_HIDE_MS = 15000;
 
 type KindFilter = 'all' | KeyNestEntryKind;
+
+interface ImportChoice {
+  format: ImportFormat;
+  label: string;
+  extensions: string[];
+}
+
+const IMPORT_CHOICES: ImportChoice[] = [
+  { format: 'csv', label: 'CSV', extensions: ['csv', 'txt'] },
+  { format: 'bitwarden', label: 'Bitwarden', extensions: ['json'] },
+  { format: '1password', label: '1Password', extensions: ['csv', 'txt'] },
+];
 
 interface KeyNestRootState {
   entries: ReadonlyArray<KeyNestEntry>;
@@ -38,6 +58,18 @@ interface KeyNestRootState {
   health: HealthSummary | null;
   auditing: boolean;
   auditError: string | null;
+  // Id of the entry whose TOTP seed is being entered inline, or null.
+  totpEditId: string | null;
+  totpDraftSeed: string;
+  totpError: string | null;
+  // The entry whose TOTP code is currently being shown, plus the derived
+  // 6-digit code and the seconds left in the current step. The seed itself is
+  // held outside state (in `_totpSeed`) and is never rendered.
+  totpShownId: string | null;
+  totpCode: string | null;
+  totpRemaining: number;
+  importStatus: string | null;
+  importing: boolean;
 }
 
 export default class KeyNestRoot extends React.Component<
@@ -57,6 +89,10 @@ export default class KeyNestRoot extends React.Component<
   // Held (outside state) only to verify the clipboard still contains our
   // secret before auto-clearing — never rendered.
   _copiedSecret: string | null = null;
+  // The transient TOTP seed for the entry currently showing a code. Held
+  // outside state so it is recomputed against — but never rendered or logged.
+  _totpSeed: string | null = null;
+  _totpTimer: ReturnType<typeof setInterval> | null = null;
 
   state: KeyNestRootState = {
     entries: KeyNestStore.items(),
@@ -76,6 +112,14 @@ export default class KeyNestRoot extends React.Component<
     health: null,
     auditing: false,
     auditError: null,
+    totpEditId: null,
+    totpDraftSeed: '',
+    totpError: null,
+    totpShownId: null,
+    totpCode: null,
+    totpRemaining: DEFAULT_TOTP_STEP_SECONDS,
+    importStatus: null,
+    importing: false,
   };
 
   componentDidMount() {
@@ -84,7 +128,14 @@ export default class KeyNestRoot extends React.Component<
     // clear it (and invalidate any in-flight audit) when the entry set changes.
     this._unlisten = KeyNestStore.listen(() => {
       this._auditEpoch += 1;
-      this.setState({ entries: KeyNestStore.items(), health: null });
+      const entries = KeyNestStore.items();
+      // If the entry whose TOTP code is on screen was removed (or lost its
+      // seed), tear the live code down so we don't keep ticking on it.
+      if (this.state.totpShownId) {
+        const shown = entries.find((e) => e.id === this.state.totpShownId);
+        if (!shown || !shown.totp) this._hideTotp();
+      }
+      this.setState({ entries, health: null });
     });
   }
 
@@ -94,8 +145,20 @@ export default class KeyNestRoot extends React.Component<
     if (this._copiedTimer) clearTimeout(this._copiedTimer);
     if (this._clipboardClearTimer) clearTimeout(this._clipboardClearTimer);
     if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
+    this._stopTotp();
     this._copiedSecret = null;
   }
+
+  _stopTotp = () => {
+    if (this._totpTimer) clearInterval(this._totpTimer);
+    this._totpTimer = null;
+    this._totpSeed = null;
+  };
+
+  _hideTotp = () => {
+    this._stopTotp();
+    this.setState({ totpShownId: null, totpCode: null });
+  };
 
   _hideRevealed = () => {
     if (this._revealHideTimer) clearTimeout(this._revealHideTimer);
@@ -162,7 +225,122 @@ export default class KeyNestRoot extends React.Component<
     if (this.state.revealedId === entry.id) {
       this._hideRevealed();
     }
+    if (this.state.totpShownId === entry.id) {
+      this._hideTotp();
+    }
     await KeyNestStore.removeWithSecret(entry.id);
+  };
+
+  // --- TOTP (2FA) ----------------------------------------------------------
+
+  _onStartTotpEdit = (entry: KeyNestEntry) => {
+    this.setState({ totpEditId: entry.id, totpDraftSeed: '', totpError: null });
+  };
+
+  _onCancelTotpEdit = () => {
+    this.setState({ totpEditId: null, totpDraftSeed: '', totpError: null });
+  };
+
+  _onSaveTotpSeed = async (entry: KeyNestEntry) => {
+    const seed = this.state.totpDraftSeed.trim();
+    if (!isValidBase32Seed(seed)) {
+      this.setState({ totpError: localized('Enter a valid base32 secret.') });
+      return;
+    }
+    await KeyNestStore.setTotpSeed(entry.id, seed);
+    this.setState({ totpEditId: null, totpDraftSeed: '', totpError: null });
+  };
+
+  _onRemoveTotp = async (entry: KeyNestEntry) => {
+    if (this.state.totpShownId === entry.id) this._hideTotp();
+    await KeyNestStore.clearTotpSeed(entry.id);
+  };
+
+  _tickTotp = () => {
+    if (this._totpSeed === null) return;
+    try {
+      const now = Date.now();
+      this.setState({
+        totpCode: generateTotp(this._totpSeed, now),
+        totpRemaining: secondsRemaining(now),
+      });
+    } catch (err) {
+      // A malformed seed shouldn't have been stored, but never log it; just
+      // stop showing a code.
+      this._hideTotp();
+    }
+  };
+
+  _onToggleTotpCode = async (entry: KeyNestEntry) => {
+    if (this.state.totpShownId === entry.id) {
+      this._hideTotp();
+      return;
+    }
+    const seed = await KeyNestStore.getTotpSeed(entry.id);
+    if (!this._mounted) return;
+    if (seed === undefined) return;
+    this._stopTotp();
+    this._totpSeed = seed;
+    this.setState({ totpShownId: entry.id });
+    this._tickTotp();
+    this._totpTimer = setInterval(this._tickTotp, 1000);
+  };
+
+  _onCopyTotp = () => {
+    const code = this.state.totpCode;
+    if (!code) return;
+    clipboard.writeText(code);
+    // Reuse the same auto-clear behavior as secrets: clear after 30s, but only
+    // if the clipboard still holds this code.
+    this._copiedSecret = code;
+    if (this._clipboardClearTimer) clearTimeout(this._clipboardClearTimer);
+    this._clipboardClearTimer = setTimeout(() => {
+      if (this._copiedSecret !== null && clipboard.readText() === this._copiedSecret) {
+        clipboard.clear();
+      }
+      this._copiedSecret = null;
+    }, CLIPBOARD_CLEAR_MS);
+  };
+
+  // --- Import --------------------------------------------------------------
+
+  _onImport = (choice: ImportChoice) => {
+    AppEnv.showOpenDialog(
+      {
+        title: localized('Import into KeyNest'),
+        filters: [{ name: choice.label, extensions: choice.extensions }],
+        properties: ['openFile'],
+      },
+      (filePaths) => {
+        if (!filePaths || filePaths.length === 0) return;
+        this._importFromPath(choice.format, filePaths[0]);
+      }
+    );
+  };
+
+  _importFromPath = async (format: ImportFormat, filePath: string) => {
+    this.setState({ importing: true, importStatus: null });
+    let text: string;
+    try {
+      text = fs.readFileSync(filePath, 'utf8');
+    } catch (err) {
+      if (!this._mounted) return;
+      this.setState({
+        importing: false,
+        importStatus: localized('Could not read the selected file.'),
+      });
+      return;
+    }
+    const parsed = parseImport(format, text);
+    // Parsed secrets are routed straight through the secure KeyManager path
+    // and never written to vault.json or logged.
+    const { imported, skipped } = await KeyNestStore.importEntries(parsed.entries);
+    if (!this._mounted) return;
+    const totalSkipped = skipped + parsed.skipped;
+    this.setState({
+      importing: false,
+      importStatus: localized('Imported %@ · skipped %@', `${imported}`, `${totalSkipped}`),
+    });
   };
 
   _setGenOption = (patch: Partial<GeneratorOptions>) => {
@@ -232,9 +410,9 @@ export default class KeyNestRoot extends React.Component<
     );
   }
 
-  _renderStrengthMeter() {
-    const secret = this.state.draftSecret;
-    if (this.state.draftKind !== 'password' || !secret) return null;
+  // Render a strength bar + label for a secret. The secret is read to compute
+  // a 0–4 score locally and is not retained or logged.
+  _renderStrengthBar(secret: string) {
     const { score } = estimateStrength(secret);
     return (
       <div className={`moros-strength strength-${score}`}>
@@ -246,6 +424,12 @@ export default class KeyNestRoot extends React.Component<
         <span className="moros-strength-label">{this._strengthLabel(score)}</span>
       </div>
     );
+  }
+
+  _renderStrengthMeter() {
+    const secret = this.state.draftSecret;
+    if (this.state.draftKind !== 'password' || !secret) return null;
+    return this._renderStrengthBar(secret);
   }
 
   _renderGenerator() {
@@ -311,6 +495,30 @@ export default class KeyNestRoot extends React.Component<
     );
   }
 
+  _renderImport() {
+    return (
+      <div className="moros-toolbar-row moros-import-row">
+        <span className="moros-gen-label">{localized('Import')}</span>
+        {IMPORT_CHOICES.map((choice) => (
+          <button
+            key={choice.format}
+            className="btn"
+            disabled={this.state.importing}
+            onClick={() => this._onImport(choice)}
+          >
+            {choice.label}
+          </button>
+        ))}
+        {this.state.importing && (
+          <span className="moros-health-summary">{localized('Importing…')}</span>
+        )}
+        {!this.state.importing && this.state.importStatus && (
+          <span className="moros-health-summary">{this.state.importStatus}</span>
+        )}
+      </div>
+    );
+  }
+
   _renderExpiryChip(entry: KeyNestEntry) {
     const state = expiryState(entry);
     if (state === 'ok') return null;
@@ -321,8 +529,75 @@ export default class KeyNestRoot extends React.Component<
     );
   }
 
+  _renderTotpCell(entry: KeyNestEntry) {
+    // Inline seed entry takes precedence over everything else for this entry.
+    if (this.state.totpEditId === entry.id) {
+      return (
+        <span className="moros-totp moros-totp-edit">
+          <input
+            type="text"
+            className="moros-input moros-totp-input"
+            placeholder={localized('Base32 2FA secret')}
+            value={this.state.totpDraftSeed}
+            onChange={(e) => this.setState({ totpDraftSeed: e.target.value, totpError: null })}
+          />
+          <button className="btn" onClick={() => this._onSaveTotpSeed(entry)}>
+            {localized('Save')}
+          </button>
+          <button className="btn" onClick={this._onCancelTotpEdit}>
+            {localized('Cancel')}
+          </button>
+          {this.state.totpError && <span className="moros-gen-error">{this.state.totpError}</span>}
+        </span>
+      );
+    }
+
+    if (!entry.totp) {
+      return (
+        <button className="btn moros-totp-add" onClick={() => this._onStartTotpEdit(entry)}>
+          {localized('Add 2FA')}
+        </button>
+      );
+    }
+
+    const shown = this.state.totpShownId === entry.id;
+    return (
+      <span className="moros-totp">
+        {shown && this.state.totpCode ? (
+          <>
+            <span className="moros-totp-code">{this.state.totpCode}</span>
+            <span className="moros-totp-countdown" title={localized('Seconds until refresh')}>
+              {this.state.totpRemaining}s
+            </span>
+            <button className="btn" onClick={this._onCopyTotp}>
+              {localized('Copy code')}
+            </button>
+          </>
+        ) : (
+          <button className="btn" onClick={() => this._onToggleTotpCode(entry)}>
+            {localized('Show 2FA')}
+          </button>
+        )}
+        {shown && (
+          <button className="btn" onClick={() => this._onToggleTotpCode(entry)}>
+            {localized('Hide')}
+          </button>
+        )}
+        <button
+          className="moros-totp-remove"
+          title={localized('Remove 2FA')}
+          onClick={() => this._onRemoveTotp(entry)}
+        >
+          &times;
+        </button>
+      </span>
+    );
+  }
+
   _renderEntry(entry: KeyNestEntry) {
     const revealed = this.state.revealedId === entry.id;
+    const showStrength =
+      revealed && entry.kind === 'password' && this.state.revealedSecret !== null;
     return (
       <div className="moros-row" key={entry.id}>
         <span className={`moros-chip kind-${entry.kind}`}>
@@ -336,12 +611,14 @@ export default class KeyNestRoot extends React.Component<
         <span className="moros-secret">
           {revealed && this.state.revealedSecret !== null ? this.state.revealedSecret : '••••••••'}
         </span>
+        {showStrength && this._renderStrengthBar(this.state.revealedSecret as string)}
         <button className="btn" onClick={() => this._onToggleReveal(entry)}>
           {revealed ? localized('Hide') : localized('Reveal')}
         </button>
         <button className="btn" onClick={() => this._onCopy(entry)}>
           {this.state.copiedId === entry.id ? localized('Copied!') : localized('Copy')}
         </button>
+        {this._renderTotpCell(entry)}
         <button
           className="moros-row-delete"
           title={localized('Delete')}
@@ -411,6 +688,7 @@ export default class KeyNestRoot extends React.Component<
           {this._renderKindFilter()}
         </div>
         {this._renderHealth()}
+        {this._renderImport()}
         <div className="moros-toolbar-row">
           <select
             className="moros-select"
