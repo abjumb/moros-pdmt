@@ -84,12 +84,12 @@ export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
     this.trigger();
   }
 
-  /** Stop watching and cancel pending saves. Call on package deactivate. */
+  /** Flush any pending save, then stop watching. Call on package deactivate. */
   dispose() {
-    if (this._saveTimer) {
-      clearTimeout(this._saveTimer);
-      this._saveTimer = null;
-    }
+    // Persist a pending debounced edit before tearing down, so a create/update/
+    // remove made just before deactivation isn't lost. flush() clears the timer
+    // and writes synchronously.
+    if (this._saveTimer) this.flush();
     this._watch.stop();
   }
 

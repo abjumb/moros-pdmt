@@ -102,12 +102,11 @@ class MorosSettingsStore extends MorosStore {
     }
   }
 
-  /** Stop watching and cancel pending saves. Call on package deactivate. */
+  /** Flush any pending save, then stop watching. Call on package deactivate. */
   dispose() {
-    if (this._saveTimer) {
-      clearTimeout(this._saveTimer);
-      this._saveTimer = null;
-    }
+    // Persist a pending settings change (e.g. a just-picked currency) before
+    // tearing down, so it isn't dropped. flush() clears the timer and writes.
+    if (this._saveTimer) this.flush();
     this._watch.stop();
   }
 }

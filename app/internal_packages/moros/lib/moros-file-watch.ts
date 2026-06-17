@@ -73,6 +73,11 @@ export default class MorosFileWatch {
     const dir = path.dirname(this._filePath);
     const base = path.basename(this._filePath);
     try {
+      // Ensure the data directory exists so the watch arms immediately — even in
+      // a passive widget window on a fresh profile that never writes itself.
+      // Without this, a missing dir would throw, leave the watcher unset, and it
+      // would never re-arm (stores only re-arm after their own successful save).
+      fs.mkdirSync(dir, { recursive: true });
       // Watch the *directory*, not the file. The stores save via an atomic
       // temp-file + `renameSync`, which swaps the inode out from under a
       // file-level `fs.watch` handle — it would see the first write and then
@@ -85,8 +90,8 @@ export default class MorosFileWatch {
       // Re-arm on error rather than going silent.
       this._watcher.on('error', () => this._rearm(enabled));
     } catch (err) {
-      // Directory may not exist yet on first run; nothing to watch until a save
-      // creates it (the stores re-arm after their first successful write).
+      // Couldn't create/watch the directory; leave unset and retry on the next
+      // _startWatching() (e.g. after a successful save).
       this._watcher = null;
     }
   }
