@@ -88,7 +88,7 @@ describe('KeyNest password strength', () => {
   });
 
   it('rates a long mixed-class password as very strong', () => {
-    expect(estimateStrength('Abc123!@xyzQRS456&*').score).toBeGreaterThanOrEqual(3);
+    expect(estimateStrength('Abc123!@xyzQRS456&*').score).toBeGreaterThan(2);
     expect(estimateStrength('Abcd1234!@#$Wxyz5678%^&*Qrst').score).toBe(4);
   });
 
