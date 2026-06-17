@@ -2,6 +2,7 @@ import React from 'react';
 import { localized } from 'moros-exports';
 import BriefingStore, { BRIEF_WINDOW_HOURS, MorosBrief } from './briefing-store';
 import AiSettingsPanel from '../ai/ai-settings-panel';
+import PanelGrid, { PanelDef } from '../panels/panel-grid';
 
 interface BriefingRootState {
   working: boolean;
@@ -107,6 +108,31 @@ export default class BriefingRoot extends React.Component<
     );
   }
 
+  // Wrap the existing Briefing sub-views as tiling panels. The header, AI
+  // settings panel, and generate-button toolbar stay as fixed chrome above the
+  // grid; the grid owns the AI settings display and the brief output.
+  _briefingPanels(): PanelDef[] {
+    return [
+      {
+        id: 'ai-settings',
+        title: localized('AI Provider'),
+        content: (
+          <AiSettingsPanel
+            featureName={localized('Briefing')}
+            dataDescription={localized('sender names, subjects, and snippets')}
+            upgradeSource="MorosBriefing"
+            upgradeCampaign="Hosted briefing"
+          />
+        ),
+      },
+      {
+        id: 'brief',
+        title: localized('Brief'),
+        content: <div className="moros-scroll-region">{this._renderBrief()}</div>,
+      },
+    ];
+  }
+
   render() {
     return (
       <div className="moros-root moros-briefing">
@@ -119,12 +145,6 @@ export default class BriefingRoot extends React.Component<
             )}
           </div>
         </div>
-        <AiSettingsPanel
-          featureName={localized('Briefing')}
-          dataDescription={localized('sender names, subjects, and snippets')}
-          upgradeSource="MorosBriefing"
-          upgradeCampaign="Hosted briefing"
-        />
         <div className="moros-toolbar-row">
           <button
             className="btn btn-emphasis"
@@ -134,7 +154,7 @@ export default class BriefingRoot extends React.Component<
             {this.state.working ? localized('Generating…') : localized('Generate brief')}
           </button>
         </div>
-        <div className="moros-scroll-region">{this._renderBrief()}</div>
+        <PanelGrid moduleId="briefing" panels={this._briefingPanels()} />
       </div>
     );
   }

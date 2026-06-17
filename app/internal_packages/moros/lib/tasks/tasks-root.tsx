@@ -1,5 +1,6 @@
 import React from 'react';
 import { localized, Actions, DatabaseStore, Thread } from 'moros-exports';
+import PanelGrid, { PanelDef } from '../panels/panel-grid';
 import TasksStore, {
   MorosTask,
   TaskPriority,
@@ -442,6 +443,40 @@ export default class TasksRoot extends React.Component<Record<string, unknown>, 
     );
   }
 
+  // Tasks is a tightly-coupled single view: the list and board modes share
+  // drag-reorder state, keyboard navigation, and selection state that all
+  // require a single React component context. Splitting into multiple panels
+  // would fracture that coupling without any meaningful gain. A single panel
+  // wraps the whole list/board body so the module participates in the tiling
+  // framework consistently while leaving all existing behavior intact.
+  _tasksPanels(groups: Record<TaskStatus, MorosTask[]>, visibleCount: number): PanelDef[] {
+    return [
+      {
+        id: 'tasks',
+        title: localized('Tasks'),
+        content: (
+          <div className="moros-scroll-region">
+            {visibleCount > 0 ? (
+              this.state.viewMode === 'board' ? (
+                <div className="moros-board">
+                  {STATUS_ORDER.map((status) => this._renderBoardColumn(status, groups[status]))}
+                </div>
+              ) : (
+                STATUS_ORDER.map((status) => this._renderGroup(status, groups[status]))
+              )
+            ) : (
+              <div className="moros-empty">
+                {this.state.tasks.length > 0
+                  ? localized('No tasks match your search.')
+                  : localized('No tasks yet — add your first one above.')}
+              </div>
+            )}
+          </div>
+        ),
+      },
+    ];
+  }
+
   render() {
     const groups = TasksStore.tasksByStatus(this.state.searchQuery, this.state.labelFilter);
     const visibleCount = STATUS_ORDER.reduce((sum, status) => sum + groups[status].length, 0);
@@ -499,23 +534,7 @@ export default class TasksRoot extends React.Component<Record<string, unknown>, 
             </div>
           </div>
         )}
-        <div className="moros-scroll-region">
-          {visibleCount > 0 ? (
-            this.state.viewMode === 'board' ? (
-              <div className="moros-board">
-                {STATUS_ORDER.map((status) => this._renderBoardColumn(status, groups[status]))}
-              </div>
-            ) : (
-              STATUS_ORDER.map((status) => this._renderGroup(status, groups[status]))
-            )
-          ) : (
-            <div className="moros-empty">
-              {this.state.tasks.length > 0
-                ? localized('No tasks match your search.')
-                : localized('No tasks yet — add your first one above.')}
-            </div>
-          )}
-        </div>
+        <PanelGrid moduleId="tasks" panels={this._tasksPanels(groups, visibleCount)} />
       </div>
     );
   }

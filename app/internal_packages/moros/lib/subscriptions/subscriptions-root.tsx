@@ -16,6 +16,7 @@ import AiSettingsPanel from '../ai/ai-settings-panel';
 import AiSettingsStore from '../ai/ai-settings';
 import { providerById } from '../ai/ai-providers';
 import { todayISO } from '../moros-data-store';
+import PanelGrid, { PanelDef } from '../panels/panel-grid';
 
 interface SubscriptionsRootState {
   subscriptions: ReadonlyArray<MorosSubscription>;
@@ -338,6 +339,36 @@ export default class SubscriptionsRoot extends React.Component<
     );
   }
 
+  // Wrap the existing Subscriptions sub-views as tiling panels. The header,
+  // add-entry toolbar, AI settings, and suggestions stay as fixed chrome above
+  // the grid; the grid owns the summary cards and the subscription list.
+  _subscriptionsPanels(sorted: MorosSubscription[]): PanelDef[] {
+    return [
+      {
+        id: 'overview',
+        title: localized('Overview'),
+        content: this._renderStatCards(),
+      },
+      {
+        id: 'list',
+        title: localized('Subscriptions'),
+        content: (
+          <div className="moros-scroll-region">
+            {sorted.length > 0 ? (
+              sorted.map((sub) => this._renderSubscription(sub))
+            ) : (
+              <div className="moros-empty">
+                {localized(
+                  'No subscriptions yet — add one above, or scan your inbox for receipts.'
+                )}
+              </div>
+            )}
+          </div>
+        ),
+      },
+    ];
+  }
+
   render() {
     const sorted = [...this.state.subscriptions].sort((a, b) => {
       if ((a.status === 'canceled') !== (b.status === 'canceled')) {
@@ -355,7 +386,6 @@ export default class SubscriptionsRoot extends React.Component<
             )}
           </div>
         </div>
-        {this._renderStatCards()}
         <div className="moros-toolbar-row">
           <input
             type="text"
@@ -408,15 +438,7 @@ export default class SubscriptionsRoot extends React.Component<
         </div>
         {this._renderAiSettings()}
         {this._renderSuggestions()}
-        <div className="moros-scroll-region">
-          {sorted.length > 0 ? (
-            sorted.map((sub) => this._renderSubscription(sub))
-          ) : (
-            <div className="moros-empty">
-              {localized('No subscriptions yet — add one above, or scan your inbox for receipts.')}
-            </div>
-          )}
-        </div>
+        <PanelGrid moduleId="subscriptions" panels={this._subscriptionsPanels(sorted)} />
       </div>
     );
   }

@@ -3,6 +3,7 @@ import fs from 'fs';
 import { clipboard } from 'electron';
 import { localized } from 'moros-exports';
 import KeyNestStore, { KeyNestEntry, KeyNestEntryKind, expiryState } from './keynest-store';
+import PanelGrid, { PanelDef } from '../panels/panel-grid';
 import {
   GeneratorOptions,
   DEFAULT_GENERATOR_OPTIONS,
@@ -665,6 +666,36 @@ export default class KeyNestRoot extends React.Component<
     );
   }
 
+  // Wrap the existing KeyNest sub-views as tiling panels. The header, search
+  // toolbar, health/import rows, and add-entry toolbar stay as fixed chrome
+  // above the grid; the grid owns the health overview and the entries list.
+  _keynestPanels(visible: KeyNestEntry[]): PanelDef[] {
+    return [
+      {
+        id: 'health',
+        title: localized('Password Health'),
+        content: this._renderHealth(),
+      },
+      {
+        id: 'entries',
+        title: localized('Entries'),
+        content: (
+          <div className="moros-scroll-region">
+            {visible.length > 0 ? (
+              visible.map((entry) => this._renderEntry(entry))
+            ) : (
+              <div className="moros-empty">
+                {this.state.entries.length > 0
+                  ? localized('No entries match your search.')
+                  : localized('No entries yet — store an API key or password above.')}
+              </div>
+            )}
+          </div>
+        ),
+      },
+    ];
+  }
+
   render() {
     const visible = this._filteredEntries();
     return (
@@ -687,7 +718,6 @@ export default class KeyNestRoot extends React.Component<
           />
           {this._renderKindFilter()}
         </div>
-        {this._renderHealth()}
         {this._renderImport()}
         <div className="moros-toolbar-row">
           <select
@@ -739,17 +769,7 @@ export default class KeyNestRoot extends React.Component<
           </button>
         </div>
         {this.state.draftKind === 'password' && this._renderGenerator()}
-        <div className="moros-scroll-region">
-          {visible.length > 0 ? (
-            visible.map((entry) => this._renderEntry(entry))
-          ) : (
-            <div className="moros-empty">
-              {this.state.entries.length > 0
-                ? localized('No entries match your search.')
-                : localized('No entries yet — store an API key or password above.')}
-            </div>
-          )}
-        </div>
+        <PanelGrid moduleId="keynest" panels={this._keynestPanels(visible)} />
       </div>
     );
   }
