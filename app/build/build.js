@@ -539,40 +539,60 @@ async function notarizeMacDmg() {
   // -------------------------------------------------------------------------
   const profileName = `moros-notarytool-${Date.now()}`;
 
-  console.log('---> Storing notarytool credentials in temporary keychain profile');
-  await spawn({
-    cmd: 'xcrun',
-    args: [
-      'notarytool',
-      'store-credentials',
-      profileName,
-      '--apple-id', APPLE_ID,
-      '--password', APPLE_ID_PASSWORD,
-      '--team-id', APPLE_TEAM_ID,
-    ],
-  });
+  try {
+    console.log('---> Storing notarytool credentials in temporary keychain profile');
+    await spawn({
+      cmd: 'xcrun',
+      args: [
+        'notarytool',
+        'store-credentials',
+        profileName,
+        '--apple-id', APPLE_ID,
+        '--password', APPLE_ID_PASSWORD,
+        '--team-id', APPLE_TEAM_ID,
+      ],
+    });
 
-  // Submit the dmg and block until Apple returns a verdict. `--wait` makes the
-  // command exit non-zero if notarization is rejected, which (intentionally)
-  // surfaces as a build failure since the credentials WERE provided. The
-  // password is no longer in argv here — only the opaque profile name is.
-  console.log(`---> Submitting ${dmgPath} for notarization`);
-  await spawn({
-    cmd: 'xcrun',
-    args: [
-      'notarytool',
-      'submit',
-      dmgPath,
-      '--keychain-profile', profileName,
-      '--wait',
-    ],
-  });
+    // Submit the dmg and block until Apple returns a verdict. `--wait` makes the
+    // command exit non-zero if notarization is rejected, which (intentionally)
+    // surfaces as a build failure since the credentials WERE provided. The
+    // password is no longer in argv here — only the opaque profile name is.
+    console.log(`---> Submitting ${dmgPath} for notarization`);
+    await spawn({
+      cmd: 'xcrun',
+      args: [
+        'notarytool',
+        'submit',
+        dmgPath,
+        '--keychain-profile', profileName,
+        '--wait',
+      ],
+    });
 
-  // Staple the notarization ticket into the dmg so Gatekeeper can verify it
-  // without a network round-trip.
-  console.log(`---> Stapling notarization ticket to ${dmgPath}`);
-  await spawn({ cmd: 'xcrun', args: ['stapler', 'staple', dmgPath] });
-  console.log(`>> Notarized and stapled ${dmgPath}`);
+    // Staple the notarization ticket into the dmg so Gatekeeper can verify it
+    // without a network round-trip.
+    console.log(`---> Stapling notarization ticket to ${dmgPath}`);
+    await spawn({ cmd: 'xcrun', args: ['stapler', 'staple', dmgPath] });
+    console.log(`>> Notarized and stapled ${dmgPath}`);
+  } finally {
+    // Review follow-up: delete the temporary notarytool keychain profile so the
+    // app-specific Apple password isn't left stored in the login keychain after
+    // the build — on success OR failure. `notarytool store-credentials` saves
+    // under this service name; deletion is best-effort and must not mask a real
+    // notarization error.
+    try {
+      await spawn({
+        cmd: 'security',
+        args: [
+          'delete-generic-password',
+          '-s', 'com.apple.gke.notary.tool.saved-creds',
+          '-a', profileName,
+        ],
+      });
+    } catch (cleanupErr) {
+      console.log(`---> Note: could not remove temporary notarytool profile ${profileName}`);
+    }
+  }
 }
 
 function writeFromTemplate(filePath, data) {
