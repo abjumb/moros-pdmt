@@ -485,6 +485,76 @@ async function createMacDmg() {
   console.log(`>> Created ${dmgPath}`);
 }
 
+// Notarizes and staples the .dmg ITSELF. The Moros.app *inside* the image is
+// already notarized by electron-packager's `osxNotarize` step (see
+// buildPackagerOptions above), but the disk image as a downloadable artifact is
+// a separate distributable: notarizing + stapling it lets Gatekeeper validate
+// the .dmg fully offline, so users who download it directly don't see the
+// "cannot verify the developer" prompt.
+//
+// REQUIRES YOUR SECRETS / NEEDS REAL RELEASE TESTING:
+//   This shells out to Apple's `notarytool` and `stapler` (Xcode command-line
+//   tools) using the SAME Apple credentials the `osxNotarize` block above uses:
+//     - APPLE_ID            (Apple developer account email)
+//     - APPLE_ID_PASSWORD   (app-specific password for that Apple ID)
+//     - APPLE_TEAM_ID       (Apple Developer Team ID)
+//   It can only be exercised on a macOS build machine that has these set and
+//   valid (i.e. CI with the release secrets, or a developer Mac). It is NOT
+//   runnable/testable in regular CI or on Linux/Windows.
+//
+// GATING: if any of those env vars are missing (local/dev builds, non-mac, or
+// CI without the Apple secrets) we skip cleanly with a log line and NEVER fail
+// the build — exactly like the existing osxNotarize block, which is itself
+// gated on APPLE_ID being present.
+async function notarizeMacDmg() {
+  // Only meaningful on macOS — `xcrun notarytool`/`stapler` don't exist
+  // elsewhere. On any other platform this is a no-op.
+  if (platform !== 'darwin') {
+    return;
+  }
+
+  const { APPLE_ID, APPLE_ID_PASSWORD, APPLE_TEAM_ID } = process.env;
+  if (!APPLE_ID || !APPLE_ID_PASSWORD || !APPLE_TEAM_ID) {
+    console.log(
+      '---> Skipping .dmg notarization (set APPLE_ID, APPLE_ID_PASSWORD, APPLE_TEAM_ID to enable)'
+    );
+    return;
+  }
+
+  const arch = process.env.OVERRIDE_TO_INTEL ? 'x64' : process.arch;
+  const dmgPath = path.join(outputDir, `Moros-${packageJSON.version}-${arch}.dmg`);
+  if (!fs.existsSync(dmgPath)) {
+    console.log(`---> Skipping .dmg notarization (no dmg found at ${dmgPath})`);
+    return;
+  }
+
+  // Submit the dmg and block until Apple returns a verdict. `--wait` makes the
+  // command exit non-zero if notarization is rejected, which (intentionally)
+  // surfaces as a build failure since the credentials WERE provided.
+  console.log(`---> Submitting ${dmgPath} for notarization`);
+  await spawn({
+    cmd: 'xcrun',
+    args: [
+      'notarytool',
+      'submit',
+      dmgPath,
+      '--apple-id',
+      APPLE_ID,
+      '--password',
+      APPLE_ID_PASSWORD,
+      '--team-id',
+      APPLE_TEAM_ID,
+      '--wait',
+    ],
+  });
+
+  // Staple the notarization ticket into the dmg so Gatekeeper can verify it
+  // without a network round-trip.
+  console.log(`---> Stapling notarization ticket to ${dmgPath}`);
+  await spawn({ cmd: 'xcrun', args: ['stapler', 'staple', dmgPath] });
+  console.log(`>> Notarized and stapled ${dmgPath}`);
+}
+
 function writeFromTemplate(filePath, data) {
   const template = _.template(String(fs.readFileSync(filePath)));
   const finishedPath = path.join(outputDir, path.basename(filePath).replace('.in', ''));
@@ -577,6 +647,8 @@ async function main() {
     // native installer.
     await createMacZip();
     await createMacDmg();
+    // Notarize + staple the .dmg itself (no-op without Apple credentials).
+    await notarizeMacDmg();
   } else if (platform === 'linux') {
     await createDebInstaller();
     await createRpmInstaller();

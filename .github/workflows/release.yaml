@@ -1,0 +1,320 @@
+name: Release
+
+# Publishes a GitHub Release with the per-platform installers attached whenever
+# a version tag is pushed. Moros versions are bare semver with NO leading "v"
+# (see app/package.json -> 1.21.1 and CHANGELOG.md headers like "## 1.21.1"),
+# so the tag filter matches "1.*" rather than "v*".
+#
+# ---------------------------------------------------------------------------
+# THIS WORKFLOW IS HELD / NEEDS REAL RELEASE TESTING.
+# It depends on signing & notarization credentials and cannot be exercised in
+# normal CI. Before it can run green the following repository secrets / vars
+# must be configured (same names the existing build-*.yaml workflows use):
+#
+#   macOS signing + notarization:
+#     secrets.APPLE_CODESIGN_P12              base64 of the signing .p12
+#     secrets.APPLE_CODESIGN_KEY_PASSWORD     password for that .p12
+#     secrets.APPLE_PROVISIONING_PROFILE_B64  base64 of the .provisionprofile
+#     secrets.APPLE_ID                        Apple developer account email
+#     secrets.APPLE_ID_PASSWORD               app-specific password for APPLE_ID
+#     secrets.APPLE_ID_ASC_PROVIDER           App Store Connect provider (optional)
+#     secrets.APPLE_TEAM_ID                   Apple Developer Team ID
+#   Windows signing (Azure Trusted Signing):
+#     secrets.AZURE_TENANT_ID
+#     secrets.AZURE_CLIENT_ID
+#     secrets.AZURE_CLIENT_SECRET
+#     secrets.AZURE_TRUSTED_SIGNING_ENDPOINT
+#     vars.AZURE_TRUSTED_SIGNING_ACCOUNT_NAME
+#     vars.AZURE_TRUSTED_SIGNING_CERT_PROFILE_NAME
+#   Sentry source maps (optional, macOS build only):
+#     secrets.SENTRY_AUTH_TOKEN
+#     secrets.SENTRY_ORG
+#     secrets.SENTRY_PROJECT
+#
+# NOTE: this workflow does NOT sync to S3 — that remains the job of the
+# existing build-*.yaml workflows. Here the artifacts are only collected and
+# attached to the GitHub Release. The build steps replicate the minimal build
+# invocation of each build-*.yaml (those workflows are workflow_dispatch-only
+# and carry "fail if not master" guards, so they can't be reused via
+# workflow_call from a tag ref).
+# ---------------------------------------------------------------------------
+
+on:
+  push:
+    tags:
+      - '1.*'
+
+# Least privilege: only the permission needed to create the release and upload
+# assets. Everything else stays read-only.
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            arch: arm64
+          - os: macos-15-intel
+            arch: x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Cache NodeJS modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./node_modules
+            ./app/node_modules
+          key: ${{ matrix.os }}-${{ runner.arch }}-deps-${{ hashFiles('yarn.lock') }}-${{ hashFiles('app/package-lock.json') }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Setup Codesigning
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CODESIGN_P12 }}
+          p12-password: ${{ secrets.APPLE_CODESIGN_KEY_PASSWORD }}
+
+      - name: Setup Provisioning Profile
+        run: |
+          echo "APPLE_PROVISIONING_PROFILE_PATH=${{ runner.temp }}/Moros.provisionprofile" >> $GITHUB_ENV
+          echo $APPLE_PROVISIONING_PROFILE_B64 | base64 --decode > "${{ runner.temp }}/Moros.provisionprofile"
+        env:
+          APPLE_PROVISIONING_PROFILE_B64: ${{ secrets.APPLE_PROVISIONING_PROFILE_B64 }}
+
+      - name: Lint
+        run: npm run lint:check
+
+      # Builds, signs and notarizes Moros.app, then builds + notarizes + staples
+      # the .dmg (build.js -> notarizeMacDmg()). APPLE_ID gates both the .app
+      # notarization (osxNotarize) and the new .dmg notarization step.
+      - name: Build
+        run: SIGN_BUILD=true DEBUG=electron-packager,electron-osx-sign,electron-notarize* npm run build
+        env:
+          APPLE_ID_ASC_PROVIDER: ${{ secrets.APPLE_ID_ASC_PROVIDER }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_PROVISIONING_PROFILE_PATH: ${{ env.APPLE_PROVISIONING_PROFILE_PATH }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+      - name: Rename artifacts
+        if: matrix.os == 'macos-latest'
+        run: |
+          mv app/dist/Moros.zip app/dist/Moros-AppleSilicon.zip
+
+      # Mirror the build-macos.yaml naming so the Release assets are arch-labelled
+      # rather than carrying the raw versioned filename on Intel.
+      - name: Rename DMG installer
+        run: |
+          if [ "${{ matrix.arch }}" = "arm64" ]; then label=AppleSilicon; else label=Intel; fi
+          mv app/dist/Moros-*.dmg "app/dist/Moros-$label.dmg"
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos-${{ matrix.arch }}
+          path: |
+            app/dist/*.dmg
+            app/dist/Moros-AppleSilicon.zip
+          retention-days: 1
+          if-no-files-found: ignore
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system deps
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            software-properties-common \
+            autoconf automake build-essential clang cmake execstack fakeroot git \
+            libc-ares-dev libctemplate-dev libcurl4-openssl-dev libglib2.0-dev \
+            libicu-dev libsasl2-dev libsasl2-modules libsasl2-modules-gssapi-mit \
+            libsecret-1-dev libssl-dev libnss3 libnss3-dev libtidy-dev libtool \
+            libxext-dev libxkbfile-dev libxml2-dev libxtst-dev pkg-config rpm \
+            uuid-dev xvfb
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint:check
+
+      - name: Build
+        run: DEBUG=electron-packager npm run build
+
+      - name: Upload Linux x64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-x64
+          path: |
+            app/dist/*.deb
+            app/dist/*.rpm
+          retention-days: 1
+
+  build-linux-arm64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system deps
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            software-properties-common \
+            autoconf automake build-essential clang cmake fakeroot git \
+            libc-ares-dev libctemplate-dev libcurl4-openssl-dev libglib2.0-dev \
+            libicu-dev libsasl2-dev libsasl2-modules libsasl2-modules-gssapi-mit \
+            libsecret-1-dev libssl-dev libnss3 libnss3-dev libtidy-dev libtool \
+            libxext-dev libxkbfile-dev libxml2-dev libxtst-dev pkg-config rpm \
+            uuid-dev xvfb
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint:check
+
+      - name: Build
+        run: DEBUG=electron-packager npm run build
+
+      - name: Upload Linux arm64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-arm64
+          path: |
+            app/dist/*.deb
+            app/dist/*.rpm
+          retention-days: 1
+
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Cache NodeJS modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./node_modules
+            ./app/node_modules
+          key: windows-2022-deps-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/package-lock.json') }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint:check
+
+      - name: Build
+        run: npm run build
+        env:
+          DEBUG: electron-packager
+
+      - name: Sign Application Files with Azure Trusted Signing
+        uses: azure/trusted-signing-action@v0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+          trusted-signing-account-name: ${{ vars.AZURE_TRUSTED_SIGNING_ACCOUNT_NAME }}
+          certificate-profile-name: ${{ vars.AZURE_TRUSTED_SIGNING_CERT_PROFILE_NAME }}
+          files-folder: ${{ github.workspace }}\app\dist\moros-win32-x64
+          files-folder-filter: exe,dll,node
+          files-folder-recurse: true
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
+      - name: Create Windows Installer
+        run: node app/build/create-signed-windows-installer.js
+
+      - name: Sign Windows Installer with Azure Trusted Signing
+        uses: azure/trusted-signing-action@v0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+          trusted-signing-account-name: ${{ vars.AZURE_TRUSTED_SIGNING_ACCOUNT_NAME }}
+          certificate-profile-name: ${{ vars.AZURE_TRUSTED_SIGNING_CERT_PROFILE_NAME }}
+          files-folder: ${{ github.workspace }}\app\dist
+          files-folder-filter: exe
+          files-folder-recurse: false
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows-x64
+          path: app/dist/MorosSetup.exe
+          retention-days: 1
+
+  release:
+    needs: [build-macos, build-linux, build-linux-arm64, build-windows]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download all release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          # All build jobs name their artifacts "release-*"; flatten them into a
+          # single directory so every installer lands next to each other.
+          pattern: release-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: List collected assets
+        run: ls -lR release-assets
+
+      # softprops/action-gh-release pinned to a release tag. With contents:write
+      # it creates (or updates) the GitHub Release for the pushed tag and uploads
+      # every collected installer as a release asset.
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # github.ref_name is the bare tag (e.g. "1.21.1") since this triggers
+          # on tag push.
+          name: Moros ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          draft: true
+          files: release-assets/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
