@@ -20,6 +20,7 @@ import FinanceRoot from './finance/finance-root';
 import KeyNestRoot from './keynest/keynest-root';
 import SubscriptionsRoot from './subscriptions/subscriptions-root';
 import BriefingRoot from './briefing/briefing-root';
+import CommandPaletteController from './command-palette';
 
 const MODULES = [
   {
@@ -107,6 +108,10 @@ export function activate() {
 
   ComponentRegistry.register(CreateTaskButton, { role: 'ThreadActionsToolbarButton' });
 
+  // Command palette (Cmd/Ctrl-K). Registers the toggle command + overlay; the
+  // keystroke is bound in keymaps/command-palette.json.
+  CommandPaletteController.register();
+
   // Restore the previously focused module after a relaunch (the saved
   // perspective can't be deserialized by the core mailbox code).
   const savedType =
@@ -118,6 +123,7 @@ export function activate() {
 }
 
 export function deactivate() {
+  CommandPaletteController.unregister();
   ComponentRegistry.unregister(CreateTaskButton);
   for (const module of MODULES) {
     ComponentRegistry.unregister(module.component);

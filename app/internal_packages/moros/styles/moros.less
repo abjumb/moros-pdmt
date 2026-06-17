@@ -1062,3 +1062,111 @@
     }
   }
 }
+
+// --------------------------------------------------------- Command palette
+// Linear-style Cmd/Ctrl-K palette: a centered, dense, dark overlay with
+// hairline borders and an indigo (@accent-primary, #5E6AD2) selection accent.
+// Colors are pulled from theme variables so the palette stays coherent with
+// whatever theme is active.
+
+.moros-cmdk-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  background: fade(@black, 45%);
+}
+
+.moros-cmdk {
+  width: 560px;
+  max-width: 90vw;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: @background-secondary;
+  border: 1px solid @border-color-divider;
+  border-radius: @border-radius-base * 2;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  font-family: @font-family;
+}
+
+.moros-cmdk-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.moros-cmdk-input-row {
+  display: block;
+  margin: 0;
+  border-bottom: 1px solid @border-color-divider;
+}
+
+.moros-cmdk-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: @spacing-standard @spacing-double;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: @text-color-heading;
+  font-size: @font-size-base * 1.15;
+  font-family: @font-family;
+
+  &::placeholder {
+    color: @text-color-very-subtle;
+  }
+}
+
+.moros-cmdk-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: @spacing-half 0;
+}
+
+.moros-cmdk-section {
+  padding: @spacing-half @spacing-double @spacing-quarter;
+  font-size: @font-size-smaller;
+  font-weight: @font-weight-semi-bold;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: @text-color-very-subtle;
+}
+
+.moros-cmdk-option {
+  display: flex;
+  align-items: center;
+  padding: @spacing-half @spacing-double;
+  cursor: pointer;
+  color: @text-color;
+  font-size: @font-size-base;
+
+  &.is-selected {
+    background: fade(@accent-primary, 18%);
+    color: @text-color-heading;
+    box-shadow: inset 2px 0 0 @accent-primary;
+  }
+
+  .moros-cmdk-option-title {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.moros-cmdk-empty {
+  padding: @spacing-standard @spacing-double;
+  color: @text-color-very-subtle;
+  font-size: @font-size-base;
+}
