@@ -1265,3 +1265,191 @@
   color: @text-color-very-subtle;
   font-size: @font-size-base;
 }
+
+// ------------------------------------------------------- Tiling panel grid
+// Reusable framework (Phase 2.5 "tiling panels"): a module view is composed of
+// panels the user can drag-reorder, resize, and hide/restore. Linear-style
+// chrome — hairline dividers, quiet drag/resize affordances, indigo accent.
+// The grid flows horizontally as flexible columns sharing space by `flex-grow`.
+
+.moros-panel-grid-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.moros-panel-hidden-menu {
+  position: relative;
+  align-self: flex-end;
+  margin: @spacing-half @spacing-double 0;
+
+  .moros-panel-hidden-toggle {
+    font-size: @font-size-smaller;
+  }
+
+  .moros-panel-hidden-list {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 2;
+    margin-top: 2px;
+    min-width: 180px;
+    padding: @spacing-quarter;
+    background: @background-primary;
+    border: 1px solid @border-color-divider;
+    border-radius: @border-radius-large;
+    box-shadow: 0 6px 20px fade(#000, 22%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .moros-panel-hidden-item {
+    text-align: left;
+    padding: @spacing-half @spacing-three-quarters;
+    border: none;
+    background: none;
+    color: @text-color;
+    border-radius: @border-radius-base;
+    cursor: pointer;
+    font-size: @font-size-small;
+
+    &:hover {
+      background: @list-hover-bg;
+    }
+  }
+}
+
+.moros-panel-grid {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: @spacing-standard;
+  padding: @spacing-standard @spacing-double;
+  overflow: auto;
+}
+
+.moros-panel {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: @background-secondary;
+  border: 1px solid @border-color-divider;
+  border-radius: @border-radius-large;
+  overflow: hidden;
+
+  // Drag-to-reorder feedback (mirrors the Tasks list).
+  &.is-dragging {
+    opacity: 0.4;
+  }
+
+  // Drop indicator: a 2px accent line on the leading/trailing edge of the
+  // panel the dragged panel would land next to.
+  &.drop-before::before,
+  &.drop-after::after {
+    content: '';
+    position: absolute;
+    top: @spacing-half;
+    bottom: @spacing-half;
+    width: 2px;
+    background: @accent-primary;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &.drop-before::before {
+    left: -1px;
+  }
+
+  &.drop-after::after {
+    right: -1px;
+  }
+
+  .moros-panel-header {
+    display: flex;
+    align-items: center;
+    gap: @spacing-half;
+    padding: @spacing-half @spacing-three-quarters;
+    border-bottom: 1px solid @border-color-divider;
+    background: @background-primary;
+    cursor: grab;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .moros-panel-grip {
+      color: @text-color-very-subtle;
+      font-size: @font-size-small;
+      line-height: 1;
+    }
+
+    .moros-panel-title {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: @font-size-smaller;
+      font-weight: @font-weight-semi-bold;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: @text-color-subtle;
+    }
+
+    .moros-panel-hide {
+      border: none;
+      background: none;
+      color: @text-color-very-subtle;
+      cursor: pointer;
+      font-size: @font-size-large;
+      line-height: 1;
+      opacity: 0;
+
+      &:hover {
+        color: @text-color;
+      }
+    }
+
+    &:hover .moros-panel-hide {
+      opacity: 1;
+    }
+  }
+
+  .moros-panel-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  // Right-edge resize affordance: a thin hairline that thickens to the accent
+  // on hover, signalling it can be dragged to change the panel's share.
+  .moros-panel-resize {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    touch-action: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 100%;
+      background: transparent;
+    }
+
+    &:hover::after {
+      width: 2px;
+      background: @accent-primary;
+    }
+  }
+}

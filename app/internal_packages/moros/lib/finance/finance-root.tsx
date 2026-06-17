@@ -18,6 +18,7 @@ import FinanceStore, {
 import BudgetsStore from './finance-budgets-store';
 import MorosSettingsStore, { CURRENCIES } from '../moros-settings-store';
 import NetWorthView from './net-worth-view';
+import PanelGrid, { PanelDef } from '../panels/panel-grid';
 
 interface FinanceRootState {
   transactions: ReadonlyArray<MorosTransaction>;
@@ -312,9 +313,37 @@ export default class FinanceRoot extends React.Component<
     );
   }
 
+  // Wrap the existing Finance sub-views as tiling panels. Each panel's content
+  // is one of the existing `_render*` methods (or NetWorthView) unchanged — the
+  // PanelGrid only owns arrangement, so Finance's behavior is untouched.
+  _financePanels(month: string): PanelDef[] {
+    const transactions = FinanceStore.sortedByDate(this.state.viewMonth);
+    return [
+      { id: 'networth', title: localized('Net worth'), content: <NetWorthView /> },
+      { id: 'summary', title: localized('Summary'), content: this._renderSummary() },
+      { id: 'budgets', title: localized('Budgets'), content: this._renderBudgets(month) },
+      {
+        id: 'transactions',
+        title: localized('Transactions'),
+        content: (
+          <div className="moros-scroll-region">
+            {transactions.length > 0 ? (
+              transactions.map((t) => this._renderTransaction(t))
+            ) : (
+              <div className="moros-empty">
+                {this.state.viewMonth && this.state.transactions.length > 0
+                  ? localized('No transactions in this month.')
+                  : localized('No transactions yet — record income or spending above.')}
+              </div>
+            )}
+          </div>
+        ),
+      },
+    ];
+  }
+
   render() {
     const month = this.state.viewMonth || currentMonthPrefix();
-    const transactions = FinanceStore.sortedByDate(this.state.viewMonth);
 
     return (
       <div className="moros-root moros-finance">
@@ -336,9 +365,6 @@ export default class FinanceRoot extends React.Component<
             ))}
           </select>
         </div>
-        <NetWorthView />
-        {this._renderSummary()}
-        {this._renderBudgets(month)}
         <div className="moros-toolbar-row">
           <input
             type="text"
@@ -395,17 +421,7 @@ export default class FinanceRoot extends React.Component<
         {this.state.importNotice ? (
           <div className="moros-import-notice">{this.state.importNotice}</div>
         ) : null}
-        <div className="moros-scroll-region">
-          {transactions.length > 0 ? (
-            transactions.map((t) => this._renderTransaction(t))
-          ) : (
-            <div className="moros-empty">
-              {this.state.viewMonth && this.state.transactions.length > 0
-                ? localized('No transactions in this month.')
-                : localized('No transactions yet — record income or spending above.')}
-            </div>
-          )}
-        </div>
+        <PanelGrid moduleId="finance" panels={this._financePanels(month)} />
       </div>
     );
   }
