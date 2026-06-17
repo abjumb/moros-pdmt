@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import MorosStore from 'moros-store';
+import MorosFileWatch from './moros-file-watch';
 
 export interface MorosRecord {
   id: string;
@@ -38,11 +39,50 @@ export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
   _filename: string;
   _items: T[];
   _saveTimer: ReturnType<typeof setTimeout> | null = null;
+  // Cross-window live sync: watches our JSON file and reloads when another
+  // window writes it. See `_startWatching` for why this is off under specs.
+  _watch: MorosFileWatch;
 
   constructor(filename: string) {
     super();
     this._filename = filename;
     this._items = this._load();
+    this._watch = new MorosFileWatch(this._filePath(), (content) =>
+      this._onExternalChange(content)
+    );
+    this._startWatching();
+  }
+
+  /**
+   * Start file-watching for cross-window sync. Disabled under specs: spec
+   * windows reuse the same on-disk config and a real `fs.watch` would fire
+   * unpredictably across tests (and could hang the suite), so the watcher must
+   * be inert there. The single-window app is otherwise unaffected — with one
+   * window open, nothing else writes the file, so the watcher never fires.
+   */
+  _startWatching() {
+    const enabled = !(typeof AppEnv !== 'undefined' && AppEnv.inSpecMode && AppEnv.inSpecMode());
+    this._watch.start(enabled);
+  }
+
+  /** Another window changed our file: adopt its contents and notify listeners. */
+  _onExternalChange(content: string) {
+    try {
+      const parsed = JSON.parse(content);
+      this._items = Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+      return; // Corrupt/partial read; keep current state and wait for the next event.
+    }
+    this.trigger();
+  }
+
+  /** Stop watching and cancel pending saves. Call on package deactivate. */
+  dispose() {
+    if (this._saveTimer) {
+      clearTimeout(this._saveTimer);
+      this._saveTimer = null;
+    }
+    this._watch.stop();
   }
 
   items(): ReadonlyArray<T> {
@@ -110,10 +150,17 @@ export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
     this._saveTimer = null;
     const filePath = this._filePath();
     const tempPath = `${filePath}.tmp`;
+    const content = JSON.stringify(this._items, null, 2);
     try {
       fs.mkdirSync(path.dirname(filePath), { recursive: true });
-      fs.writeFileSync(tempPath, JSON.stringify(this._items, null, 2), 'utf8');
+      // Record what we're about to write *before* writing, so the file-watch
+      // event our own save triggers is recognized as a self-write and ignored.
+      this._watch.noteWrite(content);
+      fs.writeFileSync(tempPath, content, 'utf8');
       fs.renameSync(tempPath, filePath);
+      // The file may not have existed when we first tried to watch it; now that
+      // it does, ensure the watcher is armed. Re-arms only if not already watching.
+      this._startWatching();
     } catch (err) {
       AppEnv.reportError(err);
     }

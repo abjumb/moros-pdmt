@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import MorosStore from 'moros-store';
 import { morosDataDirPath } from './moros-data-store';
+import MorosFileWatch from './moros-file-watch';
 
 const SETTINGS_FILENAME = 'settings.json';
 
@@ -15,10 +16,31 @@ interface MorosSettings {
 class MorosSettingsStore extends MorosStore {
   _settings: MorosSettings;
   _saveTimer: ReturnType<typeof setTimeout> | null = null;
+  // Cross-window live sync, mirroring MorosDataStore (see moros-file-watch.ts).
+  _watch: MorosFileWatch;
 
   constructor() {
     super();
     this._settings = this._load();
+    this._watch = new MorosFileWatch(this._filePath(), (content) =>
+      this._onExternalChange(content)
+    );
+    this._startWatching();
+  }
+
+  _startWatching() {
+    const enabled = !(typeof AppEnv !== 'undefined' && AppEnv.inSpecMode && AppEnv.inSpecMode());
+    this._watch.start(enabled);
+  }
+
+  _onExternalChange(content: string) {
+    try {
+      const parsed = JSON.parse(content);
+      this._settings = parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (err) {
+      return;
+    }
+    this.trigger();
   }
 
   currency(): string {
@@ -50,10 +72,14 @@ class MorosSettingsStore extends MorosStore {
       this._saveTimer = null;
       const filePath = this._filePath();
       const tempPath = `${filePath}.tmp`;
+      const content = JSON.stringify(this._settings, null, 2);
       try {
         fs.mkdirSync(path.dirname(filePath), { recursive: true });
-        fs.writeFileSync(tempPath, JSON.stringify(this._settings, null, 2), 'utf8');
+        // Mark the self-write before writing so its echo is ignored (see watcher).
+        this._watch.noteWrite(content);
+        fs.writeFileSync(tempPath, content, 'utf8');
         fs.renameSync(tempPath, filePath);
+        this._startWatching();
       } catch (err) {
         AppEnv.reportError(err);
       }
