@@ -62,10 +62,11 @@ describe('command palette filterCommands', () => {
     expect(result).toEqual(COMMANDS);
   });
 
-  it('filters by a substring of the title', () => {
+  it('matches a query against both the title and the section name', () => {
+    // 'finance' is in the "Go to Finance" title and in the "Finance" section of
+    // the import command, so both surface — in registry order (nav first).
     const result = filterCommands(COMMANDS, 'finance');
-    expect(result.length).toBe(1);
-    expect(result[0].id).toBe('nav:finance');
+    expect(result.map((c) => c.id)).toEqual(['nav:finance', 'finance:import']);
   });
 
   it('matches by subsequence across the title', () => {
