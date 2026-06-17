@@ -29,6 +29,12 @@ interface TasksRootState {
   labelFilter: string;
   viewMode: ViewMode;
   selectedId: string | null;
+  // Drag-to-reorder transient state (not persisted).
+  draggingId: string | null;
+  // Id of the task the dragged item would land in front of, and whether the
+  // drop indicator sits above (before) or below (after) that task's row.
+  dropTargetId: string | null;
+  dropAfter: boolean;
 }
 
 export default class TasksRoot extends React.Component<Record<string, unknown>, TasksRootState> {
@@ -44,6 +50,9 @@ export default class TasksRoot extends React.Component<Record<string, unknown>, 
     labelFilter: '',
     viewMode: 'list',
     selectedId: null,
+    draggingId: null,
+    dropTargetId: null,
+    dropAfter: false,
   };
 
   componentDidMount() {
@@ -67,6 +76,90 @@ export default class TasksRoot extends React.Component<Record<string, unknown>, 
     const task = TasksStore.create({ title, status: 'todo', priority: 'none' });
     this.setState({ draftTitle: '', selectedId: task.id });
   };
+
+  // ----------------------------------------------------- Drag-to-reorder
+  //
+  // HTML5 drag-and-drop, dependency-free. Reordering is allowed only within
+  // the same status group; a drop onto a different status is ignored. On drop
+  // we hand the group's new id order to the store, which assigns sequential
+  // `order` values and flips the group to manual ordering.
+
+  _onDragStart = (e: React.DragEvent, task: MorosTask) => {
+    e.dataTransfer.effectAllowed = 'move';
+    // Some browsers require data to be set for the drag to initiate.
+    e.dataTransfer.setData('text/plain', task.id);
+    this.setState({ draggingId: task.id, selectedId: task.id });
+  };
+
+  _onDragOverTask = (e: React.DragEvent, task: MorosTask) => {
+    const { draggingId } = this.state;
+    if (!draggingId || draggingId === task.id) return;
+    const dragging = TasksStore.get(draggingId);
+    // Only allow dropping within the same status group.
+    if (!dragging || dragging.status !== task.status) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    // Decide whether the indicator sits above or below the hovered row based
+    // on the cursor position within that row.
+    const rect = e.currentTarget.getBoundingClientRect();
+    const after = e.clientY - rect.top > rect.height / 2;
+    if (this.state.dropTargetId !== task.id || this.state.dropAfter !== after) {
+      this.setState({ dropTargetId: task.id, dropAfter: after });
+    }
+  };
+
+  _onDropTask = (e: React.DragEvent, task: MorosTask) => {
+    const { draggingId } = this.state;
+    if (!draggingId || draggingId === task.id) {
+      this._clearDrag();
+      return;
+    }
+    const dragging = TasksStore.get(draggingId);
+    if (!dragging || dragging.status !== task.status) {
+      this._clearDrag();
+      return;
+    }
+    e.preventDefault();
+    this._commitReorder(task.status, draggingId, task.id, this.state.dropAfter);
+  };
+
+  _clearDrag = () => {
+    this.setState({ draggingId: null, dropTargetId: null, dropAfter: false });
+  };
+
+  // Build the group's new id order by moving `draggingId` next to `targetId`,
+  // then persist it via the store. We order over the FULL (unfiltered) group so
+  // a drag performed while a search/label filter is active still produces a
+  // consistent order across every task in the status, not just visible ones.
+  _commitReorder(status: TaskStatus, draggingId: string, targetId: string, after: boolean) {
+    const groups = TasksStore.tasksByStatus();
+    const ids = groups[status].map((t) => t.id).filter((id) => id !== draggingId);
+    const targetIndex = ids.indexOf(targetId);
+    if (targetIndex < 0) {
+      this._clearDrag();
+      return;
+    }
+    ids.splice(after ? targetIndex + 1 : targetIndex, 0, draggingId);
+    TasksStore.reorderWithinStatus(status, ids);
+    this._clearDrag();
+  }
+
+  _dragProps(task: MorosTask) {
+    return {
+      draggable: true,
+      onDragStart: (e: React.DragEvent) => this._onDragStart(e, task),
+      onDragOver: (e: React.DragEvent) => this._onDragOverTask(e, task),
+      onDrop: (e: React.DragEvent) => this._onDropTask(e, task),
+      onDragEnd: this._clearDrag,
+    };
+  }
+
+  // Extra class names that drive the drag visuals on a row/card.
+  _dragClasses(task: MorosTask) {
+    const dragging = this.state.draggingId === task.id ? ' is-dragging' : '';
+    if (this.state.dropTargetId !== task.id) return dragging;
+    return `${dragging} ${this.state.dropAfter ? 'drop-after' : 'drop-before'}`;
+  }
 
   _addLabel(task: MorosTask, raw: string) {
     const label = raw.trim();
@@ -228,11 +321,12 @@ export default class TasksRoot extends React.Component<Record<string, unknown>, 
     const selected = this.state.selectedId === task.id;
     return (
       <div
-        className={`moros-row ${selected ? 'is-selected' : ''}`}
+        className={`moros-row ${selected ? 'is-selected' : ''}${this._dragClasses(task)}`}
         key={task.id}
         role="option"
         aria-selected={selected}
         onClick={() => this.setState({ selectedId: task.id })}
+        {...this._dragProps(task)}
       >
         <button
           className={`moros-status-ring status-${task.status}`}
@@ -283,11 +377,12 @@ export default class TasksRoot extends React.Component<Record<string, unknown>, 
     const selected = this.state.selectedId === task.id;
     return (
       <div
-        className={`moros-card-task ${selected ? 'is-selected' : ''}`}
+        className={`moros-card-task ${selected ? 'is-selected' : ''}${this._dragClasses(task)}`}
         key={task.id}
         role="option"
         aria-selected={selected}
         onClick={() => this.setState({ selectedId: task.id })}
+        {...this._dragProps(task)}
       >
         <div className="moros-card-task-head">
           <button

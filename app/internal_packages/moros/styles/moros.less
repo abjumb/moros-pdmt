@@ -315,6 +315,7 @@
     padding: 6px @spacing-double;
     border-bottom: 1px solid @border-color-divider;
     font-size: @font-size-small;
+    position: relative;
 
     &:hover {
       background: @list-hover-bg;
@@ -322,6 +323,32 @@
       .moros-row-delete {
         opacity: 1;
       }
+    }
+
+    // Drag-to-reorder feedback.
+    &.is-dragging {
+      opacity: 0.4;
+    }
+
+    // Drop indicator: a 2px accent line on the relevant edge of the row the
+    // dragged task would land next to.
+    &.drop-before::before,
+    &.drop-after::after {
+      content: '';
+      position: absolute;
+      left: @spacing-double;
+      right: @spacing-double;
+      height: 2px;
+      background: @accent-primary;
+      pointer-events: none;
+    }
+
+    &.drop-before::before {
+      top: -1px;
+    }
+
+    &.drop-after::after {
+      bottom: -1px;
     }
 
     &.is-selected {
@@ -986,10 +1013,35 @@
     border-radius: @border-radius-base;
     font-size: @font-size-small;
     cursor: default;
+    position: relative;
 
     &.is-selected {
       border-color: @accent-primary;
       box-shadow: 0 0 0 1px @accent-primary;
+    }
+
+    // Drag-to-reorder feedback (mirrors the list rows).
+    &.is-dragging {
+      opacity: 0.4;
+    }
+
+    &.drop-before::before,
+    &.drop-after::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: @accent-primary;
+      pointer-events: none;
+    }
+
+    &.drop-before::before {
+      top: -3px;
+    }
+
+    &.drop-after::after {
+      bottom: -3px;
     }
 
     .moros-card-task-head {
