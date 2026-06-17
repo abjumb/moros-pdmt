@@ -1072,14 +1072,17 @@ export default class Application extends EventEmitter {
     // single spec runs.
     const watchdogMinutes = parseInt(process.env.MOROS_SPEC_TIMEOUT || '10', 10);
     if (specWindowOptions.exitWhenDone && Number.isFinite(watchdogMinutes) && watchdogMinutes > 0) {
-      const watchdogTimer = setTimeout(() => {
-        console.error(
-          `\n[spec watchdog] Spec suite did not complete within ${watchdogMinutes} minute(s). ` +
-            `This usually means a blocking modal (showMessageBoxSync / dialog.*Sync) or an ` +
-            `unresolved await is hanging the renderer in headless mode. Force-exiting with code 1.\n`
-        );
-        app.exit(1);
-      }, watchdogMinutes * 60 * 1000);
+      const watchdogTimer = setTimeout(
+        () => {
+          console.error(
+            `\n[spec watchdog] Spec suite did not complete within ${watchdogMinutes} minute(s). ` +
+              `This usually means a blocking modal (showMessageBoxSync / dialog.*Sync) or an ` +
+              `unresolved await is hanging the renderer in headless mode. Force-exiting with code 1.\n`
+          );
+          app.exit(1);
+        },
+        watchdogMinutes * 60 * 1000
+      );
 
       // Timers with unref() do not keep the Node event loop alive on their own,
       // so if specs complete and app.quit() is called normally the process will
