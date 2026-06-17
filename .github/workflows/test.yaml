@@ -43,5 +43,12 @@ jobs:
         run: npm run typecheck
 
       - name: Run tests
-        run: dbus-launch --exit-with-session xvfb-run -a npm test
-        timeout-minutes: 20
+        # --no-sandbox: Chromium/Electron needs it on Linux CI runners where the
+        # kernel (userns) sandbox is restricted.
+        # MOROS_SPEC_TIMEOUT drives the in-app spec watchdog (minutes). The suite
+        # now runs in ~2 min, so 10 is generous; timeout-minutes is the backstop
+        # that fires if the watchdog itself is ever bypassed.
+        env:
+          MOROS_SPEC_TIMEOUT: '10'
+        run: dbus-launch --exit-with-session xvfb-run -a npm test -- --no-sandbox
+        timeout-minutes: 12
