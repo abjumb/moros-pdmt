@@ -93,6 +93,24 @@ describe('Moros file-watch self-write detection', () => {
     expect(watch.isSelfWrite('[2]')).toBe(true);
   });
 
+  it('consumeSelfWrite suppresses the matching write exactly once', () => {
+    const watch = makeWatch();
+    watch.noteWrite('[1]');
+    // The echo of our own write is suppressed once...
+    expect(watch.consumeSelfWrite('[1]')).toBe(true);
+    // ...but a later *external* write with the same content is NOT suppressed
+    // (the marker is one-shot), so an X -> Y -> X cross-window update isn't lost.
+    expect(watch.consumeSelfWrite('[1]')).toBe(false);
+  });
+
+  it('consumeSelfWrite does not consume the marker on a non-match', () => {
+    const watch = makeWatch();
+    watch.noteWrite('[1]');
+    expect(watch.consumeSelfWrite('[2]')).toBe(false);
+    // The unrelated check left the marker intact, so our real echo still matches.
+    expect(watch.consumeSelfWrite('[1]')).toBe(true);
+  });
+
   it('start(false) is inert — no watcher and stop() is safe', () => {
     const watch = makeWatch();
     watch.start(false);

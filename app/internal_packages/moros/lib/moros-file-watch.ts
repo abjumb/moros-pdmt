@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 /**
  * Watches a single JSON data file and invokes a callback when it changes on
@@ -49,22 +50,43 @@ export default class MorosFileWatch {
   }
 
   /**
+   * One-shot self-write check used by the watcher: like `isSelfWrite`, but
+   * clears the marker on a match so that a *later* external write with the same
+   * content (e.g. another window reverting to a value we previously wrote) is
+   * NOT mistaken for our own echo and silently dropped.
+   */
+  consumeSelfWrite(content: string): boolean {
+    if (this.isSelfWrite(content)) {
+      this._lastWrittenContent = null;
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Begin watching. Inert when there is no real filesystem watch available —
    * notably under specs, where `fs.watch` would either hang the suite or fire
    * unpredictably. Callers pass `enabled: false` in that case.
    */
   start(enabled: boolean) {
     if (!enabled || this._watcher) return;
+    const dir = path.dirname(this._filePath);
+    const base = path.basename(this._filePath);
     try {
-      // `fs.watch` on the file itself; some platforms emit `rename` (not
-      // `change`) when an atomic temp+rename replaces the file, so we react to
-      // any event and let the content comparison decide.
-      this._watcher = fs.watch(this._filePath, () => this._queueReload());
-      // If the file is replaced via rename, the original watch handle can go
-      // stale on some platforms. Re-arm on error rather than going silent.
+      // Watch the *directory*, not the file. The stores save via an atomic
+      // temp-file + `renameSync`, which swaps the inode out from under a
+      // file-level `fs.watch` handle — it would see the first write and then
+      // silently miss every later one. Watching the directory and filtering on
+      // the basename survives the rename. (`filename` can be null on some
+      // platforms, so fall back to reacting and letting the content check decide.)
+      this._watcher = fs.watch(dir, (_event, filename) => {
+        if (!filename || filename === base) this._queueReload();
+      });
+      // Re-arm on error rather than going silent.
       this._watcher.on('error', () => this._rearm(enabled));
     } catch (err) {
-      // File may not exist yet on first run; nothing to watch until it does.
+      // Directory may not exist yet on first run; nothing to watch until a save
+      // creates it (the stores re-arm after their first successful write).
       this._watcher = null;
     }
   }
@@ -87,7 +109,7 @@ export default class MorosFileWatch {
         // Mid-rename or transiently missing; ignore and wait for the next event.
         return;
       }
-      if (this.isSelfWrite(content)) return;
+      if (this.consumeSelfWrite(content)) return;
       this._onExternalChange(content);
     }, 100);
   }

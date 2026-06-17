@@ -34,6 +34,13 @@ class MorosSettingsStore extends MorosStore {
   }
 
   _onExternalChange(content: string) {
+    // Flush a pending local change (last-writer-wins) rather than adopting the
+    // external file and then clobbering it when our debounce fires — which
+    // would drop the pending edit (e.g. a just-picked currency).
+    if (this._saveTimer) {
+      this.flush();
+      return;
+    }
     try {
       const parsed = JSON.parse(content);
       this._settings = parsed && typeof parsed === 'object' ? parsed : {};
@@ -66,24 +73,42 @@ class MorosSettingsStore extends MorosStore {
     }
   }
 
+  /** Persist immediately, bypassing the debounce. */
+  flush() {
+    if (this._saveTimer) clearTimeout(this._saveTimer);
+    this._save();
+  }
+
   _queueSave() {
     if (this._saveTimer) clearTimeout(this._saveTimer);
-    this._saveTimer = setTimeout(() => {
+    this._saveTimer = setTimeout(() => this._save(), 250);
+  }
+
+  _save() {
+    this._saveTimer = null;
+    const filePath = this._filePath();
+    const tempPath = `${filePath}.tmp`;
+    const content = JSON.stringify(this._settings, null, 2);
+    try {
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      fs.writeFileSync(tempPath, content, 'utf8');
+      fs.renameSync(tempPath, filePath);
+      // Mark the self-write only after a successful save (a failed write must
+      // not poison suppression of later external changes).
+      this._watch.noteWrite(content);
+      this._startWatching();
+    } catch (err) {
+      AppEnv.reportError(err);
+    }
+  }
+
+  /** Stop watching and cancel pending saves. Call on package deactivate. */
+  dispose() {
+    if (this._saveTimer) {
+      clearTimeout(this._saveTimer);
       this._saveTimer = null;
-      const filePath = this._filePath();
-      const tempPath = `${filePath}.tmp`;
-      const content = JSON.stringify(this._settings, null, 2);
-      try {
-        fs.mkdirSync(path.dirname(filePath), { recursive: true });
-        // Mark the self-write before writing so its echo is ignored (see watcher).
-        this._watch.noteWrite(content);
-        fs.writeFileSync(tempPath, content, 'utf8');
-        fs.renameSync(tempPath, filePath);
-        this._startWatching();
-      } catch (err) {
-        AppEnv.reportError(err);
-      }
-    }, 250);
+    }
+    this._watch.stop();
   }
 }
 

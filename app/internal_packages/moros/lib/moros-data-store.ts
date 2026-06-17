@@ -67,6 +67,14 @@ export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
 
   /** Another window changed our file: adopt its contents and notify listeners. */
   _onExternalChange(content: string) {
+    // If we have an unsaved local edit pending, flushing it (last-writer-wins)
+    // is safer than adopting the external file and then overwriting it when our
+    // debounce fires — which would silently drop the pending local edit. Our
+    // own flush echo is suppressed by the watcher.
+    if (this._saveTimer) {
+      this.flush();
+      return;
+    }
     try {
       const parsed = JSON.parse(content);
       this._items = Array.isArray(parsed) ? parsed : [];
@@ -153,13 +161,14 @@ export default class MorosDataStore<T extends MorosRecord> extends MorosStore {
     const content = JSON.stringify(this._items, null, 2);
     try {
       fs.mkdirSync(path.dirname(filePath), { recursive: true });
-      // Record what we're about to write *before* writing, so the file-watch
-      // event our own save triggers is recognized as a self-write and ignored.
-      this._watch.noteWrite(content);
       fs.writeFileSync(tempPath, content, 'utf8');
       fs.renameSync(tempPath, filePath);
-      // The file may not have existed when we first tried to watch it; now that
-      // it does, ensure the watcher is armed. Re-arms only if not already watching.
+      // Record the self-write only *after* a successful save, so a failed write
+      // can't leave a marker that later suppresses a real external change with
+      // the same content.
+      this._watch.noteWrite(content);
+      // The directory may not have existed when we first tried to watch it; now
+      // that a save has created it, ensure the watcher is armed (no-op if already).
       this._startWatching();
     } catch (err) {
       AppEnv.reportError(err);
