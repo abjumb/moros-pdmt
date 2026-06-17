@@ -324,6 +324,15 @@
       }
     }
 
+    &.is-selected {
+      background: color-mix(in srgb, #5e6ad2 18%, transparent);
+      box-shadow: inset 2px 0 0 @accent-primary;
+
+      .moros-row-delete {
+        opacity: 1;
+      }
+    }
+
     .moros-row-title {
       flex: 1;
       min-width: 0;
@@ -819,5 +828,185 @@
     font-size: @font-size-smaller;
     color: @text-color-subtle;
     border-bottom: 1px solid @border-color-divider;
+  }
+
+  // -------------------------------------------------------- Tasks: labels
+
+  .moros-labels {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: @spacing-quarter;
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .moros-label-chip {
+    display: inline-flex;
+    align-items: center;
+    font-size: @font-size-smaller;
+    color: @text-color-subtle;
+    background: @background-secondary;
+    border: 1px solid @border-color-divider;
+    border-radius: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+
+    .moros-label-text {
+      border: none;
+      background: none;
+      color: inherit;
+      font-size: inherit;
+      padding: 1px 4px 1px 8px;
+      cursor: pointer;
+
+      &[aria-pressed='true'] {
+        color: @accent-primary;
+      }
+    }
+
+    .moros-label-remove {
+      border: none;
+      background: none;
+      color: @text-color-very-subtle;
+      font-size: @font-size-base;
+      line-height: 1;
+      padding: 0 6px 0 2px;
+      cursor: pointer;
+
+      &:hover {
+        color: @color-error;
+      }
+    }
+  }
+
+  .moros-label-add {
+    width: 22px;
+    padding: 1px 4px;
+    font-size: @font-size-smaller;
+    color: @text-color;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    outline: none;
+
+    &:hover,
+    &:focus {
+      width: 80px;
+      border-color: @input-border-color;
+      background: @input-bg;
+    }
+  }
+
+  .moros-thread-link {
+    flex: 0 0 auto;
+    border: none;
+    background: none;
+    color: @text-color-subtle;
+    font-size: @font-size-base;
+    line-height: 1;
+    padding: 0 2px;
+    cursor: pointer;
+
+    &:hover {
+      color: @accent-primary;
+    }
+  }
+
+  // -------------------------------------------------- Tasks: view toggle
+
+  .moros-view-toggle {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    background: @background-secondary;
+    border: 1px solid @border-color-divider;
+    border-radius: @border-radius-large;
+
+    .moros-view-btn {
+      border: none;
+      background: none;
+      color: @text-color-subtle;
+      font-size: @font-size-smaller;
+      padding: 3px 10px;
+      border-radius: @border-radius-base;
+      cursor: pointer;
+
+      &.is-active {
+        background: @background-primary;
+        color: @text-color;
+      }
+    }
+  }
+
+  .moros-label-filter-row {
+    padding-top: @spacing-quarter;
+    padding-bottom: @spacing-quarter;
+  }
+
+  // ------------------------------------------------------- Tasks: board
+
+  .moros-board {
+    display: flex;
+    align-items: flex-start;
+    gap: @spacing-standard;
+    padding: @spacing-standard @spacing-double;
+    overflow-x: auto;
+    height: 100%;
+  }
+
+  .moros-board-column {
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    background: @background-secondary;
+    border: 1px solid @border-color-divider;
+    border-radius: @border-radius-large;
+    overflow: hidden;
+
+    .moros-group-header {
+      background: transparent;
+    }
+
+    .moros-board-column-body {
+      display: flex;
+      flex-direction: column;
+      gap: @spacing-half;
+      padding: @spacing-half;
+    }
+  }
+
+  .moros-card-task {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-quarter;
+    padding: @spacing-half @spacing-three-quarters;
+    background: @background-primary;
+    border: 1px solid @border-color-divider;
+    border-radius: @border-radius-base;
+    font-size: @font-size-small;
+    cursor: default;
+
+    &.is-selected {
+      border-color: @accent-primary;
+      box-shadow: 0 0 0 1px @accent-primary;
+    }
+
+    .moros-card-task-head {
+      display: flex;
+      align-items: center;
+      gap: @spacing-half;
+    }
+
+    .moros-card-task-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: @spacing-half;
+    }
+
+    .moros-row-date.is-overdue {
+      color: @color-error;
+    }
   }
 }

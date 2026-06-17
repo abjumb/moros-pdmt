@@ -9,6 +9,12 @@ export interface MorosTask extends MorosRecord {
   priority: TaskPriority;
   /** Optional ISO date (yyyy-mm-dd). Empty string / undefined = no due date. */
   dueDate?: string;
+  /** Free-form labels for grouping/filtering. */
+  labels?: string[];
+  /** Id of the originating email thread, when the task was filed from mail. */
+  threadId?: string;
+  /** Account id of the originating thread — needed to reopen it. */
+  threadAccountId?: string;
 }
 
 export const STATUS_ORDER: TaskStatus[] = ['in-progress', 'todo', 'backlog', 'done'];
@@ -53,7 +59,16 @@ class TasksStore extends MorosDataStore<MorosTask> {
     super('tasks.json');
   }
 
-  tasksByStatus(query = ''): { [S in TaskStatus]: MorosTask[] } {
+  /** Distinct labels across all tasks, alphabetically sorted. */
+  allLabels(): string[] {
+    const seen = new Set<string>();
+    for (const task of this.items()) {
+      for (const label of task.labels || []) seen.add(label);
+    }
+    return Array.from(seen).sort((a, b) => a.localeCompare(b));
+  }
+
+  tasksByStatus(query = '', label = ''): { [S in TaskStatus]: MorosTask[] } {
     const normalized = query.trim().toLowerCase();
     const groups: { [S in TaskStatus]: MorosTask[] } = {
       backlog: [],
@@ -63,6 +78,7 @@ class TasksStore extends MorosDataStore<MorosTask> {
     };
     for (const task of this.items()) {
       if (normalized && !task.title.toLowerCase().includes(normalized)) continue;
+      if (label && !(task.labels || []).includes(label)) continue;
       (groups[task.status] || groups.backlog).push(task);
     }
     // Linear ordering within a group: priority first, then nearest due date

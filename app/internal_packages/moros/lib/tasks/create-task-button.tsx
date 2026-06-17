@@ -29,6 +29,8 @@ export default class CreateTaskButton extends React.Component<
         title: thread.subject || localized('(No Subject)'),
         status: 'todo',
         priority: 'none',
+        threadId: thread.id,
+        threadAccountId: thread.accountId,
       });
     }
     if (this._resetTimer) clearTimeout(this._resetTimer);
