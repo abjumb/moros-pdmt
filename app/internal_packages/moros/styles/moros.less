@@ -3,6 +3,101 @@
 // Linear-style module chrome: dense rows, hairline dividers, quiet chrome
 // that picks all of its color from the active theme's variables.
 
+// --------------------------------------------------- App-level navigation rail
+// Persistent, narrow left-edge rail (Phase 3 "Linear shell"). The component is
+// registered once into Global.Header (rendered a single time by SheetContainer)
+// and positioned `fixed` so it spans the full window height on the left edge.
+// The workspace is given a matching left inset so no content sits under it.
+//
+// Colors come from the active theme's `ui-variables`; the active item uses the
+// Linear indigo accent (#5E6AD2, the same literal the rest of this file uses
+// for selection states).
+
+@moros-nav-rail-width: 64px;
+
+.moros-nav-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 5; // above the sheet toolbar (zIndex 3) and footer (zIndex 4)
+  width: @moros-nav-rail-width;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  padding: @spacing-half @spacing-quarter;
+  box-sizing: border-box;
+  background: @background-secondary;
+  border-right: 1px solid @border-color-divider;
+  -webkit-app-region: drag; // let the rail double as a window-drag handle
+}
+
+.moros-nav-rail-item {
+  -webkit-app-region: no-drag;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: @spacing-half 2px;
+  border: none;
+  border-radius: @border-radius-large;
+  background: none;
+  color: @text-color-subtle;
+  font-size: @font-size-smaller;
+  cursor: pointer;
+  outline: none;
+
+  &:hover {
+    background: @list-hover-bg;
+    color: @text-color;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 1px #5e6ad2;
+  }
+
+  &.is-active {
+    color: #5e6ad2;
+    background: color-mix(in srgb, #5e6ad2 16%, transparent);
+
+    .moros-nav-rail-icon img {
+      background-color: #5e6ad2 !important;
+    }
+  }
+
+  .moros-nav-rail-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .moros-nav-rail-label {
+    line-height: 1.1;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+}
+
+// Inset the whole workspace so the fixed rail never overlaps sheet content,
+// toolbars, header or footer.
+.sheet-container .layout-mode-list,
+.sheet-container .layout-mode-split,
+.sheet-container .layout-mode-splitVertical {
+  padding-left: @moros-nav-rail-width;
+  box-sizing: border-box;
+}
+
 .moros-root .moros-header.moros-header-split {
   display: flex;
   align-items: flex-start;
