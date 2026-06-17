@@ -73,6 +73,178 @@ export function parseAmountToCents(input: string): number | null {
   return Math.round(value * 100);
 }
 
+/**
+ * Per-category spending vs. budget for a single month. A pure, testable
+ * summary the month view renders as a progress bar. `spentCents` and
+ * `budgetCents` are integer cents; `ratio` is spent/budget (0 when there is
+ * no budget) and `overBudget` is true once spending exceeds the budget.
+ */
+export interface CategoryBudgetSummary {
+  category: string;
+  spentCents: number;
+  budgetCents: number;
+  ratio: number;
+  overBudget: boolean;
+}
+
+/**
+ * Build the spent-vs-budget summary for a month. Pure: callers pass the
+ * month's transactions and the budget map so the math is unit-testable
+ * without the singleton stores. Categories with either spending or a budget
+ * are returned, ordered like CATEGORIES (unknown categories appended).
+ */
+export function budgetSummary(
+  transactions: ReadonlyArray<Pick<MorosTransaction, 'category' | 'kind' | 'amountCents'>>,
+  budgets: { [category: string]: number }
+): CategoryBudgetSummary[] {
+  const spentByCategory: { [category: string]: number } = {};
+  for (const t of transactions) {
+    if (t.kind !== 'expense') continue;
+    spentByCategory[t.category] = (spentByCategory[t.category] || 0) + t.amountCents;
+  }
+
+  const categories = [
+    ...CATEGORIES,
+    ...Object.keys(spentByCategory).filter((c) => !CATEGORIES.includes(c)),
+    ...Object.keys(budgets).filter((c) => !CATEGORIES.includes(c) && !(c in spentByCategory)),
+  ];
+  const seen = new Set<string>();
+
+  const summaries: CategoryBudgetSummary[] = [];
+  for (const category of categories) {
+    if (seen.has(category)) continue;
+    seen.add(category);
+    const spentCents = spentByCategory[category] || 0;
+    const budgetCents = budgets[category] || 0;
+    if (spentCents === 0 && budgetCents === 0) continue;
+    summaries.push({
+      category,
+      spentCents,
+      budgetCents,
+      ratio: budgetCents > 0 ? spentCents / budgetCents : 0,
+      overBudget: budgetCents > 0 && spentCents > budgetCents,
+    });
+  }
+  return summaries;
+}
+
+export interface ParsedCsvRow {
+  description: string;
+  amountCents: number;
+  kind: TransactionKind;
+  category: string;
+  date: string;
+}
+
+export interface ParsedCsvResult {
+  rows: ParsedCsvRow[];
+  /** Count of rows skipped because they were malformed or unparseable. */
+  skipped: number;
+}
+
+/** Split a single CSV line, honoring double-quoted fields and "" escapes. */
+function splitCsvLine(line: string): string[] {
+  const fields: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        current += ch;
+      }
+    } else if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ',') {
+      fields.push(current);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  fields.push(current);
+  return fields.map((f) => f.trim());
+}
+
+/**
+ * Parse a transactions CSV into rows ready for FinanceStore.create(). Pure and
+ * unit-testable independent of any file dialog.
+ *
+ * Expected columns (matched case-insensitively from a header row if present,
+ * otherwise positional: date, description, amount, category): `date`,
+ * `description`, `amount`, optional `category`. A negative amount (or a `kind`
+ * column of "income") marks income; amounts are stored as positive integer
+ * cents with `kind` carrying the sign, matching the manual-entry convention.
+ * Malformed rows (missing date/description/amount or an unparseable amount)
+ * are skipped and counted rather than throwing.
+ */
+export function parseTransactionsCsv(text: string): ParsedCsvResult {
+  const lines = text.split(/\r\n|\r|\n/).filter((line) => line.trim() !== '');
+  const rows: ParsedCsvRow[] = [];
+  let skipped = 0;
+  if (lines.length === 0) return { rows, skipped };
+
+  // Detect a header row by looking for known column names.
+  const firstCells = splitCsvLine(lines[0]).map((c) => c.toLowerCase());
+  const headerKeywords = ['date', 'description', 'amount', 'category', 'kind', 'desc', 'memo'];
+  const hasHeader = firstCells.some((c) => headerKeywords.includes(c));
+
+  let idx = { date: 0, description: 1, amount: 2, category: 3, kind: -1 };
+  if (hasHeader) {
+    const find = (...names: string[]) => firstCells.findIndex((c) => names.includes(c));
+    idx = {
+      date: find('date'),
+      description: find('description', 'desc', 'memo'),
+      amount: find('amount', 'value'),
+      category: find('category'),
+      kind: find('kind', 'type'),
+    };
+  }
+
+  const dataLines = hasHeader ? lines.slice(1) : lines;
+  for (const line of dataLines) {
+    const cells = splitCsvLine(line);
+    const cell = (i: number) => (i >= 0 && i < cells.length ? cells[i] : '');
+
+    const date = cell(idx.date);
+    const description = cell(idx.description);
+    const rawAmount = cell(idx.amount);
+    if (!date || !description || !rawAmount) {
+      skipped++;
+      continue;
+    }
+
+    const amountCents = parseAmountToCents(rawAmount);
+    if (amountCents === null || amountCents === 0) {
+      skipped++;
+      continue;
+    }
+
+    // Sign comes from a leading minus or an explicit "income"/"expense" kind.
+    const kindCell = cell(idx.kind).toLowerCase();
+    let kind: TransactionKind;
+    if (kindCell === 'income' || kindCell === 'expense') {
+      kind = kindCell;
+    } else {
+      kind = /-/.test(rawAmount) ? 'income' : 'expense';
+    }
+    // amountCents is always positive (sign carried by `kind`).
+    const positiveCents = Math.abs(amountCents);
+
+    const category = cell(idx.category) || CATEGORIES[0];
+    rows.push({ description, amountCents: positiveCents, kind, category, date });
+  }
+
+  return { rows, skipped };
+}
+
 /** Current month as a 'yyyy-mm' prefix. */
 export function currentMonthPrefix() {
   return todayISO().slice(0, 7);
