@@ -1,4 +1,5 @@
 @import 'ui-variables';
+@import 'ui-mixins';
 
 // Linear-style module chrome: dense rows, hairline dividers, quiet chrome
 // that picks all of its color from the active theme's variables.
@@ -28,8 +29,8 @@
   gap: 2px;
   padding: @spacing-half @spacing-quarter;
   box-sizing: border-box;
-  background: @background-secondary;
-  border-right: 1px solid @border-color-divider;
+  .glass-surface-flat;
+  border-right: 1px solid @glass-border-color;
   -webkit-app-region: drag; // let the rail double as a window-drag handle
 }
 
@@ -49,7 +50,7 @@
   outline: none;
 
   &:hover {
-    background: @list-hover-bg;
+    background: @glass-control-bg-hover;
     color: @text-color;
   }
 
@@ -241,12 +242,15 @@
   flex: 1;
   min-width: 0;
   height: 100%;
-  background: @background-primary;
+  background: transparent;
   color: @text-color;
 
   .moros-header {
     padding: @spacing-standard @spacing-double @spacing-half;
-    border-bottom: 1px solid @border-color-divider;
+    background: @glass-surface-bg-soft;
+    border-bottom: 1px solid @glass-border-color;
+    -webkit-backdrop-filter: @glass-backdrop-filter;
+    backdrop-filter: @glass-backdrop-filter;
 
     h2 {
       margin: 0;
@@ -267,7 +271,10 @@
     align-items: center;
     gap: @spacing-half;
     padding: @spacing-half @spacing-double;
-    border-bottom: 1px solid @border-color-divider;
+    background: @glass-surface-bg-soft;
+    border-bottom: 1px solid @glass-border-color;
+    -webkit-backdrop-filter: @glass-backdrop-filter;
+    backdrop-filter: @glass-backdrop-filter;
 
     .moros-input {
       flex: 1;
@@ -352,9 +359,7 @@
     .moros-card {
       flex: 1;
       padding: @spacing-three-quarters @spacing-standard;
-      background: @background-secondary;
-      border: 1px solid @border-color-divider;
-      border-radius: @border-radius-large;
+      .glass-surface;
 
       .moros-card-label {
         font-size: @font-size-smaller;
@@ -388,8 +393,10 @@
     align-items: center;
     gap: @spacing-half;
     padding: @spacing-three-quarters @spacing-double @spacing-quarter;
-    background: @background-secondary;
-    border-bottom: 1px solid @border-color-divider;
+    background: @glass-surface-bg-soft;
+    border-bottom: 1px solid @glass-border-color;
+    -webkit-backdrop-filter: @glass-backdrop-filter;
+    backdrop-filter: @glass-backdrop-filter;
 
     .moros-group-title {
       font-size: @font-size-small;
@@ -413,7 +420,7 @@
     position: relative;
 
     &:hover {
-      background: @list-hover-bg;
+      background: @glass-control-bg-hover;
 
       .moros-row-delete {
         opacity: 1;
@@ -514,8 +521,8 @@
     padding: 1px 8px;
     font-size: @font-size-smaller;
     color: @text-color-subtle;
-    background: @background-secondary;
-    border: 1px solid @border-color-divider;
+    background: @glass-control-bg;
+    border: 1px solid @glass-border-color;
     border-radius: 10px;
     white-space: nowrap;
   }
@@ -1081,9 +1088,7 @@
     flex: 0 0 260px;
     display: flex;
     flex-direction: column;
-    background: @background-secondary;
-    border: 1px solid @border-color-divider;
-    border-radius: @border-radius-large;
+    .glass-surface;
     overflow: hidden;
 
     .moros-group-header {
@@ -1103,8 +1108,8 @@
     flex-direction: column;
     gap: @spacing-quarter;
     padding: @spacing-half @spacing-three-quarters;
-    background: @background-primary;
-    border: 1px solid @border-color-divider;
+    background: @glass-surface-bg-strong;
+    border: 1px solid @glass-border-color;
     border-radius: @border-radius-base;
     font-size: @font-size-small;
     cursor: default;
@@ -1182,10 +1187,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: @background-secondary;
-  border: 1px solid @border-color-divider;
-  border-radius: @border-radius-base * 2;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  .glass-surface-strong(@border-radius-base * 2);
   font-family: @font-family;
 }
 
@@ -1247,7 +1249,7 @@
   font-size: @font-size-base;
 
   &.is-selected {
-    background: fade(@accent-primary, 18%);
+    background: color-mix(in srgb, @accent-primary 18%, transparent);
     color: @text-color-heading;
     box-shadow: inset 2px 0 0 @accent-primary;
   }

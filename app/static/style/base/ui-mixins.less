@@ -3,3 +3,31 @@
 @import '../mixins/text-emphasis';
 @import '../mixins/background-variant';
 @import '../mixins/windows';
+
+.glass-surface(@radius: @border-radius-large) {
+  background: @glass-surface-bg;
+  border: 1px solid @glass-border-color;
+  border-radius: @radius;
+  box-shadow: @glass-shadow;
+  -webkit-backdrop-filter: @glass-backdrop-filter;
+  backdrop-filter: @glass-backdrop-filter;
+}
+
+.glass-surface-strong(@radius: @border-radius-large) {
+  .glass-surface(@radius);
+  background: @glass-surface-bg-strong;
+}
+
+.glass-surface-flat() {
+  background: @glass-surface-bg-soft;
+  -webkit-backdrop-filter: @glass-backdrop-filter;
+  backdrop-filter: @glass-backdrop-filter;
+}
+
+.glass-control() {
+  background: @glass-control-bg;
+  border: 1px solid @glass-border-color;
+  box-shadow: @glass-control-shadow;
+  -webkit-backdrop-filter: @glass-backdrop-filter;
+  backdrop-filter: @glass-backdrop-filter;
+}

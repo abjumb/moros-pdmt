@@ -66,6 +66,21 @@
 @source-list-active-bg: rgba(0, 0, 0, 0.06);
 @source-list-active-color: #232529;
 
+@glass-window-bg: linear-gradient(
+  135deg,
+  color-mix(in srgb, #f4f5f8 88%, #5e6ad2 12%) 0%,
+  #ffffff 48%,
+  #eef0f6 100%
+);
+@glass-surface-bg: rgb(from @background-primary r g b / 78%);
+@glass-surface-bg-strong: rgb(from @background-primary r g b / 90%);
+@glass-surface-bg-soft: rgb(from @panel-background-color r g b / 70%);
+@glass-control-bg: rgb(from @background-primary r g b / 72%);
+@glass-control-bg-hover: rgb(from @background-primary r g b / 88%);
+@glass-border-color: color-mix(in srgb, @text-color 12%, transparent);
+@glass-highlight: rgb(255 255 255 / 58%);
+@glass-shadow: inset 0 1px 0 @glass-highlight, 0 14px 34px rgba(64, 72, 96, 0.14);
+
 @menu-item-color-hover: rgba(0, 0, 0, 0.05);
 @menu-item-color-selected: #5e6ad2;
 @menu-text-color-selected: #ffffff;

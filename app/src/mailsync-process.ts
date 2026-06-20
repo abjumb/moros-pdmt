@@ -20,9 +20,19 @@ import {
 let Utils = null;
 
 export interface MailsyncProcessExit {
-  code: number;
+  code: number | null;
   error?: Error;
-  signal: string;
+  signal: string | null;
+}
+
+export function formatMailsyncExitStatus(code: number | null, signal: string | null) {
+  if (typeof code === 'number') {
+    return `code ${code}`;
+  }
+  if (signal) {
+    return `signal ${signal}`;
+  }
+  return 'no exit status';
 }
 
 export const LocalizedErrorStrings = {
@@ -249,7 +259,8 @@ export class MailsyncProcess extends EventEmitter {
         reject(err);
       });
 
-      this._proc.on('close', (code) => {
+      this._proc.on('close', (code, signal) => {
+        const exitStatus = formatMailsyncExitStatus(code, signal);
         try {
           const lastLine = buffer.toString('utf-8').split('\n').pop();
 
@@ -260,9 +271,10 @@ export class MailsyncProcess extends EventEmitter {
             // If the Mailsync executable itself failed to run, the logs are not JSON
             // and may contain system errors (shared library issues, etc). Include this
             // in the logs so users can fix on their own or report detailed bugs.
-            const rawLog = this._stripSecrets(buffer.toString());
+            const rawLog =
+              this._stripSecrets(buffer.toString()) || localized('No output from mailsync.');
             const error = new Error(
-              `${localized(`An unknown error has occurred`)} mailsync: ${code}. ${rawLog}`
+              `${localized(`An unknown error has occurred`)} mailsync: ${exitStatus}. ${rawLog}`
             );
             (error as any).rawLog = rawLog;
             return reject(error);
@@ -283,7 +295,7 @@ export class MailsyncProcess extends EventEmitter {
         } catch (err) {
           const rawLog = this._stripSecrets(buffer.toString());
           const error = new Error(
-            `${localized(`An unknown error has occurred`)} (mailsync: ${code})`
+            `${localized(`An unknown error has occurred`)} (mailsync: ${exitStatus})`
           );
           (error as any).rawLog = rawLog;
           return reject(error);

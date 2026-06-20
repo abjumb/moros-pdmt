@@ -8,9 +8,9 @@
 setup = "sh .conductor/setup.sh"
 
 # Electron desktop app (no HTTP port). `--config-dir-path` gives each workspace
-# its OWN dev data dir so multiple Mailspring instances can run side by side
+# its OWN dev data dir so multiple Moros instances can run side by side
 # without corrupting a shared SQLite database / config.
-run = "npm start -- --config-dir-path \"$HOME/Library/Application Support/Mailspring-dev-$CONDUCTOR_WORKSPACE_NAME\""
+run = "sh .conductor/run.sh"
 
 # Safe because each workspace runs against an isolated config dir (see above).
 run_mode = "concurrent"
