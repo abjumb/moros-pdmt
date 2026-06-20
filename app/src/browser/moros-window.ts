@@ -165,12 +165,6 @@ export default class MorosWindow extends EventEmitter {
     // window — popout/composer/spec windows keep their solid backgrounds. The
     // renderer drops the workspace fill to a translucent veil so this vibrancy
     // layer is visible (see workspace.less, body.platform-darwin.window-type-default).
-    if (process.platform === 'darwin' && this.windowType === 'default') {
-      browserWindowOptions.vibrancy = 'under-window';
-      browserWindowOptions.visualEffectState = 'active';
-      browserWindowOptions.backgroundColor = '#00000000';
-    }
-
     this.browserWindow = new BrowserWindow(browserWindowOptions);
     require('@electron/remote/main').enable(this.browserWindow.webContents);
     (this.browserWindow as any).updateLoadSettings = this.updateLoadSettings;
