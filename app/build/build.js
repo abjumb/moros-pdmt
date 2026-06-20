@@ -229,6 +229,7 @@ function buildPackagerOptions() {
         '{' +
         [
           'mailsync',
+          'mailspring-sync',
           'mailsync.exe',
           'mailsync.bin',
           '*.so',

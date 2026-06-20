@@ -44,7 +44,9 @@
 @btn-default-bg-color: #ffffff;
 @btn-border-color: rgba(0, 0, 0, 0.12);
 @btn-icon-color: #6b6f76;
-@btn-emphasis-bg-color: @accent-primary;
+// Literal required: base styles call LESS darken(@btn-emphasis-bg-color, …),
+// which cannot evaluate the CSS var() behind @accent-primary. See ui-linear.
+@btn-emphasis-bg-color: #5e6ad2;
 
 @input-bg: #ffffff;
 @input-border-color: #d9dade;

@@ -63,6 +63,8 @@ scripts/venv
 # OAuth client secret for talking to Google Sheets
 client_secret.json
 /app/mailsync
+/app/mailspring-sync
+/app/mailspring-sync.dSYM.zip
 /logfile.txt
 /app/dist-docs
 /app/mailsync.dSYM.zip

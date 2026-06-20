@@ -110,7 +110,13 @@ export class MailsyncProcess extends EventEmitter {
     this.verbose = verbose;
     this.resourcePath = resourcePath;
     this.configDirPath = configDirPath;
-    this.binaryPath = path.join(resourcePath, 'mailsync').replace('app.asar', 'app.asar.unpacked');
+    // The prebuilt Mailspring-Sync engine has an anti-fork guard in its main()
+    // that exits with code 2 (silently, before any logging) unless its own
+    // executable path contains the substring "mailspring". Moros ships it as
+    // "mailspring-sync" so the path satisfies that check. See scripts/postinstall.js.
+    this.binaryPath = path
+      .join(resourcePath, 'mailspring-sync')
+      .replace('app.asar', 'app.asar.unpacked');
   }
 
   _showStatusWindow(mode) {

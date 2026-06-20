@@ -70,9 +70,31 @@ function getMailsyncURL(callback) {
   );
 }
 
+// The prebuilt Mailspring-Sync engine refuses to run (exits 2 silently) unless
+// its executable path contains "mailspring". The upstream binary unpacks as
+// "app/mailsync"; rename it to "app/mailspring-sync" so the path satisfies that
+// guard. On macOS the prebuilt is unsigned, which Apple Silicon SIGKILLs on exec,
+// so ad-hoc sign it. mailsync-process.ts spawns "<resourcePath>/mailspring-sync".
+function prepareMailsyncBinary() {
+  try {
+    const src = path.join('app', 'mailsync');
+    const dst = path.join('app', 'mailspring-sync');
+    if (fs.existsSync(src)) {
+      fs.renameSync(src, dst);
+      console.log(`\nRenamed mailsync -> mailspring-sync (anti-fork path guard).`);
+    }
+    if (process.platform === 'darwin' && fs.existsSync(dst)) {
+      execSync(`codesign --force -s - '${dst}'`);
+      console.log(`Ad-hoc signed mailspring-sync for macOS.`);
+    }
+  } catch (err) {
+    console.error(`\nFailed to prepare mailspring-sync binary: ${err}`);
+  }
+}
+
 function downloadMailsync() {
-  getMailsyncURL(distS3URL => {
-    https.get(distS3URL, response => {
+  getMailsyncURL((distS3URL) => {
+    https.get(distS3URL, (response) => {
       if (response.statusCode === 200) {
         response.pipe(fs.createWriteStream(`app/mailsync.tar.gz`));
         response.on('end', () => {
@@ -84,9 +106,10 @@ function downloadMailsync() {
               src: `app/mailsync.tar.gz`,
               dest: 'app/',
             },
-            err => {
+            (err) => {
               if (!err) {
                 console.log(`\nUnpackaged Mailsync into ./app.`);
+                prepareMailsyncBinary();
               } else {
                 console.error(`\nEncountered an error unpacking: ${err}`);
               }
@@ -126,7 +149,7 @@ if (cacheElectronTarget !== npmElectronTarget) {
 // Audit is emitted with npm ls, no need to run it on EVERY command which is an odd default
 
 async function sqliteMissingNanosleep() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const sqliteLibDir = path.join(appModulesPath, 'better-sqlite3', 'build', 'Release');
     const staticLib = path.join(sqliteLibDir, 'sqlite3.a');
     const sharedLib = path.join(sqliteLibDir, 'better_sqlite3.node');

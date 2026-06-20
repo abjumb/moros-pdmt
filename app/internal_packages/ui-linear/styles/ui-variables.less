@@ -58,7 +58,10 @@
 @btn-default-bg-color: #191b20;
 @btn-border-color: rgba(255, 255, 255, 0.08);
 @btn-icon-color: #8a8f98;
-@btn-emphasis-bg-color: @accent-primary;
+// Must stay a literal color: base buttons.less / button-dropdown.less call
+// LESS darken(@btn-emphasis-bg-color, …) at compile time, which cannot evaluate
+// the CSS var() that @accent-primary resolves to. Use the accent's literal fallback.
+@btn-emphasis-bg-color: #5e6ad2;
 
 @dropdown-default-bg-color: #1c1e24;
 @dropdown-default-border-color: #2c2e36;
