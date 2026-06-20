@@ -59,10 +59,9 @@ class OnboardingStore extends MorosStore {
       // switching environments.
       this._pageStack = ['account-choose'];
     } else if (hasAccounts) {
-      // Should only happen when the user has "signed out" of their Moros ID,
-      // but already has accounts synced. Or is upgrading from a very old build.
-      // We used to show "Welcome Back", but now just jump to sign in.
-      this._pageStack = ['authenticate'];
+      // Previously jumped to Mailspring ID sign-in here. Moros doesn't require an
+      // identity, so go straight to adding an account instead.
+      this._pageStack = ['account-choose'];
     } else {
       // Standard new user onboarding flow.
       this._pageStack = ['welcome'];

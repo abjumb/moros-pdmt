@@ -97,7 +97,11 @@ export default class TutorialPage extends React.Component<
     if (nextItem) {
       this.setState({ current: nextItem, seen: nextSeen });
     } else {
-      OnboardingActions.moveToPage('authenticate');
+      // Moros does not require a Mailspring ID. Skip the 'authenticate' page and
+      // go straight to provider selection; the app runs fine with a null identity
+      // (Mailspring's own onboarding exposes this via skipSupported). Pro features
+      // that depend on the identity server simply stay disabled.
+      OnboardingActions.moveToPage('account-choose');
     }
   };
 
