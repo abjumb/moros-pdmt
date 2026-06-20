@@ -52,11 +52,11 @@ body.platform-win32 {
 .btn {
   padding: 0 0.8em;
   border-radius: @border-radius-base;
-  border: 0;
+  border: 1px solid @glass-border-color;
   cursor: default;
   display: inline-block;
   color: @btn-default-text-color;
-  background: @background-primary;
+  background: @glass-control-bg;
 
   img.content-mask {
     background-color: @btn-default-text-color;
@@ -65,8 +65,9 @@ body.platform-win32 {
   // Use 4 box shadows to create a 0.5px hairline around the button, and another
   // for the actual shadow. Pending https://code.google.com/p/chromium/issues/detail?id=236371
   // Yes, 1px border looks really bad on retina.
-  box-shadow: 0 0.5px 0 @btn-border-color, 0 -0.5px 0 @btn-border-color,
-    0.5px 0 0 @btn-border-color, -0.5px 0 0 @btn-border-color, 0 0.5px 1px @btn-border-color;
+  box-shadow: @glass-control-shadow;
+  -webkit-backdrop-filter: @glass-backdrop-filter;
+  backdrop-filter: @glass-backdrop-filter;
 
   height: 1.9em;
   line-height: 1.9em;
@@ -77,7 +78,7 @@ body.platform-win32 {
 
   &:active {
     cursor: default;
-    background: darken(@btn-default-bg-color, 9%);
+    background: @glass-control-bg-hover;
   }
   &:focus-visible {
     outline: 2px solid @accent-primary;
@@ -178,22 +179,12 @@ body.platform-win32 {
 }
 
 .btn-gradient {
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    from(@btn-default-bg-color),
-    to(darken(@btn-default-bg-color, 4.8%))
-  );
+  background: @glass-control-bg;
+  -webkit-backdrop-filter: @glass-backdrop-filter;
+  backdrop-filter: @glass-backdrop-filter;
 }
 .btn-gradient:active {
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    from(darken(@btn-default-bg-color, 9%)),
-    to(darken(@btn-default-bg-color, 13.5%))
-  );
+  background: @glass-control-bg-hover;
 }
 
 .btn-icon {

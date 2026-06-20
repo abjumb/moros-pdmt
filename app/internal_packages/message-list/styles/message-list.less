@@ -127,7 +127,7 @@ body.platform-win32 {
   display: flex;
   flex-direction: column;
   position: relative;
-  background: @background-secondary;
+  background: transparent;
 
   transition: all 125ms ease-in-out;
   width: 100%;
@@ -171,8 +171,7 @@ body.platform-win32 {
   }
 
   .show-hidden-messages {
-    background-color: darken(@background-secondary, 4%);
-    border: 1px solid darken(@background-secondary, 8%);
+    .glass-surface;
     border-radius: @border-radius-base;
     color: @text-color-very-subtle;
     margin-bottom: @padding-large-vertical;
@@ -184,8 +183,7 @@ body.platform-win32 {
   }
 
   .message-body-error {
-    background-color: @background-secondary;
-    border: 1px solid darken(@background-secondary, 8%);
+    .glass-surface;
     color: @text-color-very-subtle;
     margin-top: @padding-large-vertical;
     cursor: default;
@@ -280,10 +278,7 @@ body.platform-win32 {
     margin: 0 auto;
 
     .message-item-white-wrap {
-      background: @background-primary;
-      border: 0;
-      box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.28), 0 1px 1.5px rgba(0, 0, 0, 0.08);
-      border-radius: 4px;
+      .glass-surface-strong(8px);
     }
 
     padding-bottom: @message-spacing * 2;
@@ -293,7 +288,7 @@ body.platform-win32 {
 
     &.collapsed {
       .message-item-white-wrap {
-        background-color: darken(@background-primary, 2%);
+        background: @glass-surface-bg;
         padding-top: 19px;
         padding-bottom: 8px;
         margin-bottom: 0;
@@ -555,9 +550,11 @@ body.platform-win32 {
 
     border: 0;
     box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.28), 0 1px 1.5px rgba(0, 0, 0, 0.08);
-    border-top: 1px dashed @border-color-divider;
+    border-top: 1px dashed @glass-border-color;
     border-radius: 0 0 4px 4px;
-    background: @background-primary;
+    background: @glass-surface-bg-strong;
+    -webkit-backdrop-filter: @glass-backdrop-filter;
+    backdrop-filter: @glass-backdrop-filter;
 
     color: @text-color-very-subtle;
     img.content-mask {
@@ -760,9 +757,7 @@ body.platform-win32 {
   opacity: 0;
   margin: 5px;
   cursor: default;
-  border: 1px solid @border-color-primary;
-  border-radius: @border-radius-large;
-  background: @background-primary;
+  .glass-surface;
   padding: 15px;
 
   &.visible {

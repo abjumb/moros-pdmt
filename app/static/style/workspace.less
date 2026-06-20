@@ -27,6 +27,7 @@ moros-workspace {
   // Important: This attribute is used in the theme-manager-specs to check that
   // themes load and override each other correctly. Do not remove!
   background-color: @background-primary;
+  background-image: @glass-window-bg;
 }
 
 .sheet-container {
@@ -34,7 +35,7 @@ moros-workspace {
 }
 
 .sheet {
-  background-color: @background-primary;
+  background-color: transparent;
 }
 
 .sheet-stack-enter {
@@ -136,16 +137,10 @@ body.is-blurred {
     }
   }
   .sheet-toolbar-container {
-    background-image: linear-gradient(
-      to bottom,
-      lighten(@toolbar-background-color, 14%),
-      lighten(@toolbar-background-color, 14%)
-    );
+    background: @glass-surface-bg-soft;
 
     .btn.btn-toolbar {
-      background: none;
-      box-shadow: 0 0.5px 0 @btn-border-color, 0 -0.5px 0 @btn-border-color,
-        0.5px 0 0 @btn-border-color, -0.5px 0 0 @btn-border-color;
+      .glass-control;
       img {
         opacity: 0.5;
       }
@@ -159,19 +154,15 @@ body.is-blurred {
 }
 
 .sheet-toolbar-container {
-  background-image: -webkit-linear-gradient(
-    lighten(@toolbar-background-color, 10%) 0%,
-    lighten(@toolbar-background-color, 10%) 1.9%,
-    lighten(@toolbar-background-color, 9%) 2%,
-    @toolbar-background-color 100%
-  );
+  .glass-surface-flat;
+  background-image: none;
   color: @text-color-heading;
 }
 
 .sheet-toolbar {
   position: relative;
   -webkit-app-region: drag;
-  border-bottom: 1px solid darken(@toolbar-background-color, 9%);
+  border-bottom: 1px solid @glass-border-color;
   width: 100%;
   height: 34px;
 

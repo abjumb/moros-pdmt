@@ -1,4 +1,5 @@
 @import 'ui-variables';
+@import 'ui-mixins';
 
 .selection-bar-absolute-enter {
   opacity: 0;
@@ -100,10 +101,10 @@ body.platform-win32 {
   .list-item {
     font-size: @font-size-base;
     color: @text-color;
-    background: @list-bg;
+    background: @glass-surface-bg;
 
     &:hover {
-      background: darken(@list-bg, 5%);
+      background: @glass-control-bg-hover;
     }
 
     &.selected {

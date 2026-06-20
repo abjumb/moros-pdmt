@@ -8,10 +8,10 @@
   border-bottom: 1px solid @border-color-divider;
 }
 .sheet-toolbar-container {
-  background: @toolbar-background-color;
+  background: @glass-surface-bg-soft;
 }
 body.is-blurred .sheet-toolbar-container {
-  background: @toolbar-background-color;
+  background: @glass-surface-bg-soft;
 }
 
 // Re-tint mail iconography for the near-black surfaces.
@@ -30,8 +30,8 @@ img.content-light {
 }
 
 #message-list .message-item-wrap .message-item-white-wrap {
-  background-color: @background-secondary;
-  box-shadow: 0 0 0 1px @border-color-divider;
+  background: @glass-surface-bg-strong;
+  box-shadow: @glass-shadow;
 }
 
 // Linear keeps read rows muted and unread rows bright — no bold blue dots.
