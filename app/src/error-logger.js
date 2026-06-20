@@ -140,8 +140,10 @@ module.exports = ErrorLogger = (function () {
       productName: 'Moros',
       companyName: 'Moros',
       submitURL: `https://id.getmailspring.com/report-crash?ver=${appVersion}&platform=${process.platform}`,
-      uploadToServer: true,
-      autoSubmit: true,
+      // Moros does not send crash reports to Mailspring's servers. Local crash
+      // dumps are still written for debugging, but nothing is uploaded.
+      uploadToServer: false,
+      autoSubmit: false,
       extra: {
         ver: appVersion,
         platform: process.platform,

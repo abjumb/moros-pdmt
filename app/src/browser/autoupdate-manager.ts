@@ -71,6 +71,12 @@ export default class AutoUpdateManager extends EventEmitter {
   };
 
   setupAutoUpdater() {
+    // Moros does not use Mailspring's update servers (updates.getmailspring.com).
+    // Disable auto-update entirely: no updater is created, no feed URL is set, and
+    // no automatic or scheduled checks run. `autoUpdater` stays null; check()/install()
+    // guard against that so the manual "Check for Updates" menu item safely no-ops.
+    return;
+    // eslint-disable-next-line no-unreachable
     if (process.platform === 'win32') {
       const Impl = require('./autoupdate-impl-win32').default;
       autoUpdater = new Impl();
@@ -163,6 +169,11 @@ export default class AutoUpdateManager extends EventEmitter {
   }
 
   check({ hidePopups }: { hidePopups?: boolean } = {}) {
+    // Auto-update is disabled in Moros (see setupAutoUpdater); autoUpdater is null.
+    if (!autoUpdater) {
+      if (!hidePopups) this.onUpdateNotAvailable();
+      return;
+    }
     this.updateFeedURL();
     if (!hidePopups) {
       autoUpdater.once('update-not-available', this.onUpdateNotAvailable);
@@ -172,6 +183,7 @@ export default class AutoUpdateManager extends EventEmitter {
   }
 
   install() {
+    if (!autoUpdater) return;
     autoUpdater.quitAndInstall();
   }
 
@@ -182,7 +194,7 @@ export default class AutoUpdateManager extends EventEmitter {
   }
 
   onUpdateNotAvailable = () => {
-    autoUpdater.removeListener('error', this.onUpdateError);
+    if (autoUpdater) autoUpdater.removeListener('error', this.onUpdateError);
     dialog.showMessageBox({
       type: 'info',
       buttons: [localized('OK')],
